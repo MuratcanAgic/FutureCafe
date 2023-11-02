@@ -1,3 +1,4 @@
+using FutureCafe.Business.ServiceRegistiration;
 using FutureCafe.DataAccess.ServiceRegistiration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDataServices(builder.Configuration);
-
+builder.Services.AddBusinessServices();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
