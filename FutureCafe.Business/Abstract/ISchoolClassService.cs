@@ -1,5 +1,5 @@
 ﻿using FluentValidation.Results;
-using FutureCafe.Core.Results;
+using FutureCafe.Core.Utilities.Results;
 using FutureCafe.Entities.Concrete;
 using System.Linq.Expressions;
 
@@ -10,7 +10,7 @@ namespace FutureCafe.Business.Abstract
     ValidationResult Validate(SchoolClass entity);
     IDataResult<SchoolClass> FindById(int id);
     IDataResult<SchoolClass> Get(Expression<Func<SchoolClass, bool>> filter, string includeProperties = "");
-    IEnumerable<IDataResult<SchoolClass>> GetList(Expression<Func<SchoolClass, bool>> filter = null,
+    IDataResult<IEnumerable<SchoolClass>> GetList(Expression<Func<SchoolClass, bool>> filter = null,
     Func<IQueryable<SchoolClass>, IOrderedQueryable<SchoolClass>> orderBy = null, string includeProperties = "");
     IDataResult<SchoolClass> Add(SchoolClass entity);
     IResult Update(SchoolClass entity);

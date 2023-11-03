@@ -1,4 +1,4 @@
-﻿namespace FutureCafe.Core.Results
+﻿namespace FutureCafe.Core.Utilities.Results
 {
   public class ErrorDataResult<T> : DataResult<T>
   {

@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using FutureCafe.Business.Abstract;
-using FutureCafe.Core.Results;
+using FutureCafe.Core.Utilities.Results;
 using FutureCafe.DataAccess.Abstract;
 using FutureCafe.Entities.Concrete;
 using System.Linq.Expressions;
@@ -66,6 +66,7 @@ namespace FutureCafe.Business.Concrete
 
     public IDataResult<SchoolClass> Get(Expression<Func<SchoolClass, bool>> filter, string includeProperties = "")
     {
+
       throw new NotImplementedException();
     }
 
@@ -74,9 +75,26 @@ namespace FutureCafe.Business.Concrete
       throw new NotImplementedException();
     }
 
-    public IEnumerable<IDataResult<SchoolClass>> GetList(Expression<Func<SchoolClass, bool>> filter = null, Func<IQueryable<SchoolClass>, IOrderedQueryable<SchoolClass>> orderBy = null, string includeProperties = "")
+    public IDataResult<IEnumerable<SchoolClass>> GetList(Expression<Func<SchoolClass, bool>> filter = null, Func<IQueryable<SchoolClass>, IOrderedQueryable<SchoolClass>> orderBy = null, string includeProperties = "")
     {
-      throw new NotImplementedException();
+      try
+      {
+        var schoolClassList = _schoolClassDal.GetList();
+        if (schoolClassList != null)
+        {
+          return new SuccessDataResult<IEnumerable<SchoolClass>>(schoolClassList, "Success");
+        }
+        else
+        {
+          return new ErrorDataResult<IEnumerable<SchoolClass>>("Class list empty");
+        }
+      }
+      catch (Exception e)
+      {
+        return new ErrorDataResult<IEnumerable<SchoolClass>>(e.Message.ToString());
+
+      }
+
     }
 
     public IDataResult<Task<IEnumerable<SchoolClass>>> GetListAsync(Expression<Func<SchoolClass, bool>> filter = null, Func<IQueryable<SchoolClass>, IOrderedQueryable<SchoolClass>> orderBy = null, string includeProperties = "")

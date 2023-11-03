@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using FutureCafe.Business.Abstract;
-using FutureCafe.Core.Results;
+using FutureCafe.Core.Utilities.Results;
 using FutureCafe.DataAccess.Abstract;
 using FutureCafe.Entities.Concrete;
 using System.Linq.Expressions;

@@ -1,5 +1,5 @@
 ﻿using FluentValidation.Results;
-using FutureCafe.Core.Results;
+using FutureCafe.Core.Utilities.Results;
 using FutureCafe.Entities.Concrete;
 using System.Linq.Expressions;
 
