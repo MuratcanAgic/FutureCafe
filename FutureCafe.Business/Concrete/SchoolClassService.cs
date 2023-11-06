@@ -148,7 +148,7 @@ namespace FutureCafe.Business.Concrete
 
         if (schoolClassList == null)
         {
-          return new ErrorDataResult<IEnumerable<SchoolClass>>(Messages.SchoolClassListEmpty);
+          return new ErrorDataResult<IEnumerable<SchoolClass>>(Messages.ListEmpty);
         }
         return new SuccessDataResult<IEnumerable<SchoolClass>>(schoolClassList);
       }
@@ -165,7 +165,7 @@ namespace FutureCafe.Business.Concrete
 
         if (schoolClassList == null)
         {
-          return new ErrorDataResult<IEnumerable<SchoolClass>>(Messages.SchoolClassListEmpty);
+          return new ErrorDataResult<IEnumerable<SchoolClass>>(Messages.ListEmpty);
         }
         return new SuccessDataResult<IEnumerable<SchoolClass>>(schoolClassList);
       }

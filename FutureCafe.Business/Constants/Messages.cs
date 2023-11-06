@@ -2,7 +2,7 @@
 {
   public static class Messages
   {
-    public const string SchoolClassListEmpty = "Okul sınıfı listesinde veri yok.";
+    public const string ListEmpty = "Listede veri yok.";
     public const string DataSaved = "Veri kaydedildi.";
     public const string DataDeleted = "Veri silindi.";
     public const string CannotBeEmpty = "boş geçilemez.";

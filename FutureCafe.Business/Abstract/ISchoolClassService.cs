@@ -8,7 +8,6 @@ namespace FutureCafe.Business.Abstract
   public interface ISchoolClassService
   {
     ValidationResult Validate(SchoolClass entity);
-
     IDataResult<SchoolClass> FindById(int id);
     IDataResult<SchoolClass> Get(Expression<Func<SchoolClass, bool>> filter, string includeProperties = "");
     IDataResult<IEnumerable<SchoolClass>> GetList(Expression<Func<SchoolClass, bool>> filter = null,

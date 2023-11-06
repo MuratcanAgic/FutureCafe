@@ -9,6 +9,7 @@ namespace FutureCafe.Business.Mapping
     public MappingProfile()
     {
       CreateMap<SchoolClass, SchoolClassCreateEditDto>().ReverseMap();
+      CreateMap<Category, CategoryCreateEditDto>().ReverseMap();
     }
   }
 }
