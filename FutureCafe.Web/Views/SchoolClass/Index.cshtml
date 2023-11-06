@@ -23,17 +23,20 @@
               </tr>
             </thead>
             <tbody>
-              @foreach (var (item, i) in Model.Select((item, i) => (item, i)))
+              @if (Model != null)
               {
-                <tr>
-                  <th scope="row">@(i + 1)</th>
-                  <th>
-                    <a class="m-2" asp-controller="SchoolClass" asp-action="Edit" asp-route-id="@item.Id"><i class="bi-pencil-square text-success"></i></a>
-                    <a class="m-2" asp-controller="SchoolClass" asp-action="Detail" asp-route-id="@item.Id"><i class="bi-file-earmark text-info"></i></a>
-                    <a class="m-2" asp-controller="SchoolClass" asp-action="Delete" asp-route-id="@item.Id"><i class="bi-trash text-danger"></i></a>
-                  </th>
-                  <td>@item.Name</td>
-                </tr>
+                @foreach (var (item, i) in Model.Select((item, i) => (item, i)))
+                {
+                  <tr>
+                    <th scope="row">@(i + 1)</th>
+                    <th>
+                      <a class="m-2" asp-controller="SchoolClass" asp-action="Edit" asp-route-id="@item.Id"><i class="bi-pencil-square text-success"></i></a>
+                      <a class="m-2" asp-controller="SchoolClass" asp-action="Detail" asp-route-id="@item.Id"><i class="bi-file-earmark text-info"></i></a>
+                      <a class="m-2" asp-controller="SchoolClass" asp-action="Delete" asp-route-id="@item.Id"><i class="bi-trash text-danger"></i></a>
+                    </th>
+                    <td>@item.Name</td>
+                  </tr>
+                }
               }
             </tbody>
           </table>

@@ -10,7 +10,7 @@ namespace FutureCafe.Business.Abstract
     ValidationResult Validate(Student entity);
     IDataResult<Student> FindById(int id);
     IDataResult<Student> Get(Expression<Func<Student, bool>> filter, string includeProperties = "");
-    IEnumerable<IDataResult<Student>> GetList(Expression<Func<Student, bool>> filter = null,
+    IDataResult<IEnumerable<Student>> GetList(Expression<Func<Student, bool>> filter = null,
     Func<IQueryable<Student>, IOrderedQueryable<Student>> orderBy = null, string includeProperties = "");
     IDataResult<Student> Add(Student entity);
     IResult Update(Student entity);

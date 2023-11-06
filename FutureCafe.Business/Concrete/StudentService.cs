@@ -73,7 +73,7 @@ namespace FutureCafe.Business.Concrete
       throw new NotImplementedException();
     }
 
-    public IEnumerable<IDataResult<Student>> GetList(Expression<Func<Student, bool>> filter = null, Func<IQueryable<Student>, IOrderedQueryable<Student>> orderBy = null, string includeProperties = "")
+    public IDataResult<IEnumerable<Student>> GetList(Expression<Func<Student, bool>> filter = null, Func<IQueryable<Student>, IOrderedQueryable<Student>> orderBy = null, string includeProperties = "")
     {
       throw new NotImplementedException();
     }

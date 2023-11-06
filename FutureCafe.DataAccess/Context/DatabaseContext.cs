@@ -1,4 +1,5 @@
-﻿using FutureCafe.Entities.Concrete;
+﻿using FutureCafe.Entities.Abstract;
+using FutureCafe.Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -33,5 +34,49 @@ namespace FutureCafe.DataAccess.Context
     public DbSet<StudentCredit> StudentCredits { get; set; }
     public DbSet<Trade> Trades { get; set; }
     public DbSet<TradeProduct> TradeProducts { get; set; }
+
+    public override int SaveChanges()
+    {
+      var entries = ChangeTracker
+        .Entries()
+        .Where(e => e.Entity is BaseEntity && (
+                e.State == EntityState.Added
+                || e.State == EntityState.Modified));
+
+      foreach (var entityEntry in entries)
+      {
+        ((BaseEntity)entityEntry.Entity).UpdatedDate = DateTime.Now;
+
+        if (entityEntry.State == EntityState.Added)
+        {
+          ((BaseEntity)entityEntry.Entity).CreatedDate = DateTime.Now;
+        }
+      }
+      return base.SaveChanges();
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+    {
+      var entries = ChangeTracker
+        .Entries()
+        .Where(e => e.Entity is BaseEntity && (
+                e.State == EntityState.Added
+                || e.State == EntityState.Modified));
+
+      foreach (var entityEntry in entries)
+      {
+        if (entityEntry.State == EntityState.Modified)
+        {
+          entityEntry.Property("CreatedDate").IsModified = false;
+          ((BaseEntity)entityEntry.Entity).UpdatedDate = DateTime.Now;
+        }
+        if (entityEntry.State == EntityState.Added)
+        {
+          ((BaseEntity)entityEntry.Entity).UpdatedDate = DateTime.Now;
+          ((BaseEntity)entityEntry.Entity).CreatedDate = DateTime.Now;
+        }
+      }
+      return await base.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+    }
   }
 }
