@@ -9,5 +9,6 @@
     public const string StringMinLength = "minimum {MinLength} karakter olmalıdır.";
     public const string StringMaxLength = "maksimum {MaxLength} karakter olmalıdır.";
     public const string StringLength = ", {MinLength} ve {MaxLength} karater arasında olmalıdır.";
+    public const string ValidationResultNull = "Doğrulama işlemi gerçekleştirilemedi.";
   }
 }

@@ -151,7 +151,7 @@ namespace FutureCafe.Web.Controllers
 
     private void PopulateSchoolClassDropDownList(object? selectedCategory = null)
     {
-      var schoolClasses = _schoolClassService.GetList(orderBy: q => q.OrderBy(x => x.Name));
+      var schoolClasses = _schoolClassService.GetList<SchoolClass>(orderBy: q => q.OrderBy(x => x.Name));
       ViewBag.SchoolClasses = new SelectList(schoolClasses.Data, "Id", "Name", selectedCategory);
     }
   }
