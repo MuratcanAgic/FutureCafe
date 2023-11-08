@@ -1,7 +1,6 @@
 ﻿using FutureCafe.Business.Abstract;
 using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Extensions;
-using FutureCafe.Entities.Concrete;
 using FutureCafe.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +17,7 @@ namespace FutureCafe.Web.Controllers
 
     public async Task<IActionResult> Index()
     {
-      var list = await _categoryService.GetListAsync();
+      var list = await _categoryService.GetListAsync<CategoryViewDto>();
 
       if (list.Data == null)
         return View("Error", new ErrorViewModel { ErrorMessage = list.Message });
@@ -37,15 +36,16 @@ namespace FutureCafe.Web.Controllers
     {
       if (categoryDto == null) { RedirectToAction("Index"); }
 
-      var category = _categoryService.MapDtoToEntity<CategoryCreateEditDto, Category>(categoryDto);
+      //var category = _categoryService.MapDtoToEntity<CategoryCreateEditDto, Category>(categoryDto);
       //validate
-      var validationResult = await _categoryService.ValidateAsync(category.Data);
-      if (validationResult.IsValid == false)
+      var validationResult = _categoryService.Validate(categoryDto);
+      if (validationResult.Data.IsValid == false)
       {
-        validationResult.AddToModelState(this.ModelState);
+        validationResult.Data.AddToModelState(this.ModelState);
         return View(categoryDto);
       }
-      await _categoryService.AddAsync(category.Data);
+
+      await _categoryService.AddAsync<CategoryCreateEditDto>(categoryDto);
       await _categoryService.SaveAsync();
 
       return RedirectToAction("Index");
@@ -55,31 +55,30 @@ namespace FutureCafe.Web.Controllers
     {
       if (id == 0) { return RedirectToAction("Index"); }
 
-      var category = await _categoryService.FindByIdAsync(id);
+      var category = await _categoryService.FindByIdAsync<CategoryCreateEditDto>(id);
 
       if (category == null)
       { return RedirectToAction("Index"); }
 
-      var categoryDto = _categoryService.MapEntityToDto<Category, CategoryCreateEditDto>(category.Data);
 
-      return View(categoryDto.Data);
+      return View(category.Data);
     }
     [HttpPost]
     public async Task<IActionResult> Edit(CategoryCreateEditDto categoryDto)
     {
       if (categoryDto == null) { return RedirectToAction("Index"); }
 
-      var category = _categoryService.MapDtoToEntity<CategoryCreateEditDto, Category>(categoryDto);
+      //var category = _categoryService.MapDtoToEntity<CategoryCreateEditDto, Category>(categoryDto);
 
       //validate
-      var validationResult = await _categoryService.ValidateAsync(category.Data);
-      if (validationResult.IsValid == false)
+      var validationResult = _categoryService.Validate(categoryDto);
+      if (validationResult.Data.IsValid == false)
       {
-        validationResult.AddToModelState(this.ModelState);
+        validationResult.Data.AddToModelState(this.ModelState);
         return View(categoryDto);
       }
 
-      _categoryService.Update(category.Data);
+      _categoryService.Update(categoryDto);
       await _categoryService.SaveAsync();
 
       return RedirectToAction("Index");
@@ -90,7 +89,7 @@ namespace FutureCafe.Web.Controllers
     {
       if (id == 0) { return RedirectToAction("Index"); }
 
-      var category = await _categoryService.FindByIdAsync(id);
+      var category = await _categoryService.FindByIdAsync<CategoryViewDto>(id);
 
       if (category == null)
       { return RedirectToAction("Index"); }
@@ -104,7 +103,7 @@ namespace FutureCafe.Web.Controllers
     {
       if (id == 0) { return RedirectToAction("Index"); }
 
-      var category = await _categoryService.FindByIdAsync(id);
+      var category = await _categoryService.FindByIdAsync<CategoryViewDto>(id);
 
       if (category == null)
       { return RedirectToAction("Index"); }
