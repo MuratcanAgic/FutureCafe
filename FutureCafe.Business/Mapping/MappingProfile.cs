@@ -10,6 +10,8 @@ namespace FutureCafe.Business.Mapping
     {
       CreateMap<SchoolClass, SchoolClassCreateEditDto>().ReverseMap();
       CreateMap<Category, CategoryCreateEditDto>().ReverseMap();
+      CreateMap<Student, StudentViewDto>().ReverseMap();
+      CreateMap<Student, StudentCreateEditDto>().ReverseMap();
     }
   }
 }

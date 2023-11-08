@@ -144,7 +144,7 @@ namespace FutureCafe.Business.Concrete
     {
       try
       {
-        var schoolClassList = _schoolClassDal.GetList();
+        var schoolClassList = _schoolClassDal.GetList(filter, orderBy, includeProperties);
 
         if (schoolClassList == null)
         {
@@ -161,7 +161,7 @@ namespace FutureCafe.Business.Concrete
     {
       try
       {
-        var schoolClassList = await _schoolClassDal.GetListAsync();
+        var schoolClassList = await _schoolClassDal.GetListAsync(filter, orderBy, includeProperties);
 
         if (schoolClassList == null)
         {

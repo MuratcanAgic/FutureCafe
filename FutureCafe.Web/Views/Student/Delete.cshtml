@@ -1,0 +1,56 @@
+﻿@model FutureCafe.Entities.Concrete.Student
+
+<div class="container">
+  <div class="row mb-2">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h5>Öğrenci Silme</h5>
+          @*<div asp-validation-summary="All"></div>*@
+        </div>
+        <div class="card-body">
+          <form asp-controller="Student" asp-action="Delete" method="post" class="d-flex align-items-center">
+            <div class="container">
+
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="Name" class="mb-2"></label>
+                  <div class="container bg-dark-subtle rounded p-2">@Model.Name</div>
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="SurName" class="mb-2"></label>
+                  <div class="container bg-dark-subtle rounded p-2">@Model.SurName</div>
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="CardNumber" class="mb-2"></label>
+                  <div class="container bg-dark-subtle rounded p-2">@Model.CardNumber</div>
+                </div>
+              </div>
+              @*Image*@
+              @*<div class="row mb-4">
+              <div class="col">
+              <label asp-for="ImageUrl" class="mb-2"></label>
+              <input type="file" asp-for="ImageUrl" class="form-control" placeholder="Dosya yolu seçiniz." />
+              <span asp-validation-for="ImageUrl" class="text-danger"></span>
+              </div>
+              </div>*@
+
+              <div class="row mb-2">
+                <div class="col">
+                  <button type="submit" class="btn btn-danger" style="width:150px">Sil</button>
+                  <a asp-controller="Student" asp-action="Index" class="btn btn-primary" style="width:150px">Listeye Dön</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
