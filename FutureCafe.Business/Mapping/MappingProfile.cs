@@ -16,6 +16,7 @@ namespace FutureCafe.Business.Mapping
 
       CreateMap<Student, StudentViewDto>().ReverseMap();
       CreateMap<Student, StudentCreateEditDto>().ReverseMap();
+      CreateMap<Student, StudentDetailDto>().ReverseMap();
     }
   }
 }
