@@ -46,7 +46,7 @@ namespace FutureCafe.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -98,7 +98,7 @@ namespace FutureCafe.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Credits");
+                    b.ToTable("Credits", (string)null);
 
                     b.HasData(
                         new
@@ -143,7 +143,7 @@ namespace FutureCafe.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Prices");
+                    b.ToTable("Prices", (string)null);
 
                     b.HasData(
                         new
@@ -198,7 +198,7 @@ namespace FutureCafe.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
                     b.HasData(
                         new
@@ -246,7 +246,7 @@ namespace FutureCafe.DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategories", (string)null);
 
                     b.HasData(
                         new
@@ -301,7 +301,7 @@ namespace FutureCafe.DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductPrices");
+                    b.ToTable("ProductPrices", (string)null);
 
                     b.HasData(
                         new
@@ -344,7 +344,7 @@ namespace FutureCafe.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SchoolClasses");
+                    b.ToTable("SchoolClasses", (string)null);
 
                     b.HasData(
                         new
@@ -400,7 +400,7 @@ namespace FutureCafe.DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Stock");
+                    b.ToTable("Stock", (string)null);
                 });
 
             modelBuilder.Entity("FutureCafe.Entities.Concrete.Student", b =>
@@ -450,7 +450,7 @@ namespace FutureCafe.DataAccess.Migrations
 
                     b.HasIndex("SchoolClassId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
 
                     b.HasData(
                         new
@@ -509,7 +509,7 @@ namespace FutureCafe.DataAccess.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentCategories");
+                    b.ToTable("StudentCategories", (string)null);
                 });
 
             modelBuilder.Entity("FutureCafe.Entities.Concrete.StudentCredit", b =>
@@ -541,7 +541,7 @@ namespace FutureCafe.DataAccess.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentCredits");
+                    b.ToTable("StudentCredits", (string)null);
 
                     b.HasData(
                         new
@@ -584,7 +584,7 @@ namespace FutureCafe.DataAccess.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Trades");
+                    b.ToTable("Trades", (string)null);
                 });
 
             modelBuilder.Entity("FutureCafe.Entities.Concrete.TradeProduct", b =>
@@ -619,7 +619,7 @@ namespace FutureCafe.DataAccess.Migrations
 
                     b.HasIndex("TradeId");
 
-                    b.ToTable("TradeProducts");
+                    b.ToTable("TradeProducts", (string)null);
                 });
 
             modelBuilder.Entity("FutureCafe.Entities.Concrete.ProductCategory", b =>

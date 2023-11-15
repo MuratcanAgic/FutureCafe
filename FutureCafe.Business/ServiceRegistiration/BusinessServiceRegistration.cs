@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FutureCafe.Business.Abstract;
 using FutureCafe.Business.Concrete;
+using FutureCafe.Business.Dtos;
 using FutureCafe.Business.Mapping;
 using FutureCafe.Business.ValidationRules.FluentValidation;
 using FutureCafe.Entities.Concrete;
@@ -19,7 +20,7 @@ namespace FutureCafe.Business.ServiceRegistiration
       services.AddScoped<IStudentService, StudentService>();
       //validators
       services.AddScoped<IValidator<Category>, CategoryValidator>();
-      services.AddScoped<IValidator<Product>, ProductValidator>();
+      services.AddScoped<IValidator<ProductCreateEditDto>, ProductValidator>();
       services.AddScoped<IValidator<SchoolClass>, SchoolClassValidator>();
       services.AddScoped<IValidator<Student>, StudentValidator>();
 
