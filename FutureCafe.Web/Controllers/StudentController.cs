@@ -20,13 +20,13 @@ namespace FutureCafe.Web.Controllers
 
     public async Task<IActionResult> Index()
     {
-      var list = await _studentService.GetListAsync();
+      var list = await _studentService.GetListAsync<StudentViewDto>();
 
       if (list.Data == null)
         return View("Error", new ErrorViewModel { ErrorMessage = list.Message });
 
-      var viewDtoList = list.Data.Select(x => _studentService.MapEntityToDto<Student, StudentViewDto>(x).Data).ToList();
-      return View(viewDtoList);
+      //var viewDtoList = list.Data.Select(x => _studentService.MapEntityToDto<Student, StudentViewDto>(x).Data).ToList();
+      return View(list.Data);
     }
 
     //CREATE
@@ -43,16 +43,15 @@ namespace FutureCafe.Web.Controllers
       if (studentDto == null) { return RedirectToAction("Index"); }
 
 
-      var student = _studentService.MapDtoToEntity<StudentCreateEditDto, Student>(studentDto);
       //validate
-      var validationResult = await _studentService.ValidateAsync(student.Data);
-      if (validationResult.IsValid == false)
+      var validationResult = _studentService.Validate(studentDto);
+      if (validationResult.Data.IsValid == false)
       {
-        validationResult.AddToModelState(this.ModelState);
+        validationResult.Data.AddToModelState(this.ModelState);
         PopulateSchoolClassDropDownList();
         return View(studentDto);
       }
-      await _studentService.AddAsync(student.Data);
+      await _studentService.AddAsync(studentDto);
       await _studentService.SaveAsync();
 
       return RedirectToAction("Index");
@@ -64,16 +63,14 @@ namespace FutureCafe.Web.Controllers
     {
       if (id == 0) { return RedirectToAction("Index"); }
 
-      var student = _studentService.FindById(id);
+      var student = await _studentService.FindByIdAsync<StudentCreateEditDto>(id);
 
       if (student == null)
       { return RedirectToAction("Index"); }
 
-      var studentDto = _studentService.MapEntityToDto<Student, StudentCreateEditDto>(student.Data);
-
       PopulateSchoolClassDropDownList();
 
-      return View(studentDto.Data);
+      return View(student.Data);
     }
 
     [HttpPost]
@@ -81,16 +78,15 @@ namespace FutureCafe.Web.Controllers
     {
       if (studentDto == null) { return RedirectToAction("Index"); }
 
-      var student = _studentService.MapDtoToEntity<StudentCreateEditDto, Student>(studentDto);
       //validate
-      var validationResult = await _studentService.ValidateAsync(student.Data);
-      if (validationResult.IsValid == false)
+      var validationResult = _studentService.Validate(studentDto);
+      if (validationResult.Data.IsValid == false)
       {
-        validationResult.AddToModelState(this.ModelState);
+        validationResult.Data.AddToModelState(this.ModelState);
         PopulateSchoolClassDropDownList();
         return View(studentDto);
       }
-      _studentService.Update(student.Data);
+      _studentService.Update(studentDto);
       await _studentService.SaveAsync();
 
       return RedirectToAction("Index");
@@ -103,7 +99,7 @@ namespace FutureCafe.Web.Controllers
     {
       if (id == 0) { return RedirectToAction("Index"); }
 
-      var studentList = await _studentService.GetListAsync(null
+      var studentList = await _studentService.GetListAsync<StudentDetailDto>(null
         , null, "SchoolClass");
       var student = studentList.Data.FirstOrDefault(x => x.Id == id);
 
@@ -121,7 +117,7 @@ namespace FutureCafe.Web.Controllers
     {
       if (id == 0) { return RedirectToAction("Index"); }
 
-      var student = await _studentService.FindByIdAsync(id);
+      var student = await _studentService.FindByIdAsync<StudentViewDto>(id);
 
       if (student == null)
       { return RedirectToAction("Index"); }
@@ -137,7 +133,7 @@ namespace FutureCafe.Web.Controllers
     {
       if (id == 0) { return RedirectToAction("Index"); }
 
-      var student = await _studentService.FindByIdAsync(id);
+      var student = await _studentService.FindByIdAsync<Student>(id);
 
       if (student != null)
       {
@@ -151,7 +147,7 @@ namespace FutureCafe.Web.Controllers
 
     private void PopulateSchoolClassDropDownList(object? selectedCategory = null)
     {
-      var schoolClasses = _schoolClassService.GetList(orderBy: q => q.OrderBy(x => x.Name));
+      var schoolClasses = _schoolClassService.GetList<SchoolClass>(orderBy: q => q.OrderBy(x => x.Name));
       ViewBag.SchoolClasses = new SelectList(schoolClasses.Data, "Id", "Name", selectedCategory);
     }
   }

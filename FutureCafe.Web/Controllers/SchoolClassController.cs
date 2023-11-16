@@ -1,7 +1,6 @@
 ﻿using FutureCafe.Business.Abstract;
 using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Extensions;
-using FutureCafe.Entities.Concrete;
 using FutureCafe.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +17,7 @@ namespace FutureCafe.Web.Controllers
 
     public async Task<IActionResult> Index()
     {
-      var list = await _schoolClassService.GetListAsync();
+      var list = await _schoolClassService.GetListAsync<SchoolClassViewDto>();
 
       if (list.Data == null)
         return View("Error", new ErrorViewModel { ErrorMessage = list.Message });
@@ -36,15 +35,16 @@ namespace FutureCafe.Web.Controllers
     {
       if (schoolClassDto == null) { RedirectToAction("Index"); }
 
-      var schoolClass = _schoolClassService.MapDtoToEntity<SchoolClassCreateEditDto, SchoolClass>(schoolClassDto);
       //validate
-      var validationResult = await _schoolClassService.ValidateAsync(schoolClass.Data);
-      if (validationResult.IsValid == false)
+      var validationResult = _schoolClassService.Validate(schoolClassDto);
+
+      if (validationResult.Data.IsValid == false)
       {
-        validationResult.AddToModelState(this.ModelState);
+        validationResult.Data.AddToModelState(this.ModelState);
         return View(schoolClassDto);
       }
-      await _schoolClassService.AddAsync(schoolClass.Data);
+
+      await _schoolClassService.AddAsync(schoolClassDto);
       await _schoolClassService.SaveAsync();
 
       return RedirectToAction("Index");
@@ -54,31 +54,29 @@ namespace FutureCafe.Web.Controllers
     {
       if (id == 0) { return RedirectToAction("Index"); }
 
-      var schoolClass = await _schoolClassService.FindByIdAsync(id);
+      var schoolClass = await _schoolClassService.FindByIdAsync<SchoolClassCreateEditDto>(id);
 
       if (schoolClass == null)
       { return RedirectToAction("Index"); }
 
-      var schoolClassDto = _schoolClassService.MapEntityToDto<SchoolClass, SchoolClassCreateEditDto>(schoolClass.Data);
-
-      return View(schoolClassDto.Data);
+      return View(schoolClass.Data);
     }
     [HttpPost]
     public async Task<IActionResult> Edit(SchoolClassCreateEditDto schoolClassDto)
     {
       if (schoolClassDto == null) { return RedirectToAction("Index"); }
 
-      var schoolClass = _schoolClassService.MapDtoToEntity<SchoolClassCreateEditDto, SchoolClass>(schoolClassDto);
+      //var schoolClass = _schoolClassService.MapDtoToEntity<SchoolClassCreateEditDto, SchoolClass>(schoolClassDto);
 
       //validate
-      var validationResult = await _schoolClassService.ValidateAsync(schoolClass.Data);
-      if (validationResult.IsValid == false)
+      var validationResult = _schoolClassService.Validate(schoolClassDto);
+      if (validationResult.Data.IsValid == false)
       {
-        validationResult.AddToModelState(this.ModelState);
+        validationResult.Data.AddToModelState(this.ModelState);
         return View(schoolClassDto);
       }
 
-      _schoolClassService.Update(schoolClass.Data);
+      _schoolClassService.Update(schoolClassDto);
       await _schoolClassService.SaveAsync();
 
       return RedirectToAction("Index");
@@ -89,7 +87,7 @@ namespace FutureCafe.Web.Controllers
     {
       if (id == 0) { return RedirectToAction("Index"); }
 
-      var schoolClass = await _schoolClassService.FindByIdAsync(id);
+      var schoolClass = await _schoolClassService.FindByIdAsync<SchoolClassViewDto>(id);
 
       if (schoolClass == null)
       { return RedirectToAction("Index"); }
@@ -104,7 +102,7 @@ namespace FutureCafe.Web.Controllers
     {
       if (id == 0) { return RedirectToAction("Index"); }
 
-      var schoolClass = await _schoolClassService.FindByIdAsync(id);
+      var schoolClass = await _schoolClassService.FindByIdAsync<SchoolClassViewDto>(id);
 
       if (schoolClass == null)
       { return RedirectToAction("Index"); }

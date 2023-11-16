@@ -24,42 +24,46 @@ namespace FutureCafe.Business.Concrete
       _mapper = mapper;
     }
 
-    public IDataResult<Category> Add(Category entity)
+    public IDataResult<TDto> Add<TDto>(TDto dto)
     {
       try
       {
+        var entity = _mapper.Map<TDto, Category>(dto);
+
         //business result
         IResult result = BusinessRules.Run();
+
         if (result != null)
         {
-          return new ErrorDataResult<Category>(entity, result.Message);
+          return new ErrorDataResult<TDto>(dto, result.Message);
         }
         _categoryDal.Add(entity);
-        return new SuccessDataResult<Category>(entity);
+        return new SuccessDataResult<TDto>(dto);
       }
       catch (Exception e)
       {
-        return new ErrorDataResult<Category>(e.Message);
+        return new ErrorDataResult<TDto>(e.Message);
       }
     }
-
-    public async Task<IDataResult<Category>> AddAsync(Category entity)
+    public async Task<IDataResult<TDto>> AddAsync<TDto>(TDto dto)
     {
       try
       {
+        var entity = _mapper.Map<TDto, Category>(dto);
+
         //business result
         IResult result = BusinessRules.Run();
 
         if (result != null)
         {
-          return new ErrorDataResult<Category>(entity, result.Message);
+          return new ErrorDataResult<TDto>(dto, result.Message);
         }
         await _categoryDal.AddAsync(entity);
-        return new SuccessDataResult<Category>(entity);
+        return new SuccessDataResult<TDto>(dto);
       }
       catch (Exception e)
       {
-        return new ErrorDataResult<Category>(e.Message);
+        return new ErrorDataResult<TDto>(e.Message);
       }
     }
 
@@ -78,10 +82,11 @@ namespace FutureCafe.Business.Concrete
       throw new NotImplementedException();
     }
 
-    public IResult Delete(Category entity)
+    public IResult Delete<TDto>(TDto dto)
     {
       try
       {
+        var entity = _mapper.Map<TDto, Category>(dto);
         _categoryDal.Delete(entity);
         return new SuccessDataResult<Category>(Messages.DataDeleted);
       }
@@ -104,102 +109,78 @@ namespace FutureCafe.Business.Concrete
       }
     }
 
-    public IDataResult<Category> FindById(int id)
+    public IDataResult<TDto> FindById<TDto>(int id)
     {
       try
       {
-        return new SuccessDataResult<Category>(_categoryDal.FindById(id));
+        return new SuccessDataResult<TDto>(_mapper.Map<Category, TDto>(_categoryDal.FindById(id)));
       }
       catch (Exception e)
       {
-        return new ErrorDataResult<Category>(e.Message);
+        return new ErrorDataResult<TDto>(e.Message);
       }
     }
 
-    public async Task<IDataResult<Category>> FindByIdAsync(int id)
+    public async Task<IDataResult<TDto>> FindByIdAsync<TDto>(int id)
     {
       try
       {
-        var category = await _categoryDal.FindByIdAsync(id);
-        return new SuccessDataResult<Category>(category);
+        var schoolClass = await _categoryDal.FindByIdAsync(id);
+        var schoolClassDto = _mapper.Map<Category, TDto>(schoolClass);
+        return new SuccessDataResult<TDto>(schoolClassDto);
       }
       catch (Exception e)
       {
-        return new ErrorDataResult<Category>(e.Message);
+        return new ErrorDataResult<TDto>(e.Message);
       }
     }
 
-    public IDataResult<Category> Get(Expression<Func<Category, bool>> filter, string includeProperties = "")
+    public IDataResult<TDto> Get<TDto>(Expression<Func<Category, bool>> filter, string includeProperties = "")
     {
       throw new NotImplementedException();
     }
 
-    public Task<IDataResult<Category>> GetAsync(Expression<Func<Category, bool>> filter, string includeProperties = "")
+    public Task<IDataResult<TDto>> GetAsync<TDto>(Expression<Func<Category, bool>> filter, string includeProperties = "")
     {
       throw new NotImplementedException();
     }
 
-    public IDataResult<IEnumerable<Category>> GetList(Expression<Func<Category, bool>> filter = null, Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null, string includeProperties = "")
+    public IDataResult<IEnumerable<TDto>> GetList<TDto>(Expression<Func<Category, bool>> filter = null, Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null, string includeProperties = "")
     {
       try
       {
-        var categoryList = _categoryDal.GetList();
-
-        if (categoryList == null)
+        var schoolClassList = _categoryDal.GetList(filter, orderBy, includeProperties);
+        var dto = schoolClassList.Select(e => _mapper.Map<Category, TDto>(e)).ToList();
+        if (dto == null)
         {
-          return new ErrorDataResult<IEnumerable<Category>>(Messages.ListEmpty);
+          return new ErrorDataResult<IEnumerable<TDto>>(Messages.ListEmpty);
         }
-        return new SuccessDataResult<IEnumerable<Category>>(categoryList);
+        return new SuccessDataResult<IEnumerable<TDto>>(dto);
       }
       catch (Exception e)
       {
-        return new ErrorDataResult<IEnumerable<Category>>(e.Message.ToString());
+        return new ErrorDataResult<IEnumerable<TDto>>(e.Message.ToString());
       }
     }
-
-    public async Task<IDataResult<IEnumerable<Category>>> GetListAsync(Expression<Func<Category, bool>> filter = null, Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null, string includeProperties = "")
+    public async Task<IDataResult<IEnumerable<TDto>>> GetListAsync<TDto>(Expression<Func<Category, bool>> filter = null, Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null, string includeProperties = "")
     {
       try
       {
-        var categoryList = await _categoryDal.GetListAsync();
-
-        if (categoryList == null)
+        var schoolClassList = await _categoryDal.GetListAsync(filter, orderBy, includeProperties);
+        var dto = schoolClassList.Select(e => _mapper.Map<Category, TDto>(e)).ToList();
+        if (dto == null)
         {
-          return new ErrorDataResult<IEnumerable<Category>>(Messages.ListEmpty);
+          return new ErrorDataResult<IEnumerable<TDto>>(Messages.ListEmpty);
         }
-        return new SuccessDataResult<IEnumerable<Category>>(categoryList);
+        return new SuccessDataResult<IEnumerable<TDto>>(dto);
       }
       catch (Exception e)
       {
-        return new ErrorDataResult<IEnumerable<Category>>(e.Message.ToString());
+        return new ErrorDataResult<IEnumerable<TDto>>(e.Message.ToString());
       }
     }
 
-    public IDataResult<Category> MapDtoToEntity<TDto, TEntity>(TDto dto)
-    {
-      try
-      {
-        var entity = _mapper.Map<TDto, Category>(dto);
-        return new SuccessDataResult<Category>(entity);
-      }
-      catch (Exception e)
-      {
-        return new ErrorDataResult<Category>(e.Message.ToString());
-      }
-    }
 
-    public IDataResult<TDto> MapEntityToDto<TEntity, TDto>(Category entity)
-    {
-      try
-      {
-        var dto = _mapper.Map<Category, TDto>(entity);
-        return new SuccessDataResult<TDto>(dto);
-      }
-      catch (Exception e)
-      {
-        return new ErrorDataResult<TDto>(e.Message.ToString());
-      }
-    }
 
     public IResult Save()
     {
@@ -227,34 +208,45 @@ namespace FutureCafe.Business.Concrete
       }
     }
 
-    public IResult Update(Category entity)
+    public IResult Update<TDto>(TDto dto)
     {
       try
       {
         //business result
         IResult result = BusinessRules.Run();
+        var entity = _mapper.Map<TDto, Category>(dto);
 
         if (result != null)
         {
-          return new ErrorDataResult<Category>(entity, result.Message);
+          return new ErrorDataResult<TDto>(dto, result.Message);
         }
         _categoryDal.Update(entity);
-        return new SuccessDataResult<Category>(entity);
+        return new SuccessDataResult<TDto>(dto);
       }
       catch (Exception e)
       {
-        return new ErrorDataResult<Category>(e.Message);
+        return new ErrorDataResult<TDto>(e.Message);
       }
     }
 
-    public ValidationResult Validate(Category entity)
+    public IDataResult<ValidationResult> Validate<TDto>(TDto dto)
     {
-      return _validator.Validate(entity);
-    }
+      try
+      {
+        var entity = _mapper.Map<Category>(dto);
 
-    public async Task<ValidationResult> ValidateAsync(Category entity)
-    {
-      return await _validator.ValidateAsync(entity);
+        var validationResult = _validator.Validate(entity);
+
+        if (validationResult == null)
+          return new ErrorDataResult<ValidationResult>(Messages.ValidationResultNull);
+
+        return new SuccessDataResult<ValidationResult>(validationResult);
+
+      }
+      catch (Exception e)
+      {
+        return new ErrorDataResult<ValidationResult>(e.Message);
+      }
     }
   }
 }
