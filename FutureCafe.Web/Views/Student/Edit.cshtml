@@ -1,0 +1,108 @@
+﻿@model FutureCafe.Business.Dtos.StudentCreateEditDto
+
+<div class="container">
+  <div class="row mb-2">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h5>Öğrenci Değiştir</h5>
+          @*<div asp-validation-summary="All"></div>*@
+        </div>
+        <div class="card-body">
+          <form asp-controller="Student" asp-action="Edit" method="post" class="d-flex align-items-center">
+            <div class="container">
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="Name" class="mb-2"></label>
+                  <input type="text" asp-for="Name" class="form-control" placeholder="Ad" />
+                  <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="SurName" class="mb-2"></label>
+                  <input type="text" asp-for="SurName" class="form-control" placeholder="Soyad" />
+                  <span asp-validation-for="SurName" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="SchoolClassId" class="control-label mb-2"></label>
+                  <select asp-for="SchoolClassId" class="form-control" asp-items="ViewBag.SchoolClasses">
+                    <option value="">-- Sınıf Seç --</option>
+                  </select>
+                  <span asp-validation-for="SchoolClassId" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="StudentSchoolNumber" class="mb-2"></label>
+                  <input type="text" asp-for="StudentSchoolNumber" class="form-control" placeholder="Okul numarası" />
+                  <span asp-validation-for="StudentSchoolNumber" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="CardNumber" class="mb-2"></label>
+                  <input type="text" asp-for="CardNumber" class="form-control" id="target-input" placeholder="Kart okutabilir veya elle yazabilirsiniz." />
+                  <span asp-validation-for="CardNumber" class="text-danger"></span>
+                </div>
+              </div>
+              @*Image*@
+              @*<div class="row mb-4">
+              <div class="col">
+              <label asp-for="ImageUrl" class="mb-2"></label>
+              <input type="file" asp-for="ImageUrl" class="form-control" placeholder="Dosya yolu seçiniz." />
+              <span asp-validation-for="ImageUrl" class="text-danger"></span>
+              </div>
+              </div>*@
+              <div class="row mb-2">
+                <div class="col">
+                  <button type="submit" class="btn btn-warning" style="width:150px">Değiştir</button>
+                  <a asp-controller="Student" asp-action="Index" class="btn btn-primary" style="width:150px">Listeye Dön</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var barcode = '';
+  var interval;
+  var targetElement = document.getElementById('target-input');
+
+  document.addEventListener('keydown', function (evt) {
+
+    if (interval)
+      clearInterval(interval);
+    if (evt.code == 'Enter') {
+      evt.preventDefault();
+      if (barcode)
+        handleBarcode(barcode);
+      barcode = '';
+      return;
+    }
+    if (evt.key != 'Shift') {
+
+      barcode += evt.key;
+    }
+    interval = setInterval(() => barcode = '', 20);
+  });
+
+  function handleBarcode(scanned_barcode) {
+
+    var focusedElement = document.activeElement;
+
+    if (document.activeElement && focusedElement.tagName === 'INPUT') {
+      var currentValue = focusedElement.value;
+      var modifiedValue = currentValue.replace(scanned_barcode, '');
+      focusedElement.value = modifiedValue;
+    }
+
+    targetElement.value = scanned_barcode;
+  }
+</script>

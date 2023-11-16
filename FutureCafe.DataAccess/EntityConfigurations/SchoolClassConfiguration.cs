@@ -18,6 +18,8 @@ namespace FutureCafe.DataAccess.EntityConfigurations
         new SchoolClass { Id = 4, Name = "102" }
 
       );
+
+      //TODO: Sınıfı silince öğrenciler de siliniyor. Cascade
     }
   }
 }

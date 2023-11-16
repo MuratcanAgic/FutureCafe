@@ -21,12 +21,14 @@ namespace FutureCafe.Business.Abstract
     IDataResult<int> CountWhere(Expression<Func<Student, bool>> filter);
 
     //Asnyc
-    IDataResult<Task<Student>> FindByIdAsync(int id);
-    IDataResult<Task<Student>> GetAsync(Expression<Func<Student, bool>> filter, string includeProperties = "");
-    IDataResult<Task<IEnumerable<Student>>> GetListAsync(Expression<Func<Student, bool>> filter = null,
-    Func<IQueryable<Student>, IOrderedQueryable<Student>> orderBy = null, string includeProperties = "");
-    IDataResult<Task> AddAsync(Student entity);
-    IDataResult<Task<int>> SaveAsync();
-    IDataResult<Task<int>> CountWhereAsync(Expression<Func<Student, bool>> filter);
+    Task<IDataResult<Student>> FindByIdAsync(int id);
+    Task<IDataResult<Student>> GetAsync(Expression<Func<Student, bool>> filter, string includeProperties = "");
+    Task<IDataResult<IEnumerable<Student>>> GetListAsync(Expression<Func<Student, bool>> filter = null, Func<IQueryable<Student>, IOrderedQueryable<Student>> orderBy = null, string includeProperties = "");
+    Task<IDataResult<Student>> AddAsync(Student entity);
+    Task<IResult> SaveAsync();
+    Task<IDataResult<int>> CountWhereAsync(Expression<Func<Student, bool>> filter);
+    Task<ValidationResult> ValidateAsync(Student entity);
+    IDataResult<TDto> MapEntityToDto<TEntity, TDto>(Student entity);
+    IDataResult<Student> MapDtoToEntity<TDto, TEntity>(TDto dto);
   }
 }

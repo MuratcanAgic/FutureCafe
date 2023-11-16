@@ -8,8 +8,8 @@ namespace FutureCafe.Business.ValidationRules.FluentValidation
   {
     public CategoryValidator()
     {
-      RuleFor(x => x.Name).NotEmpty().WithName("Kategori").WithMessage(x => "{PropertyName} " + Messages.CannotBeEmpty);
-      RuleFor(x => x.Name).MaximumLength(100).WithName("Kategori").WithMessage(x => "{PropertyName} " + Messages.StringMaxLength);
+      RuleFor(x => x.Name).NotEmpty().WithName("Kategori Adı").WithMessage(x => "{PropertyName} " + Messages.CannotBeEmpty);
+      RuleFor(x => x.Name).MaximumLength(100).WithName("Kategori Adı").WithMessage(x => "{PropertyName} " + Messages.StringMaxLength);
     }
   }
 }
