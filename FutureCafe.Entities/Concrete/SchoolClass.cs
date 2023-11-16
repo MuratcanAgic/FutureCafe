@@ -11,5 +11,7 @@ namespace FutureCafe.Entities.Concrete
     //[StringLength(100, ErrorMessage = "{0}, {1}'den az olmalıdır.")]
     //[MinLength(2, ErrorMessage = "{0}, {1}'den fazla olmalıdır")]
     public string Name { get; set; }
+
+    public IEnumerable<Student> Students { get; set; }
   }
 }
