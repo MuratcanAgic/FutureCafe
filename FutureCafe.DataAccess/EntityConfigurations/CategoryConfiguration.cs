@@ -11,6 +11,12 @@ namespace FutureCafe.DataAccess.EntityConfigurations
       builder.HasKey(c => c.Id);
       builder.Property(c => c.Name).IsRequired().HasMaxLength(80);
 
+      builder
+            .HasMany(c => c.ProductCategory)
+            .WithOne(pc => pc.Category)
+            .HasForeignKey(pc => pc.CategoryId)
+            .OnDelete(DeleteBehavior.Restrict);
+
       builder.HasData(
         new Category { Id = 1, Name = "Gazlı içeçek" },
         new Category { Id = 2, Name = "Çikolata" },
