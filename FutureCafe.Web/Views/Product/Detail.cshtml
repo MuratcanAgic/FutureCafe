@@ -1,0 +1,96 @@
+﻿@model FutureCafe.Business.Dtos.ProductDetailDto
+
+<div class="container">
+
+  <div class="row mb-2">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h5>Ürün Detay</h5>
+          @*<div asp-validation-summary="All"></div>*@
+        </div>
+        <div class="card-body">
+
+          <div class="container">
+
+            <div class="row mb-4">
+              <div class="col">
+                <label asp-for="Name" class="mb-2"></label>
+                <div class="container bg-dark-subtle rounded p-2">@Model.Name</div>
+              </div>
+            </div>
+
+            <div class="row mb-4">
+              <div class="col">
+                <label asp-for="Description" class="mb-2"></label>
+                <div class="container bg-dark-subtle rounded p-2">@Model.Description</div>
+              </div>
+            </div>
+
+            <div class="row mb-4">
+              <div class="col">
+                <label asp-for="ProductBarcodNo" class="mb-2"></label>
+                <div class="container bg-dark-subtle rounded p-2">@Model.ProductBarcodNo</div>
+              </div>
+            </div>
+
+            <div class="row mb-4">
+              <div class="col">
+                @* <label class="control-label mb-2" asp-for="ProductCategory.FirstOrDefault().Category.Name"></label>*@
+                <label asp-for="@Model.ProductCategory"></label>
+                <div class="container bg-dark-subtle rounded p-2">
+                  @if (@Model.ProductCategory != null)
+                  {
+                    @String.Join(", ", @Model.ProductCategory.Select(p => p.Category.Name).ToArray())
+                  }
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-4">
+              <div class="col">
+                @* <label class="control-label mb-2" asp-for="ProductCategory.FirstOrDefault().Category.Name"></label>*@
+                <label>Alış fiyatı</label>
+                <div class="container bg-dark-subtle rounded p-2">
+                  @if (Model.ProductPrice.Count != 0)
+                  {
+                    @(Model.ProductPrice.Select(e => e.Price).Where(e => e.BuyingPrice.HasValue).LastOrDefault().BuyingPrice.ToString() + "₺")
+                  }                  
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-4">
+              <div class="col">
+                @* <label class="control-label mb-2" asp-for="ProductCategory.FirstOrDefault().Category.Name"></label>*@
+                <label>Satış fiyatı</label>
+                <div class="container bg-dark-subtle rounded p-2">
+                  @if (Model.ProductPrice.Count != 0)
+                  {
+                    @(Model.ProductPrice.Select(e => e.Price).Where(e => e.SalePrice.HasValue).LastOrDefault().SalePrice.ToString() + "₺")
+                  }             
+                </div>
+              </div>
+            </div>
+
+            @*Image*@
+            @*<div class="row mb-4">
+            <div class="col">
+            <label asp-for="ImageUrl" class="mb-2"></label>
+            <input type="file" asp-for="ImageUrl" class="form-control" placeholder="Dosya yolu seçiniz." />
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+            </div>*@
+
+            <div class="row mb-2">
+              <div class="col">
+                <a asp-controller="Product" asp-action="Index" class="btn btn-primary" style="width:150px">Listeye Dön</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

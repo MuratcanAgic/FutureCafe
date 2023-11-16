@@ -122,6 +122,7 @@ namespace FutureCafe.Core.DataAccess.Concrete
       return await q.FirstOrDefaultAsync(filter);
 
     }
+
     public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "")
     {
       IQueryable<TEntity> q = _context.Set<TEntity>();

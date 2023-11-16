@@ -1,0 +1,108 @@
+﻿@model IEnumerable<FutureCafe.Business.Dtos.ProductViewDto>
+
+<div class="container">
+  <div class="row mb-2">
+    <div class="col">
+      <div class="col text-end">
+        <a class="btn btn-primary" asp-controller="Product" asp-action="Create"><i class="bi-plus-circle"></i> Yeni Ürün Ekle</a>
+      </div>
+    </div>
+  </div>
+    <div class="row mb-2">
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+            <h5>Ürün Listesi</h5>
+          </div>
+          <div class="card-body">
+            <table id="myTable" class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Değiştir/Detay/Sil</th>
+                  <th scope="col">
+                    <label asp-for="@Model.FirstOrDefault().Name"></label>
+                  </th>
+                  <th scope="col">
+                    <label asp-for="@Model.FirstOrDefault().ProductBarcodNo"></label>
+                  </th>
+                  <th scope="col">
+                    <label asp-for="@Model.FirstOrDefault().ProductCategory"></label>
+                  </th>
+              @*     <th scope="col">
+                     <label >Alış Fiyatı</label> 
+                  </th>
+                  <th scope="col">
+                    <label>Satış Fiyatı</label>
+                  </th> *@
+                  @*<th>Resim</th>*@
+                </tr>
+              </thead>
+              <tbody>
+                @foreach (var (item, i) in Model.Select((item, i) => (item, i)))
+                {
+                  <tr>
+                    <th scope="row">@(i + 1)</th>
+                    <th>
+                      <a class="m-2" asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id"><i class="bi-pencil-square text-success"></i></a>
+                      <a class="m-2" asp-controller="Product" asp-action="Detail" asp-route-id="@item.Id"><i class="bi-file-earmark text-info"></i></a>
+                      <a class="m-2" asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id"><i class="bi-trash text-danger"></i></a>
+                    </th>
+                    <td>@item.Name</td>
+                    <td>@item.ProductBarcodNo</td>
+
+                    @*<td>@item.Description</td>*@
+                    <td>
+                      @if (item.ProductCategory != null)
+                      {
+                        @String.Join(", ", item.ProductCategory.Select(p => p.Category.Name).ToArray())
+                      }
+                    </td>
+                    @*<td><img href="@item.ImageUrl" /></td>*@
+                   @*  <td>
+                      @if (item.ProductPrice != null)
+                        @(item.ProductPrice.Select(e => e.Price).Where(e => e.BuyingPrice.HasValue).LastOrDefault().BuyingPrice.ToString() + "₺")
+                    </td>
+                    <td>
+                      @if (item.ProductPrice != null)
+                        @(item.ProductPrice.Select(e => e.Price).Where(e=>e.SalePrice.HasValue).LastOrDefault().SalePrice.ToString() + "₺")
+                    </td> *@
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div> 
+</div>
+
+    <script>
+
+      $(document).ready(function () {
+        $('#myTable').DataTable(
+          {
+            pagingType: 'full_numbers',
+            language: {
+              info: '_PAGES_ sayfa arasından _PAGE_. sayfa gösteriliyor',
+              infoEmpty: 'Hiç kayıt bulunamadı',
+              infoFiltered: '(Toplam _MAX_ kayıt arasından filtrelendi.)',
+              lengthMenu: 'Sayfa başına _MENU_ kayıt göster',
+              zeroRecords: 'Aramaya uygun kayıt bulunamadı.',
+              search: "Ara",
+              paginate: {
+                "first": "İlk",
+                "last": "Son",
+                "next": "Sonraki",
+                "previous": "Önceki"
+              }
+            },
+
+            lengthMenu: [
+              [10, 20, 50, -1],
+              [10, 20, 50, 'Hepsi']
+            ]
+          }
+        );
+      });
+    </script>

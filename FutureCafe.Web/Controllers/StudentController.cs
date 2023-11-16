@@ -25,7 +25,6 @@ namespace FutureCafe.Web.Controllers
       if (list.Data == null)
         return View("Error", new ErrorViewModel { ErrorMessage = list.Message });
 
-      //var viewDtoList = list.Data.Select(x => _studentService.MapEntityToDto<Student, StudentViewDto>(x).Data).ToList();
       return View(list.Data);
     }
 
@@ -106,8 +105,6 @@ namespace FutureCafe.Web.Controllers
       if (student == null)
       { return RedirectToAction("Index"); }
 
-      //ViewBag.SchoolClass = _db.SchoolClass.Find(student.SchoolClassId).Name;
-
       return View(student);
     }
 
@@ -122,11 +119,8 @@ namespace FutureCafe.Web.Controllers
       if (student == null)
       { return RedirectToAction("Index"); }
 
-      //PopulateSchoolClassDropDownList();
-
       return View(student.Data);
     }
-
 
     [HttpPost, ActionName("Delete")]
     public async Task<IActionResult> DeletePost(int id)
@@ -143,7 +137,6 @@ namespace FutureCafe.Web.Controllers
       }
       return RedirectToAction("Index");
     }
-
 
     private void PopulateSchoolClassDropDownList(object? selectedCategory = null)
     {

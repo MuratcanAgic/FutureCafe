@@ -1,0 +1,131 @@
+﻿@model FutureCafe.Business.Dtos.ProductCreateEditDto
+
+<div class="container">
+
+  <div class="row mb-2">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h5>Ürün Oluştur</h5>
+          @*<div asp-validation-summary="All"></div>*@
+        </div>
+        <div class="card-body">
+          <form asp-controller="Product" asp-action="Create" method="post" class="d-flex align-items-center">
+            <div class="container">
+
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="Name" class="mb-2"></label>
+                  <input type="text" asp-for="Name" class="form-control" placeholder="Ad" />
+                  <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="Description" class="mb-2"></label>
+                  <textarea asp-for="Description" class="form-control" placeholder="Tanım"></textarea>
+                  <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col">
+                  <label class="control-label mb-2" asp-for="SelectCategoryIds"></label>
+                  <select asp-for="SelectCategoryIds" multiple="multiple" class="form-control" asp-items=ViewBag.AvailableCategories>
+                    @*<option value="">-- Kategori Seç --</option>*@
+                  </select>
+                  <span asp-validation-for="SelectCategoryIds" class="text-danger"></span>
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="ProductBarcodNo" class="mb-2"></label>
+                  <input type="text" asp-for="ProductBarcodNo" class="form-control" id="target-input" placeholder="Barkod okutabilir veya elle yazabilirsiniz." />
+                  <span asp-validation-for="ProductBarcodNo" class="text-danger"></span>
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="BuyingPrice" class="mb-2"></label>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">₺</span>
+                    <input type="text" asp-for="BuyingPrice" class="form-control" />
+                  </div>
+                  <span asp-validation-for="BuyingPrice" class="text-danger"></span>
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="SalePrice" class="mb-2"></label>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text">₺</span>
+                    <input type="text" asp-for="SalePrice" class="form-control" />
+                  </div>
+                  <span asp-validation-for="SalePrice" class="text-danger"></span>
+                </div>
+              </div> 
+
+              @*Image*@
+              @*<div class="row mb-4">
+              <div class="col">
+              <label asp-for="ImageUrl" class="mb-2"></label>
+              <input type="file" asp-for="ImageUrl" class="form-control" placeholder="Dosya yolu seçiniz." />
+              <span asp-validation-for="ImageUrl" class="text-danger"></span>
+              </div>
+              </div>*@
+
+              <div class="row mb-2">
+                <div class="col">
+                  <button type="submit" class="btn btn-warning" style="width:150px">Oluştur</button>
+                  <a asp-controller="Product" asp-action="Index" class="btn btn-primary" style="width:150px">Listeye Dön</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  var barcode = '';
+  var interval;
+  var targetElement = document.getElementById('target-input');
+
+  document.addEventListener('keydown', function (evt) {
+
+    if (interval)
+      clearInterval(interval);
+    if (evt.code == 'Enter') {
+      evt.preventDefault();
+      if (barcode)
+        handleBarcode(barcode);
+      barcode = '';
+      return;
+    }
+    if (evt.key != 'Shift') {
+
+      barcode += evt.key;
+    }
+    interval = setInterval(() => barcode = '', 20);
+  });
+
+  function handleBarcode(scanned_barcode) {
+
+    var focusedElement = document.activeElement;
+
+    if (document.activeElement && focusedElement.tagName === 'INPUT') {
+      var currentValue = focusedElement.value;
+      var modifiedValue = currentValue.replace(scanned_barcode, '');
+      focusedElement.value = modifiedValue;
+    }
+
+    targetElement.value = scanned_barcode;
+  }
+</script>
