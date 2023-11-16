@@ -21,12 +21,14 @@ namespace FutureCafe.Business.Abstract
     IDataResult<int> CountWhere(Expression<Func<Category, bool>> filter);
 
     //Asnyc
-    IDataResult<Task<Category>> FindByIdAsync(int id);
-    IDataResult<Task<Category>> GetAsync(Expression<Func<Category, bool>> filter, string includeProperties = "");
-    IDataResult<Task<IEnumerable<Category>>> GetListAsync(Expression<Func<Category, bool>> filter = null,
-    Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null, string includeProperties = "");
-    IDataResult<Task> AddAsync(Category entity);
-    IDataResult<Task<int>> SaveAsync();
-    IDataResult<Task<int>> CountWhereAsync(Expression<Func<Category, bool>> filter);
+    Task<IDataResult<Category>> FindByIdAsync(int id);
+    Task<IDataResult<Category>> GetAsync(Expression<Func<Category, bool>> filter, string includeProperties = "");
+    Task<IDataResult<IEnumerable<Category>>> GetListAsync(Expression<Func<Category, bool>> filter = null, Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null, string includeProperties = "");
+    Task<IDataResult<Category>> AddAsync(Category entity);
+    Task<IResult> SaveAsync();
+    Task<IDataResult<int>> CountWhereAsync(Expression<Func<Category, bool>> filter);
+    Task<ValidationResult> ValidateAsync(Category entity);
+    IDataResult<TDto> MapEntityToDto<TEntity, TDto>(Category entity);
+    IDataResult<Category> MapDtoToEntity<TDto, TEntity>(TDto dto);
   }
 }
