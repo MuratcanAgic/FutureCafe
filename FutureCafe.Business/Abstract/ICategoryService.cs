@@ -10,7 +10,7 @@ namespace FutureCafe.Business.Abstract
     ValidationResult Validate(Category entity);
     IDataResult<Category> FindById(int id);
     IDataResult<Category> Get(Expression<Func<Category, bool>> filter, string includeProperties = "");
-    IEnumerable<IDataResult<Category>> GetList(Expression<Func<Category, bool>> filter = null,
+    IDataResult<IEnumerable<Category>> GetList(Expression<Func<Category, bool>> filter = null,
     Func<IQueryable<Category>, IOrderedQueryable<Category>> orderBy = null, string includeProperties = "");
     IDataResult<Category> Add(Category entity);
     IResult Update(Category entity);

@@ -15,49 +15,33 @@ namespace FutureCafe.Core.DataAccess.Concrete
     {
       _context = context;
     }
-
     public void Add(TEntity entity)
     {
-
       _context.Entry(entity).State = EntityState.Added;
-
     }
     public void Update(TEntity entity)
     {
-
       _context.Entry(entity).State = EntityState.Modified;
-
     }
-
     public bool Any(Expression<Func<TEntity, bool>> filter)
     {
-
       return _context.Set<TEntity>().Any(filter);
-
     }
-
     public void Delete(TEntity entity)
     {
-
       _context.Entry(entity).State = EntityState.Deleted;
-
     }
     public void DeleteById(int id)
     {
-
       var entity = FindById(id);
       _context.Entry(entity).State = EntityState.Deleted;
-
     }
     public TEntity FindById(int id)
     {
-
       return _context.Set<TEntity>().Find(id);
-
     }
     public TEntity Get(Expression<Func<TEntity, bool>> filter, string includeProperties = "")
     {
-
       IQueryable<TEntity> q = _context.Set<TEntity>();
 
       if (filter != null)
@@ -73,9 +57,7 @@ namespace FutureCafe.Core.DataAccess.Concrete
         }
       }
       return q.FirstOrDefault(filter);
-
     }
-
     public IEnumerable<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "")
     {
 
@@ -100,28 +82,19 @@ namespace FutureCafe.Core.DataAccess.Concrete
       {
         return q.ToList();
       }
-
     }
-
     public int Save()
     {
-
       return _context.SaveChanges();
-
     }
     public int CountWhere(Expression<Func<TEntity, bool>> filter)
     {
-
       return _context.Set<TEntity>().Where(filter).Count();
-
     }
-
     //Async	
     public async Task AddAsync(TEntity entity)
     {
-
       await _context.Set<TEntity>().AddAsync(entity);
-
     }
     public async Task<TEntity> FindByIdAsync(int id)
     {
@@ -151,7 +124,6 @@ namespace FutureCafe.Core.DataAccess.Concrete
     }
     public async Task<IEnumerable<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> filter = null, Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null, string includeProperties = "")
     {
-
       IQueryable<TEntity> q = _context.Set<TEntity>();
       if (filter != null)
       {
@@ -173,19 +145,14 @@ namespace FutureCafe.Core.DataAccess.Concrete
       {
         return await q.ToListAsync();
       }
-
     }
     public async Task<int> SaveAsync()
     {
-
       return await _context.SaveChangesAsync();
-
     }
     public async Task<int> CountWhereAsync(Expression<Func<TEntity, bool>> filter)
     {
-
       return await _context.Set<TEntity>().Where(filter).CountAsync();
-
     }
   }
 }

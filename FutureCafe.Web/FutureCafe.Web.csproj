@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FutureCafe.Business\FutureCafe.Business.csproj" />
+    <ProjectReference Include="..\FutureCafe.Core\FutureCafe.Core.csproj" />
     <ProjectReference Include="..\FutureCafe.DataAccess\FutureCafe.DataAccess.csproj" />
   </ItemGroup>
 
