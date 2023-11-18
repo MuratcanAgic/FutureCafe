@@ -142,8 +142,11 @@ namespace FutureCafe.Business.Concrete
           var productClassDto = _mapper.Map<Product, ProductCreateEditDto>(productClass);
           productClassDto.SelectCategoryIds = productClassDto.ProductCategory.Select(x => x.CategoryId).ToList();
 
-          productClassDto.BuyingPrice = productClassDto.ProductPrice.Count != 0 ? productClassDto.ProductPrice.Select(x => x.Price).Where(x => x.BuyingPrice.HasValue).LastOrDefault().BuyingPrice : 0M;
-          productClassDto.SalePrice = productClassDto.ProductPrice.Count != 0 ? productClassDto.ProductPrice.Select(x => x.Price).Where(x => x.SalePrice.HasValue).LastOrDefault().SalePrice : 0M;
+          var buyingPrice = productClassDto.ProductPrice.Select(x => x.Price).Where(x => x.BuyingPrice.HasValue).LastOrDefault();
+          var salePrice = productClassDto.ProductPrice.Select(x => x.Price).Where(x => x.SalePrice.HasValue).LastOrDefault();
+
+          productClassDto.BuyingPrice = buyingPrice != null ? buyingPrice.BuyingPrice : 0M;
+          productClassDto.SalePrice = salePrice != null ? salePrice.SalePrice : 0M;
 
           return new SuccessDataResult<TDto>(productClassDto as TDto);
         }
