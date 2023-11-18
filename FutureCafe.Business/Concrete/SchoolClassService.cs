@@ -7,6 +7,8 @@ using FutureCafe.Core.Utilities.Business;
 using FutureCafe.Core.Utilities.Results;
 using FutureCafe.DataAccess.Abstract;
 using FutureCafe.Entities.Concrete;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace FutureCafe.Business.Concrete
@@ -201,10 +203,19 @@ namespace FutureCafe.Business.Concrete
         await _schoolClassDal.SaveAsync();
         return new SuccessDataResult<SchoolClass>(Messages.DataSaved);
       }
+      catch (DbUpdateException ex) when (IsForeignKeyViolation(ex))
+      {
+        return new ErrorDataResult<SchoolClass>("Bu sınıfla ilişkili öğrenciler olduğundan, sınıf silinemez. Öncelikle öğrenciler silinmeli.");
+      }
       catch (Exception e)
       {
         return new ErrorDataResult<SchoolClass>(e.Message);
       }
+    }
+    private bool IsForeignKeyViolation(DbUpdateException ex)
+    {
+      return ex?.InnerException is SqlException sqlException &&
+             (sqlException.Number == 547 || sqlException.Number == 2601);
     }
 
     public IResult Update<TDto>(TDto dto)

@@ -13,6 +13,12 @@ namespace FutureCafe.DataAccess.EntityConfigurations
       builder.Property(x => x.Description).HasMaxLength(150);
       builder.Property(x => x.ProductBarcodNo).IsRequired().HasMaxLength(150);
 
+      /*   builder
+             .HasMany(p => p.ProductCategory)
+             .WithOne(pc => pc.Product)
+             .HasForeignKey(pc => pc.ProductId)
+             .OnDelete(DeleteBehavior.Restrict);*/
+
       builder.HasData(
        new Product { Id = 1, Name = "Beypazarı Maden Suyu", ProductBarcodNo = "8691381000486" },
        new Product { Id = 2, Name = "Ahir Tulum Peyniri", ProductBarcodNo = "8699118050490" }

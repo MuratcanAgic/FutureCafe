@@ -16,6 +16,10 @@ namespace FutureCafe.DataAccess.EntityConfigurations
       builder.Property(x => x.StudentSchoolNumber).HasMaxLength(80);
       builder.Property(x => x.SchoolClassId).IsRequired();
 
+      builder.HasOne(x => x.SchoolClass)
+                .WithMany(x => x.Students)
+                .HasForeignKey(x => x.SchoolClassId)
+                .OnDelete(DeleteBehavior.Restrict);
 
       builder.HasData(
         new Student { Id = 1, Name = "Fatmanur", SurName = "Agiç", CardNumber = "50467084778", SchoolClassId = 1, StudentSchoolNumber = "3001" },

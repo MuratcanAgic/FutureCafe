@@ -117,8 +117,13 @@ namespace FutureCafe.Web.Controllers
       if (id == 0) { return RedirectToAction("Index"); }
 
       _categoryService.DeleteById(id);
-      await _categoryService.SaveAsync();
 
+      var saveResult = await _categoryService.SaveAsync();
+
+      if (saveResult.Success == false)
+      {
+        return View("Error", new ErrorViewModel { ErrorMessage = saveResult.Message });
+      }
       return RedirectToAction("Index");
     }
   }
