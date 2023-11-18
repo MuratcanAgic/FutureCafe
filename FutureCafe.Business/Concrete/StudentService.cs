@@ -138,9 +138,22 @@ namespace FutureCafe.Business.Concrete
       throw new NotImplementedException();
     }
 
-    public Task<IDataResult<TDto>> GetAsync<TDto>(Expression<Func<Student, bool>> filter, string includeProperties = "")
+    public async Task<IDataResult<TDto>> GetAsync<TDto>(Expression<Func<Student, bool>> filter, string includeProperties = "")
     {
-      throw new NotImplementedException();
+      try
+      {
+        var student = await _studentDal.GetAsync(filter, includeProperties);
+        var studentDto = _mapper.Map<Student, TDto>(student);
+        if (student == null)
+        {
+          return new ErrorDataResult<TDto>(Messages.ListEmpty);
+        }
+        return new SuccessDataResult<TDto>(studentDto);
+      }
+      catch (Exception e)
+      {
+        return new ErrorDataResult<TDto>(e.Message.ToString());
+      }
     }
 
     public IDataResult<IEnumerable<TDto>> GetList<TDto>(Expression<Func<Student, bool>> filter = null, Func<IQueryable<Student>, IOrderedQueryable<Student>> orderBy = null, string includeProperties = "")

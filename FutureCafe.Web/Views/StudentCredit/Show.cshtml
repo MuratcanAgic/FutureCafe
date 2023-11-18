@@ -1,0 +1,148 @@
+﻿<!-- Toast -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      @*<span class="badge bg-success">n</span>*@
+      <strong class="me-auto" id="toasterInfoHeader"></strong>
+      @*<small>11 mins ago</small>*@
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Kapat"></button>
+    </div>
+    <div class="toast-body text-bg-success" id="toasterBody">
+      <label id="toasterInfoLabel"></label>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Öğrenci Kredi</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-5">
+            <label>Öğrenci:</label>
+          </div>
+          <div class="col-7">
+            <label id="LoadPersonModalNameLabel">Muratcan Agiç</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <label>Mevcut Kredi:</label>
+          </div>
+          <div class="col-7">
+            <label id="LoadPersonModalAmountLabel">50</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tamam</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Body-->
+<div class="col-4 mx-auto card mt-5">
+  <div class="card-header">
+    <label>Kredi gösterilecek Öğrenci</label>
+  </div>
+  <div class="card-body">
+    <div class="input-group">
+      <input type="text" id="studentCardNumber" class="form-control" placeholder="Kart numarası" />
+      <button class="btn btn-warning" id="showCreditButton">Ara</button>
+    </div>
+  </div>
+  <div class="card-footer">
+    <label class="text-muted mt-2" style="font-size:10pt">*Direkt tarama yaparak da kredi arayabilirsiniz.</label>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+        crossorigin="anonymous"></script>
+
+<script>
+  //variables
+  const toastLiveExample = document.getElementById("liveToast");
+  var studentCardNumber = document.getElementById("studentCardNumber");
+  var showCreditButton = document.getElementById("showCreditButton");
+  var barcode = "";
+  var interval;
+
+  //manual show
+  showCreditButton.addEventListener("click", function () {
+    ajaxShowCredit(studentCardNumber.value);
+  });
+
+  //scanner show
+  document.addEventListener("keydown", function (evt) {
+    if (interval) {
+      clearInterval(interval);
+
+    }
+    if (evt.code == "Enter") {
+      evt.preventDefault();
+      if (barcode)
+        handleBarcode(barcode);
+
+      barcode = "";
+      return;
+    }
+    if (evt.key != "Shift") {
+      barcode += evt.key;
+    }
+    interval = setInterval(() => barcode = "", 20);
+  });
+
+  function handleBarcode(scanned_barcode) {
+
+    var focusedElement = document.activeElement;
+
+    if (document.activeElement && focusedElement.tagName === "INPUT") {
+      var currentValue = focusedElement.value;
+      var modifiedValue = currentValue.replace(scanned_barcode, "");
+      focusedElement.value = modifiedValue;
+    }
+    ajaxShowCredit(scanned_barcode);
+  }
+
+  //ajax show
+  function ajaxShowCredit(studentCardNumberVal) {
+    $.ajax({
+      url: "/StudentCredit/ShowMoney",
+      type: "GET",
+      data: { StudentCardNumber: studentCardNumberVal },
+      success: function (response) {
+        if (response.success) {
+          myModal = new bootstrap.Modal(document.getElementById("staticBackdrop"));
+          myModal.show();
+          updateModal(response.studentFullName, response.credit);
+        } else {
+          CreateToaster("Öğrenci veritabanında bulunamıyor.", "Veritabanı Hatası", true);
+        }
+      },
+      error: function () {
+        CreateToaster("Veri tabanı hatası oluştu.", "Veritabanı Hatası", true);
+      }
+    });
+  }
+  //modal content update
+  function updateModal(studentInfo, creditInfo) {
+    LoadPersonModalNameLabel.innerText = studentInfo;
+    LoadPersonModalAmountLabel.innerText = "₺ " + parseFloat(creditInfo);
+  }
+  //create toaster
+  function CreateToaster(messageInfo, messageHeader, error) {
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+    toastBootstrap.show();
+    document.getElementById("toasterInfoLabel").innerHTML = messageInfo;
+    document.getElementById("toasterInfoHeader").innerHTML = messageHeader;
+    if (error === true)
+      document.getElementById("toasterBody").className = "toast-body text-bg-danger";
+    else
+      document.getElementById("toasterBody").className = "toast-body text-bg-success";
+  }
+</script>

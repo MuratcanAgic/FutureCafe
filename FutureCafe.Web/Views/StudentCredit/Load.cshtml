@@ -1,0 +1,294 @@
+﻿<!-- Toast -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      @*<span class="badge bg-success">n</span>*@
+      <strong class="me-auto" id="toasterInfoHeader"></strong>
+      @*<small>11 mins ago</small>*@
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Kapat"></button>
+    </div>
+    <div class="toast-body text-bg-success" id="toasterBody">
+      <label id="toasterInfoLabel"></label>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Yükleme yapmak istediğinize emin misiniz?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-5">
+            <label>Yüklenecek öğrenci:</label>
+          </div>
+          <div class="col-7">
+            <label id="LoadPersonModalNameLabel">Muratcan Agiç</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-5">
+            <label>Yüklenecek miktar:</label>
+          </div>
+          <div class="col-7">
+            <label id="LoadPersonModalAmountLabel">50</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Kapat</button>
+        <button type="button" id="loadAmountScannerButton" class="btn btn-outline-primary" data-bs-dismiss="modal">Evet</button>
+        <button type="button" id="loadAmountManualButton" class="btn btn-outline-primary" data-bs-dismiss="modal">Evet</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="accordion col-6 mx-auto mt-5" id="accordionExample">
+  <!-- Scanner -->
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Öğrenci Kart Tarama
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class=" mb-4 mx-auto">
+          <label>Yüklenecek Öğrenci:</label>
+          <div class="container bg-warning-subtle rounded border-1 p-2">
+            <label id="target-input">---</label>
+          </div>
+        </div>
+        <div class="mb-4 mx-auto">
+          <label>Yüklenecek Miktar:</label>
+          <div class="input-group mb-3">
+            <span class="input-group-text">₺</span>
+            <input type="number" class="form-control" placeholder="Miktar" id="loadAmountScannerInput" />
+          </div>
+        </div>
+        <div class="d-grid mx-auto ">
+          @*<button class="btn btn-success" id="loadAmountScannerButton" type="button">Yükle</button>*@
+          <button class="btn btn-success" id="showModalBtnScanner" type="button">Yükle</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Manual -->
+  <div class="accordion-item ">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        Öğrenci Manuel Arama
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <div class=" mb-4  mx-auto">
+          <label>Kart Numarası:</label>
+          <div class="input-group">
+            <input type="text" id="StudentCardNumber" class="form-control" placeholder="Kart numarası" />
+            <button class="btn btn-warning" id="findStudentButton">Ara</button>
+          </div>
+        </div>
+        <div class="mb-4 mx-auto">
+          <label>Yüklenecek Öğrenci:</label>
+          <div class="container bg-warning-subtle rounded border-1 p-2">
+            <label id="FoundedStudentLabel">---</label>
+          </div>
+        </div>
+        <div class="mb-4 mx-auto">
+          <label>Yüklenecek Miktar:</label>
+          <div class="input-group mb-3">
+            <span class="input-group-text">₺</span>
+            <input type="number" class="form-control" placeholder="Miktar" id="loadAmountManualInput" />
+          </div>
+        </div>
+        <div class="d-grid mx-auto ">
+          @*<button class="btn btn-success" id="loadAmountManualButton" type="button">Yükle</button>*@
+          <button class="btn btn-success" id="showModalBtnManual" type="button">Yükle</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+@* <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+        crossorigin="anonymous"></script> *@
+
+<script>
+
+  @*Manuel student find*@
+
+  //variables
+  const toastLiveExample = document.getElementById("liveToast");
+  var foundedStudentLabel = document.getElementById("FoundedStudentLabel");
+  var foundedStudentCardNumberHoldManual;
+  var foundedStudentCardNumberHoldScanner;
+  var loadAmountManualInput = document.getElementById("loadAmountManualInput");
+  var StudentCardNumber = document.getElementById("StudentCardNumber");
+  var loadAmountScannerInput = document.getElementById("loadAmountScannerInput");
+  var targetElement = document.getElementById("target-input");
+  var barcode = "";
+  var interval;
+  //MODAL variables
+  var LoadPersonModalNameLabel = document.getElementById("LoadPersonModalNameLabel");
+  var LoadPersonModalAmountLabel = document.getElementById("LoadPersonModalAmountLabel");
+
+  //ajax load money
+  function ajaxLoadMoney(LoadAmountVal,studentCardNumberVal,isScanned) {
+    $.ajax({
+      url: "/StudentCredit/LoadMoney",
+      type: "POST",
+      data: { LoadAmount: LoadAmountVal, StudentCardNumber: studentCardNumberVal },
+      success: function (response) {
+        if (response.success) {
+          if (isScanned === false) {
+            foundedStudentLabel.innerHTML = "";
+            loadAmountManualInput.value = "";
+            foundedStudentCardNumberHoldManual = "";
+            StudentCardNumber.value = "";
+          }
+          else {
+            targetElement.innerHTML = "";
+            loadAmountScannerInput.value = "";
+            foundedStudentCardNumberHoldScanner = "";
+          }
+          var successMessage = response.studentFullName + ",Yeni kredi: ₺" + parseFloat(response.newCredit);
+          CreateToaster(successMessage, "Para yükleme işlemi başarılı!", false);
+
+        } else {
+          CreateToaster("Öğrenci veritabanında bulunamıyor veya miktar girilmedi.", "Hata!", true);
+        }
+      },
+      error: function () {
+        CreateToaster("Veri tabanı hatası oluştu.", "Hata!", true);
+      }
+    });
+  }
+  //ajax student find
+  function ajaxFindStudent(studentCardNumberVal, isScanned) {
+    $.ajax({
+      url: "/StudentCredit/FindStudent",
+      type: "GET",
+      data: { StudentCardNumber: studentCardNumberVal },
+      success: function (response) {
+        if (response.success) {
+
+          if (isScanned === false) {
+            foundedStudentLabel.innerHTML = response.studentFullName + " (" + studentCardNumberVal + ")";
+            foundedStudentCardNumberHoldManual = studentCardNumberVal;
+          }
+          else {
+            targetElement.innerHTML = response.studentFullName + " (" + studentCardNumberVal + ")";
+            foundedStudentCardNumberHoldScanner = studentCardNumberVal;
+          }
+        } else {
+          CreateToaster("Öğrenci veritabanında bulunamıyor.", "Veritabanı Hatası", true);
+        }
+      },
+      error: function () {
+        CreateToaster("Veri tabanı hatası oluştu.", "Veritabanı Hatası", true);
+      }
+    });
+  }
+  //Barcod scanner student find
+  document.addEventListener("keydown", function (evt) {
+    if (interval) {
+      clearInterval(interval);
+
+    }
+    if (evt.code == "Enter") {
+      evt.preventDefault();
+      if (barcode)
+        handleBarcode(barcode);
+
+      barcode = "";
+      return;
+    }
+    if (evt.key != "Shift") {
+      barcode += evt.key;
+    }
+    interval = setInterval(() => barcode = "", 20);
+  });
+
+  function handleBarcode(scanned_barcode) {
+
+    var focusedElement = document.activeElement;
+
+    if (document.activeElement && focusedElement.tagName === "INPUT") {
+      var currentValue = focusedElement.value;
+      var modifiedValue = currentValue.replace(scanned_barcode, "");
+      focusedElement.value = modifiedValue;
+    }
+    ajaxFindStudent(scanned_barcode, true);
+  }
+  //manual student find
+  document.getElementById("findStudentButton").addEventListener("click", function () {
+    ajaxFindStudent(StudentCardNumber.value, false);
+  });
+
+  //manual load
+  document.getElementById("loadAmountManualButton").addEventListener("click", function () {
+    ajaxLoadMoney(loadAmountManualInput.value, foundedStudentCardNumberHoldManual, false);
+  });
+
+  //scanner load
+  document.getElementById("loadAmountScannerButton").addEventListener("click", function () {
+    ajaxLoadMoney(loadAmountScannerInput.value, foundedStudentCardNumberHoldScanner, true);
+  });
+
+  //Scanner Modal Show
+  document.getElementById("showModalBtnScanner").addEventListener("click", function () {
+    var myModal = new bootstrap.Modal(document.getElementById("staticBackdrop"));
+
+    if (foundedStudentCardNumberHoldScanner === undefined)
+      CreateToaster("Öğrenci bulunamadı", "Hata", true);
+
+    else if (loadAmountScannerInput.value === "") {
+      CreateToaster("Yüklenecek miktar girilmedi", "Hata", true);
+    }
+    else {
+      LoadPersonModalNameLabel.innerText = targetElement.innerText;
+      LoadPersonModalAmountLabel.innerText = "₺ " + parseFloat(loadAmountScannerInput.value);
+      document.getElementById("loadAmountScannerButton").hidden = false;
+      document.getElementById("loadAmountManualButton").hidden = true;
+      myModal.show();
+    }
+  });
+
+  //Manual Modal Show
+  document.getElementById("showModalBtnManual").addEventListener("click", function () {
+    var myModal = new bootstrap.Modal(document.getElementById("staticBackdrop"));
+
+    if (foundedStudentCardNumberHoldManual === undefined)
+      CreateToaster("Öğrenci bulunamadı", "Hata", true);
+
+    else if (loadAmountManualInput.value === "") {
+      CreateToaster("Yüklenecek miktar girilmedi", "Hata", true);
+    }
+    else {
+      LoadPersonModalNameLabel.innerText = foundedStudentLabel.innerText;
+      LoadPersonModalAmountLabel.innerText = "₺ " + parseFloat(loadAmountManualInput.value) ;
+      document.getElementById("loadAmountScannerButton").hidden = true;
+      document.getElementById("loadAmountManualButton").hidden = false;
+      myModal.show();
+    }
+
+  });
+
+  //create toaster
+  function CreateToaster(messageInfo, messageHeader, error) {
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+    toastBootstrap.show();
+    document.getElementById("toasterInfoLabel").innerHTML = messageInfo;
+    document.getElementById("toasterInfoHeader").innerHTML = messageHeader;
+    if (error === true)
+      document.getElementById("toasterBody").className = "toast-body text-bg-danger";
+    else
+      document.getElementById("toasterBody").className = "toast-body text-bg-success";
+  }
+</script>
