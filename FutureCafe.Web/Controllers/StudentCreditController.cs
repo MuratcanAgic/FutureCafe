@@ -44,22 +44,15 @@ namespace FutureCafe.Web.Controllers
 
       if (student.Data != null && loadAmount != 0)
       {
-        try
-        {
-          var lastAmount = student.Data.StudentCredit == null || student.Data.StudentCredit.LastOrDefault() == null ? 0 : student.Data.StudentCredit.LastOrDefault().Credit.Amount;
-          var newCreditAmount = new Credit { Amount = loadAmount + lastAmount };
 
-          student.Data.StudentCredit.Add(new StudentCredit { Credit = newCreditAmount, Student = student.Data });
+        var loadResult = _studentService.LoadMoneyToStudent(student.Data, loadAmount);
+        var updateResult = _studentService.Update(student.Data);
+        var saveResult = await _studentService.SaveAsync();
 
-          _studentService.Update(student.Data);
-          await _studentService.SaveAsync();
+        if (saveResult.Success && loadResult.Success && saveResult.Success)
+          return Json(new { success = true, studentFullName = student.Data.NameSurname, newCredit = student.Data.StudentCredit.LastOrDefault().Credit.Amount });
 
-          return Json(new { success = true, studentFullName = student.Data.NameSurname, newCredit = newCreditAmount.Amount });
-        }
-        catch (Exception)
-        {
-          return Json(new { success = false });
-        }
+        return Json(new { success = false });
 
       }
       else
@@ -73,7 +66,7 @@ namespace FutureCafe.Web.Controllers
     {
       var student = await _studentService.GetAsync<Student>(e => e.CardNumber == studentCardNumber, "StudentCredit.Credit");
 
-      if (student != null)
+      if (student.Data != null)
       {
         try
         {

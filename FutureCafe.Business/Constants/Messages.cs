@@ -10,5 +10,6 @@
     public const string StringMaxLength = "maksimum {MaxLength} karakter olmalıdır.";
     public const string StringLength = ", {MinLength} ve {MaxLength} karater arasında olmalıdır.";
     public const string ValidationResultNull = "Doğrulama işlemi gerçekleştirilemedi.";
+    public const string DataNotFound = "Veri bulunamadı.";
   }
 }

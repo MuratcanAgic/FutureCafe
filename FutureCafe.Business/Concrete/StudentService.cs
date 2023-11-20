@@ -144,9 +144,9 @@ namespace FutureCafe.Business.Concrete
       {
         var student = await _studentDal.GetAsync(filter, includeProperties);
         var studentDto = _mapper.Map<Student, TDto>(student);
-        if (student == null)
+        if (studentDto == null)
         {
-          return new ErrorDataResult<TDto>(Messages.ListEmpty);
+          return new ErrorDataResult<TDto>(Messages.DataNotFound);
         }
         return new SuccessDataResult<TDto>(studentDto);
       }
@@ -173,6 +173,22 @@ namespace FutureCafe.Business.Concrete
         return new ErrorDataResult<IEnumerable<TDto>>(e.Message.ToString());
       }
     }
+
+    public IDataResult<decimal?> GetLastCreditAmount(Student student)
+    {
+      try
+      {
+        var salePrice = student.StudentCredit.Select(x => x.Credit).LastOrDefault().Amount;
+        if (salePrice != null)
+          return new SuccessDataResult<decimal?>(salePrice);
+
+        return new ErrorDataResult<decimal?>("Öğrenci kartında kredi bulunmuyor");
+      }
+      catch (Exception e)
+      {
+        return new ErrorDataResult<decimal?>(e.Message);
+      }
+    }
     public async Task<IDataResult<IEnumerable<TDto>>> GetListAsync<TDto>(Expression<Func<Student, bool>> filter = null, Func<IQueryable<Student>, IOrderedQueryable<Student>> orderBy = null, string includeProperties = "")
     {
       try
@@ -191,7 +207,41 @@ namespace FutureCafe.Business.Concrete
       }
     }
 
+    public IDataResult<Student> LoadMoneyToStudent(Student student, decimal loadAmount)
+    {
+      try
+      {
+        var lastAmount = student.StudentCredit == null || student.StudentCredit.LastOrDefault() == null ? 0 : student.StudentCredit.LastOrDefault().Credit.Amount;
+        var newCreditAmount = new Credit { Amount = loadAmount + lastAmount };
 
+        student.StudentCredit.Add(new StudentCredit { Credit = newCreditAmount, Student = student });
+
+        return new SuccessDataResult<Student>(student);
+      }
+      catch (Exception e)
+      {
+        return new ErrorDataResult<Student>(e.Message.ToString());
+      }
+
+    }
+
+    public IDataResult<Student> WithDrawMoneyFromStudent(Student student, decimal withdrawAmount)
+    {
+      try
+      {
+        var lastAmount = student.StudentCredit == null || student.StudentCredit.LastOrDefault() == null ? 0 : student.StudentCredit.LastOrDefault().Credit.Amount;
+        var newCreditAmount = new Credit { Amount = lastAmount - withdrawAmount };
+
+        student.StudentCredit.Add(new StudentCredit { Credit = newCreditAmount, Student = student });
+
+        return new SuccessDataResult<Student>(student);
+      }
+      catch (Exception e)
+      {
+        return new ErrorDataResult<Student>(e.Message.ToString());
+      }
+
+    }
 
     public IResult Save()
     {
