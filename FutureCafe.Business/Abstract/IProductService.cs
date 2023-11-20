@@ -20,7 +20,7 @@ namespace FutureCafe.Business.Abstract
     IResult Any(Expression<Func<Product, bool>> filter);
     IResult Save();
     IDataResult<int> CountWhere(Expression<Func<Product, bool>> filter);
-
+    IDataResult<decimal?> GetLastSalePrice(Product product);
     //Asnyc
     Task<IDataResult<TDto>> FindByIdAsync<TDto>(int id) where TDto : class;
     Task<IDataResult<TDto>> GetAsync<TDto>(Expression<Func<Product, bool>> filter, string includeProperties = "");

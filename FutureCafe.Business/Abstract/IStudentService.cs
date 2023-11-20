@@ -19,7 +19,9 @@ namespace FutureCafe.Business.Abstract
     IResult Any(Expression<Func<Student, bool>> filter);
     IResult Save();
     IDataResult<int> CountWhere(Expression<Func<Student, bool>> filter);
-
+    IDataResult<Student> LoadMoneyToStudent(Student student, decimal loadAmount);
+    IDataResult<decimal?> GetLastCreditAmount(Student student);
+    IDataResult<Student> WithDrawMoneyFromStudent(Student student, decimal withdrawAmount);
     //Asnyc
     Task<IDataResult<TDto>> FindByIdAsync<TDto>(int id);
     Task<IDataResult<TDto>> GetAsync<TDto>(Expression<Func<Student, bool>> filter, string includeProperties = "");

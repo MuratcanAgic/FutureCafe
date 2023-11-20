@@ -170,15 +170,43 @@ namespace FutureCafe.Business.Concrete
         return new ErrorDataResult<TDto>(e.Message);
       }
     }
+    public IDataResult<decimal?> GetLastSalePrice(Product product)
+    {
+      try
+      {
+        var salePrice = product.ProductPrice.Select(x => x.Price).Where(x => x.SalePrice.HasValue).LastOrDefault().SalePrice;
+        if (salePrice != null)
+          return new SuccessDataResult<decimal?>(salePrice);
 
+        return new ErrorDataResult<decimal?>(product.Name + "ürününün satış fiyatı tanımlanmamış");
+      }
+      catch (Exception e)
+      {
+        return new ErrorDataResult<decimal?>(e.Message);
+      }
+    }
     public IDataResult<TDto> Get<TDto>(Expression<Func<Product, bool>> filter, string includeProperties = "")
     {
       throw new NotImplementedException();
     }
 
-    public Task<IDataResult<TDto>> GetAsync<TDto>(Expression<Func<Product, bool>> filter, string includeProperties = "")
+    public async Task<IDataResult<TDto>> GetAsync<TDto>(Expression<Func<Product, bool>> filter, string includeProperties = "")
     {
-      throw new NotImplementedException();
+      try
+      {
+        var product = await _productDal.GetAsync(filter, includeProperties);
+        var productDto = _mapper.Map<Product, TDto>(product);
+
+        if (productDto == null)
+        {
+          return new ErrorDataResult<TDto>(Messages.DataNotFound);
+        }
+        return new SuccessDataResult<TDto>(productDto);
+      }
+      catch (Exception e)
+      {
+        return new ErrorDataResult<TDto>(e.Message.ToString());
+      }
     }
 
     public IDataResult<IEnumerable<TDto>> GetList<TDto>(Expression<Func<Product, bool>> filter = null, Func<IQueryable<Product>, IOrderedQueryable<Product>> orderBy = null, string includeProperties = "")

@@ -1,0 +1,408 @@
+﻿<!-- Toast -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      @*<span class="badge bg-success">n</span>*@
+      <strong id="toasterInfoHeader" class="me-auto"></strong>
+      @*<small>11 mins ago</small>*@
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Kapat"></button>
+    </div>
+    <div class="toast-body text-bg-success" id="toasterBody">
+      <label id="toasterInfoLabel"></label>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Alışveriş Sepetiniz</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modalBody">
+      </div>
+      <div class="modal-footer">
+        <div class="d-flex justify-content-between">
+
+          <div class="d-flex flex-column align-items-end mt-2">
+            <div class="d-flex">
+              <button class="btn btn-outline-secondary me-2" data-bs-dismiss="modal" style="white-space: nowrap;">Geri Dön</button>
+              <div class="input-group">
+                <input type="text" id="studentCardNumber" class="form-control" placeholder="Öğrenci kart no?" style="text-align:center" />
+                <button class="btn btn-outline-success" id="payButton">Öde</button>
+              </div>
+            </div>
+            <label class="text-muted mt-2" style="font-size:10pt">*Direkt tarama yaparak da ödemeyi yapabilirsiniz.</label>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Cards -->
+<section class="py-5">
+  <div class="container px-4 px-lg-5 mt-5">
+    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center " id="productContainer">
+      <!--Base Card-->
+      <div class="col mb-5" id="baseCard">
+        <div class="card h-100">
+          <!-- Product image-->
+          <img class="card-img-top mt-2" src="~/imgs/canteen_default.jpg" alt="..." style="width: 100%; height: 150px; object-fit: contain;" />
+          <!-- Product details-->
+          <div class="card-body p-4">
+            <div class="text-center">
+              <!-- Product name-->
+              <h5 class="fw-bolder">Eklenecek ürün:</h5>
+              <input type="text" class="form-control" placeholder="Barkod no?" style="text-align:center" id="productBarcodNoInput" />
+            </div>
+          </div>
+          <!-- Product actions-->
+          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+            <div class="text-center"><button class="btn btn-outline-dark mt-auto" id="addProductButton">Barkod no ile ekle</button></div>
+            <label class="mt-2 text-md-center text-sm-start text-muted">*Direkt tarama yaparak da ürün ekleyebilirsiniz.</label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--Total Price Panel-->
+    <div class="border-top d-flex justify-content-between">
+      <div>
+        <label class="text-muted mt-2" style="font-size:16pt;">Toplam Tutar:</label>
+        <label class="text-muted mt-2" style="font-size:16pt;">₺</label>
+        <label id="totalPriceLabel" class="mt-2 text-muted" style="font-size:16pt;">0.00</label>
+      </div>
+      <div class="d-flex flex-column align-items-end mt-2">
+        <div class="d-flex">
+          <button class="btn btn-outline-secondary me-2" id="clearCartButton" style="white-space: nowrap;">Sepeti Boşalt</button>
+          <button class="btn btn-outline-success" id="proceedToPayButton">Öde</button>
+        </div>
+        @* <label class="text-muted mt-2">*Direkt tarama yaparak da ürün ekleyebilirsiniz.</label> *@
+      </div>
+    </div>
+  </div>
+</section>
+
+@* <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+        crossorigin="anonymous">
+</script> *@
+
+<script>
+  //var,const
+  const products = new Array();
+  const productContainer = document.getElementById("productContainer");
+  const baseCard = document.getElementById("baseCard");
+  const totalPriceLabel = document.getElementById("totalPriceLabel");
+  const clearCartButton = document.getElementById("clearCartButton");
+  const proceedToPayButton = document.getElementById("proceedToPayButton");
+  const toastLiveExample = document.getElementById("liveToast");
+  var myModal;
+  var createdProductId = 0;
+  var payProceeded = false;
+  var barcode = "";
+  var interval;
+  //manual ajax process
+  $(document).ready(function () {
+    //ajax create product
+    $("#addProductButton").click(function () {
+      var productBarcodNoInput = $("#productBarcodNoInput").val();
+      createProductItemAjax(productBarcodNoInput);
+    });
+    //ajax pay
+    $("#payButton").click(function () {
+      //console.log("a");
+      var studentCardNumber = $("#studentCardNumber").val();
+      payAjax(studentCardNumber);
+    });
+  });
+
+  //scanner ajax process
+  document.addEventListener("keydown", function (evt) {
+    if (interval) {
+      clearInterval(interval);
+    }
+    if (evt.code == "Enter") {
+      evt.preventDefault();
+      if (barcode)
+        handleBarcode(barcode);
+
+      barcode = "";
+      return;
+    }
+    if (evt.key != "Shift") {
+      barcode += evt.key;
+    }
+    interval = setInterval(() => barcode = "", 20);
+  });
+
+  function handleBarcode(scanned_barcode) {
+
+    var focusedElement = document.activeElement;
+
+    if (document.activeElement && focusedElement.tagName === "INPUT") {
+      var currentValue = focusedElement.value;
+      var modifiedValue = currentValue.replace(scanned_barcode, "");
+      focusedElement.value = modifiedValue;
+    }
+    if (payProceeded === false) {
+      let productBarcodNoInput = document.getElementById("productBarcodNoInput");
+      productBarcodNoInput.value = scanned_barcode;
+      createProductItemAjax(productBarcodNoInput.value);
+    }
+    else {
+      let studentCardNumber = document.getElementById("studentCardNumber");
+      studentCardNumber.value = scanned_barcode;
+      payAjax(studentCardNumber.value);
+    }
+  }
+  //ajax create product item
+  function createProductItemAjax(barcodeValue) {
+    $.ajax({
+      url: "/Trade/CreateProductItem",
+      type: "GET",
+      data: { productBarcodNoInput: barcodeValue },
+      success: function (response) {
+        if (response.success) {
+          addOrUpdateProduct(response.productBarcodNo, response.productName, response.productSalePrice);
+        } else {
+          CreateToaster(response.message, "Ürün oluşturma hatası", true);
+        }
+      },
+      error: function () {
+        CreateToaster("Ürün oluşturulurken veri tabanı hatası oluştu.", "Veritabanı hatası", true);
+      }
+    });
+  }
+  //ajax pay
+  function payAjax(studentCardValue) {
+    productDtos = new Array();
+    products.forEach((product) => {
+      const newProductDto = {
+        ProductBarcodNo: product.ProductBarcodNo,
+        ProductCount: product.ProductCount
+      }
+      productDtos.push(newProductDto);
+    });
+    $.ajax({
+      url: "/Trade/Pay",
+      type: "POST",
+      data: { studentCardNumber: studentCardValue, totalPrice: calculateTotalPrice(), products: productDtos },
+      success: function (response) {
+        if (response.success) {
+          document.getElementById("productBarcodNoInput").value = "";
+          products.length = 0;
+          updateProductCards();
+          CreateToaster(response.message, "Ödeme işlemi: Başarılı!", false);
+          myModal.hide();
+          payProceeded = false;
+        } else {
+          if (response.hideModal === true) { myModal.hide(); }
+          CreateToaster(response.message, "Ödeme Hatası", true);
+        }
+      },
+      error: function () {
+        CreateToaster("Ödeme yapılırken veri tabanı hatası oluştu.", "Veritabanı hatası", true);
+      }
+    });
+  }
+  function CreateToaster(messageInfo, messageHeader, error) {
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+    toastBootstrap.show();
+    document.getElementById("toasterInfoLabel").innerHTML = messageInfo;
+    document.getElementById("toasterInfoHeader").innerHTML = messageHeader;
+    if (error === true)
+      document.getElementById("toasterBody").className = "toast-body text-bg-danger";
+    else
+      document.getElementById("toasterBody").className = "toast-body text-bg-success";
+  }
+  //addOrUpdateProduct
+  function addOrUpdateProduct(productBarcodNo, productName, productSalePrice) {
+
+    const newProduct = {
+      ProductId: 1,
+      ProductBarcodNo: productBarcodNo,
+      ProductInfo: {
+        ProductName: productName, ProductSalePrice: productSalePrice
+      }, ProductCount: 1
+    }
+
+    //find the index of the existing product with the same barcode, if any
+    const existingProductIndex = products.findIndex(
+      (product) => product.ProductBarcodNo === newProduct.ProductBarcodNo
+    );
+
+    if (existingProductIndex !== -1) {
+      //if a product with the same barcode exists, increase its ProductCount
+      products[existingProductIndex].ProductCount += 1;
+    } else {
+      //if no product with the same barcode exists, push the new product to the array
+      createdProductId++;
+      newProduct.ProductId = createdProductId;
+      products.push(newProduct);
+    }
+    updateProductCards();
+  }
+
+  //function to generate and append product cards
+  function createProductCard(product) {
+    const productCard = document.createElement("div");
+    productCard.className = "col mb-5";
+    productCard.id = "createdProduct_" + product.ProductBarcodNo;
+
+    //generate the product card HTML
+    productCard.innerHTML = `
+                <div class="card h-100">
+                  <!-- Product image -->
+                  <img class="card-img-top mt-2" src="..//imgs/canteen_default.jpg" alt="..." style="width: 100%; height: 150px; object-fit: contain;" />
+                  <!-- Product details -->
+                  <div class="card-body p-4">
+                    <div class="text-center">
+                      <!-- Product name -->
+                        <h5 class="fw-bolder">${product.ProductInfo.ProductName}</h5>
+                      <!-- Product price and quantity -->
+                      <div class="d-grid">
+                        <div class="mb-1">
+                          <label>Birim Fiyat:</label>
+                            <label class="text-md-center text-sm-start">₺ ${product.ProductInfo.ProductSalePrice}</label>
+                        </div>
+                        <div>
+                          <label>Adet:</label>
+                          <label>${product.ProductCount}</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Product actions -->
+                  <div class="card-footer p-2 pt-0 border-top-0 bg-transparent">
+                    <div class="text-center">
+                          <button class="btn btn-outline-dark mt-auto" id="decrease-${product.ProductId}"><i class="bi-cart-dash" style="font-size:14pt;"></i></button>
+                          <button class="btn btn-outline-dark mt-auto" id="increase-${product.ProductId}"><i class="bi-cart-plus" style="font-size:14pt;"></i></button>
+                      <div class="text-end">
+                        <label class="mt-2 text-end text-muted" style="font-size:12pt;">Toplam: ₺</label>
+                          <label class="mt-2 text-end text-muted" style="font-size:12pt;">${(parseFloat(product.ProductInfo.ProductSalePrice) * parseInt(product.ProductCount)).toFixed(2)}</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+
+    //append the product card to the container
+    productContainer.appendChild(productCard);
+
+    //add event listeners to the buttons for this product
+    const increaseButton = document.getElementById(`increase-${product.ProductId}`);
+    const decreaseButton = document.getElementById(`decrease-${product.ProductId}`);
+
+    increaseButton.addEventListener("click", () => {
+      //increase the product count and update the UI
+      product.ProductCount++;
+      updateProductCards();
+    });
+
+    decreaseButton.addEventListener("click", () => {
+      //decrease the product count, delete if it"s zero, and update the UI
+      if (product.ProductCount > 0) {
+        product.ProductCount--;
+        if (product.ProductCount === 0) {
+          //delete the product from the array
+          const index = products.findIndex((p) => p.ProductId === product.ProductId);
+          console.log(index);
+          if (index !== -1) {
+            products.splice(index, 1);
+          }
+        }
+        updateProductCards();
+      }
+    });
+  }
+
+  //UPDATE UI
+  function updateProductCards() {
+    //loop through the products array and create product cards
+    //clear first
+    productContainer.innerHTML = "";
+    productContainer.appendChild(baseCard);
+    //add later
+    products.forEach((product) => {
+      createProductCard(product);
+    });
+
+    const totalPrice = calculateTotalPrice();
+    totalPriceLabel.textContent = `${totalPrice}`;
+
+    console.log(products);
+  }
+
+  //total price calculation
+  function calculateTotalPrice() {
+    let totalPrice = 0;
+    for (const product of products) {
+      totalPrice += parseFloat(product.ProductInfo.ProductSalePrice) * parseInt(product.ProductCount);
+    }
+
+    return totalPrice.toFixed(2); // Round to 2 decimal places
+
+  }
+  //clear cart
+  clearCartButton.addEventListener("click", function () {
+    products.length = 0;
+    updateProductCards();
+  });
+
+  //proceed to pay
+  proceedToPayButton.addEventListener("click", function () {
+    if (products.length > 0) {
+      document.getElementById("studentCardNumber").value = "";
+      myModal = new bootstrap.Modal(document.getElementById("staticBackdrop"));
+      myModal.show();
+      updateModalSummary();
+      payProceeded = true;
+    }
+    else
+      alert("Sepette ürün bulunmuyor!")
+  });
+
+  function updateModalSummary() {
+
+    let modalBody = document.getElementById("modalBody");
+
+    //clear first
+    modalBody.innerHTML = "";
+
+    //summary lines
+    products.forEach((product) => {
+      const modalSummaryLine = document.createElement("div");
+      modalSummaryLine.className = "row mt-2";
+
+      modalSummaryLine.innerHTML = `
+                   <div class="col-6 ">
+                      <label>${product.ProductInfo.ProductName}</label>
+                      <label>x ${product.ProductCount}</label>
+                  </div>
+
+                  <div class="col-6 text-end">
+                       <label class="mt-2 text-end " style="font-size:12pt;">₺</label>
+                       <label class="mt-2 text-end " style="font-size:12pt;">${(parseFloat(product.ProductInfo.ProductSalePrice) * parseInt(product.ProductCount)).toFixed(2)}</label>
+                  </div>
+                `;
+
+      modalBody.appendChild(modalSummaryLine);
+    });
+
+    //total price line
+    const modalTotalLine = document.createElement("div");
+    modalTotalLine.className = "row mt-3";
+
+    const totalPrice = calculateTotalPrice();
+    modalTotalLine.innerHTML = `
+
+                      <div class="col text-end border-top">
+                           <label class="mt-2 text-end " style="font-size:12pt;">Toplam Tutar: ₺</label>
+                           <label class="mt-2 text-end " style="font-size:12pt;">${totalPrice}</label>
+                      </div>
+                    `;
+    modalBody.appendChild(modalTotalLine);
+  }
+</script>
