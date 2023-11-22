@@ -14,32 +14,34 @@
           <h5>Okul Sınıf Listesi</h5>
         </div>
         <div class="card-body">
-          <table id="myTable" class="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Değiştir/Detay/Sil</th>
-                <th scope="col"><label asp-for="@Model.FirstOrDefault().Name"></label></th>
-              </tr>
-            </thead>
-            <tbody>
-              @if (Model != null)
-              {
-                @foreach (var (item, i) in Model.Select((item, i) => (item, i)))
+          <div class="table-responsive">
+            <table id="myTable" class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Değiştir/Detay/Sil</th>
+                  <th scope="col"><label asp-for="@Model.FirstOrDefault().Name"></label></th>
+                </tr>
+              </thead>
+              <tbody>
+                @if (Model != null)
                 {
-                  <tr>
-                    <th scope="row">@(i + 1)</th>
-                    <th>
-                      <a class="m-2" asp-controller="SchoolClass" asp-action="Edit" asp-route-id="@item.Id"><i class="bi-pencil-square text-success"></i></a>
-                      <a class="m-2" asp-controller="SchoolClass" asp-action="Detail" asp-route-id="@item.Id"><i class="bi-file-earmark text-info"></i></a>
-                      <a class="m-2" asp-controller="SchoolClass" asp-action="Delete" asp-route-id="@item.Id"><i class="bi-trash text-danger"></i></a>
-                    </th>
-                    <td>@item.Name</td>
-                  </tr>
+                  @foreach (var (item, i) in Model.Select((item, i) => (item, i)))
+                  {
+                    <tr>
+                      <th scope="row">@(i + 1)</th>
+                      <th>
+                        <a class="m-2" asp-controller="SchoolClass" asp-action="Edit" asp-route-id="@item.Id"><i class="bi-pencil-square text-success"></i></a>
+                        <a class="m-2" asp-controller="SchoolClass" asp-action="Detail" asp-route-id="@item.Id"><i class="bi-file-earmark text-info"></i></a>
+                        <a class="m-2" asp-controller="SchoolClass" asp-action="Delete" asp-route-id="@item.Id"><i class="bi-trash text-danger"></i></a>
+                      </th>
+                      <td>@item.Name</td>
+                    </tr>
+                  }
                 }
-              }
-            </tbody>
-          </table>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -51,27 +53,27 @@
   $(document).ready(function () {
     $('#myTable').DataTable(
       {
-      pagingType: 'full_numbers',
-      language: {
-        info: '_PAGES_ sayfa arasından _PAGE_. sayfa gösteriliyor',
-        infoEmpty: 'Hiç kayıt bulunamadı',
-        infoFiltered: '(Toplam _MAX_ kayıt arasından filtrelendi.)',
-        lengthMenu: 'Sayfa başına _MENU_ kayıt göster',
-        zeroRecords: 'Aramaya uygun kayıt bulunamadı.',
-        search: "Ara",
-        paginate: {
+        pagingType: 'full_numbers',
+        language: {
+          info: '_PAGES_ sayfa arasından _PAGE_. sayfa gösteriliyor',
+          infoEmpty: 'Hiç kayıt bulunamadı',
+          infoFiltered: '(Toplam _MAX_ kayıt arasından filtrelendi.)',
+          lengthMenu: 'Sayfa başına _MENU_ kayıt göster',
+          zeroRecords: 'Aramaya uygun kayıt bulunamadı.',
+          search: "Ara",
+          paginate: {
             "first": "İlk",
             "last": "Son",
             "next": "Sonraki",
             "previous": "Önceki"
           }
-      },
+        },
 
-      lengthMenu: [
+        lengthMenu: [
           [10, 20, 50, -1],
           [10, 20, 50, 'Hepsi']
         ]
-    }
+      }
     );
   });
 </script>
