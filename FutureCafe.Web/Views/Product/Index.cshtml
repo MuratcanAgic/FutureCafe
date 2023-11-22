@@ -8,13 +8,14 @@
       </div>
     </div>
   </div>
-    <div class="row mb-2">
-      <div class="col">
-        <div class="card">
-          <div class="card-header">
-            <h5>Ürün Listesi</h5>
-          </div>
-          <div class="card-body">
+  <div class="row mb-2">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h5>Ürün Listesi</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
             <table id="myTable" class="table table-striped">
               <thead>
                 <tr>
@@ -29,11 +30,11 @@
                   <th scope="col">
                     <label asp-for="@Model.FirstOrDefault().ProductCategory"></label>
                   </th>
-              @*     <th scope="col">
-                     <label >Alış Fiyatı</label> 
+                  @*     <th scope="col">
+                  <label >Alış Fiyatı</label>
                   </th>
                   <th scope="col">
-                    <label>Satış Fiyatı</label>
+                  <label>Satış Fiyatı</label>
                   </th> *@
                   @*<th>Resim</th>*@
                 </tr>
@@ -59,14 +60,14 @@
                       }
                     </td>
                     @*<td><img href="@item.ImageUrl" /></td>*@
-                   @*  <td>
-                      @if (item.ProductPrice != null)
-                        @(item.ProductPrice.Select(e => e.Price).Where(e => e.BuyingPrice.HasValue).LastOrDefault().BuyingPrice.ToString() + "₺")
-                    </td>
-                    <td>
-                      @if (item.ProductPrice != null)
-                        @(item.ProductPrice.Select(e => e.Price).Where(e=>e.SalePrice.HasValue).LastOrDefault().SalePrice.ToString() + "₺")
-                    </td> *@
+                    @*  <td>
+                  @if (item.ProductPrice != null)
+                  @(item.ProductPrice.Select(e => e.Price).Where(e => e.BuyingPrice.HasValue).LastOrDefault().BuyingPrice.ToString() + "₺")
+                  </td>
+                  <td>
+                  @if (item.ProductPrice != null)
+                  @(item.ProductPrice.Select(e => e.Price).Where(e=>e.SalePrice.HasValue).LastOrDefault().SalePrice.ToString() + "₺")
+                  </td> *@
                   </tr>
                 }
               </tbody>
@@ -74,35 +75,36 @@
           </div>
         </div>
       </div>
-    </div> 
+    </div>
+  </div>
 </div>
 
-    <script>
+<script>
 
-      $(document).ready(function () {
-        $('#myTable').DataTable(
-          {
-            pagingType: 'full_numbers',
-            language: {
-              info: '_PAGES_ sayfa arasından _PAGE_. sayfa gösteriliyor',
-              infoEmpty: 'Hiç kayıt bulunamadı',
-              infoFiltered: '(Toplam _MAX_ kayıt arasından filtrelendi.)',
-              lengthMenu: 'Sayfa başına _MENU_ kayıt göster',
-              zeroRecords: 'Aramaya uygun kayıt bulunamadı.',
-              search: "Ara",
-              paginate: {
-                "first": "İlk",
-                "last": "Son",
-                "next": "Sonraki",
-                "previous": "Önceki"
-              }
-            },
-
-            lengthMenu: [
-              [10, 20, 50, -1],
-              [10, 20, 50, 'Hepsi']
-            ]
+  $(document).ready(function () {
+    $('#myTable').DataTable(
+      {
+        pagingType: 'full_numbers',
+        language: {
+          info: '_PAGES_ sayfa arasından _PAGE_. sayfa gösteriliyor',
+          infoEmpty: 'Hiç kayıt bulunamadı',
+          infoFiltered: '(Toplam _MAX_ kayıt arasından filtrelendi.)',
+          lengthMenu: 'Sayfa başına _MENU_ kayıt göster',
+          zeroRecords: 'Aramaya uygun kayıt bulunamadı.',
+          search: "Ara",
+          paginate: {
+            "first": "İlk",
+            "last": "Son",
+            "next": "Sonraki",
+            "previous": "Önceki"
           }
-        );
-      });
-    </script>
+        },
+
+        lengthMenu: [
+          [10, 20, 50, -1],
+          [10, 20, 50, 'Hepsi']
+        ]
+      }
+    );
+  });
+</script>

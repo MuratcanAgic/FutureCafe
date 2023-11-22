@@ -12,35 +12,37 @@
           <h5>Öğrenci Listesi</h5>
         </div>
         <div class="card-body">
-          <table id="myTable" class="table table-striped">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Değiştir/Detay/Sil</th>
-                <th scope="col"><label asp-for="@Model.FirstOrDefault().Name"></label></th>
-                <th scope="col"><label asp-for="@Model.FirstOrDefault().SurName"></label></th>             
-                <th scope="col"><label asp-for="@Model.FirstOrDefault().CardNumber"></label></th>
-                @*<th>Resim</th>*@
-              </tr>
-            </thead>
-            <tbody>
-              @foreach (var (item, i) in Model.Select((item, i) => (item, i)))
-              {
+          <div class="table-responsive">
+            <table id="myTable" class="table table-striped">
+              <thead>
                 <tr>
-                  <th scope="row">@(i + 1)</th>
-                  <th>
-                    <a class="m-2" asp-controller="Student" asp-action="Edit" asp-route-id="@item.Id"><i class="bi-pencil-square text-success"></i></a>
-                    <a class="m-2" asp-controller="Student" asp-action="Detail" asp-route-id="@item.Id"><i class="bi-file-earmark text-info"></i></a>
-                    <a class="m-2" asp-controller="Student" asp-action="Delete" asp-route-id="@item.Id"><i class="bi-trash text-danger"></i></a>
-                  </th>
-                  <td>@item.Name</td>
-                  <td>@item.SurName</td>
-                  <td>@item.CardNumber</td>
-                  @*<td><img href="@item.ImageUrl" /></td>*@
+                  <th scope="col">#</th>
+                  <th scope="col">Değiştir/Detay/Sil</th>
+                  <th scope="col"><label asp-for="@Model.FirstOrDefault().Name"></label></th>
+                  <th scope="col"><label asp-for="@Model.FirstOrDefault().SurName"></label></th>
+                  <th scope="col"><label asp-for="@Model.FirstOrDefault().CardNumber"></label></th>
+                  @*<th>Resim</th>*@
                 </tr>
-              }
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                @foreach (var (item, i) in Model.Select((item, i) => (item, i)))
+                {
+                  <tr>
+                    <th scope="row">@(i + 1)</th>
+                    <th>
+                      <a class="m-2" asp-controller="Student" asp-action="Edit" asp-route-id="@item.Id"><i class="bi-pencil-square text-success"></i></a>
+                      <a class="m-2" asp-controller="Student" asp-action="Detail" asp-route-id="@item.Id"><i class="bi-file-earmark text-info"></i></a>
+                      <a class="m-2" asp-controller="Student" asp-action="Delete" asp-route-id="@item.Id"><i class="bi-trash text-danger"></i></a>
+                    </th>
+                    <td>@item.Name</td>
+                    <td>@item.SurName</td>
+                    <td>@item.CardNumber</td>
+                    @*<td><img href="@item.ImageUrl" /></td>*@
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
