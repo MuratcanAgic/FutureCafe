@@ -19,6 +19,9 @@ namespace FutureCafe.Business.ServiceRegistiration
       services.AddScoped<ISchoolClassService, SchoolClassService>();
       services.AddScoped<IStudentService, StudentService>();
       services.AddScoped<ITradeService, TradeService>();
+      services.AddScoped<IUserService, UserService>();
+      services.AddScoped<IAuthService, AuthService>();
+
       //validators
       services.AddScoped<IValidator<Category>, CategoryValidator>();
       services.AddScoped<IValidator<ProductCreateEditDto>, ProductValidator>();

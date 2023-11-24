@@ -25,6 +25,7 @@ namespace FutureCafe.DataAccess.ServiceRegistiration
       services.AddScoped<IProductCategoryDal, EfProductCategoryDal>();
       services.AddScoped<IProductPriceDal, EfProductPriceDal>();
       services.AddScoped<IStudentCreditDal, EfStudentCreditDal>();
+      services.AddScoped<IUserDal, EfUserDal>();
       //services.AddTransient<DbContext, DatabaseContext>();
       return services;
     }
