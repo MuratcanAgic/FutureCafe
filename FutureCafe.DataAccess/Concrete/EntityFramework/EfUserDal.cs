@@ -15,7 +15,7 @@ namespace FutureCafe.DataAccess.Concrete.EntityFramework
 
     public List<OperationClaim> GetClaims(User user)
     {
-      return Get(a => a.Id == user.Id, "UserOperationClaims.Claims").UserOperationClaims.Select(e => e.OperationClaim).ToList();
+      return Get(a => a.Id == user.Id, "UserOperationClaims.OperationClaim").UserOperationClaims.Select(e => e.OperationClaim).ToList();
     }
   }
 }

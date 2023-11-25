@@ -1,6 +1,7 @@
 ﻿using FutureCafe.Business.Abstract;
 using FutureCafe.Business.Dtos;
 using FutureCafe.Entities.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FutureCafe.Web.Controllers
@@ -17,6 +18,7 @@ namespace FutureCafe.Web.Controllers
       _tradeService = tradeService;
     }
 
+    [Authorize(Roles = "Admin,CanteenKeeper")]
     public IActionResult Index()
     {
       return View();
