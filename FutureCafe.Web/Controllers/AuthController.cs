@@ -41,7 +41,7 @@ namespace FutureCafe.Web.Controllers
         new Claim(ClaimTypes.NameIdentifier,"1"),
         new Claim(ClaimTypes.Name,userToLogin.Data.FirstName),
         new Claim(ClaimTypes.Surname,userToLogin.Data.LastName),
-        new Claim(ClaimTypes.Email,userToLogin.Data.Email)
+        new Claim(ClaimTypes.Email,userToLogin.Data.Email),
       };
 
       if (claimsDb != null && claimsDb.Count != 0)

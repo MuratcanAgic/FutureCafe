@@ -25,6 +25,10 @@ namespace FutureCafe.Business.Mapping
 
       CreateMap<Product, ProductViewDto>().ReverseMap();
       CreateMap<Product, ProductDetailDto>().ReverseMap();
+
+      CreateMap<User, UserForViewDto>().ReverseMap();
+      CreateMap<User, UserForRegisterDto>().ReverseMap();
+      CreateMap<User, UserForLoginDto>().ReverseMap();
     }
   }
 }

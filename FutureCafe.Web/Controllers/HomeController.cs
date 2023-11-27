@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FutureCafe.Web.Controllers
 {
@@ -10,12 +11,12 @@ namespace FutureCafe.Web.Controllers
     {
       _logger = logger;
     }
-
+    [Authorize(Roles = "Admin")]
     public IActionResult Index()
     {
       return View();
     }
-
+    [Authorize(Roles = "Admin")]
     public IActionResult Privacy()
     {
       return View();
