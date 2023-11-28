@@ -78,6 +78,10 @@
                   <a class="dropdown-item" asp-controller="Category" asp-action="Index">
                     <i class="bi-card-list pe-2"></i>Kategori
                   </a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" asp-controller="User" asp-action="Index">
+                    <i class="bi-person-fill-gear pe-2"></i>Kullanıcı
+                  </a>
                 </div>
               </li>
             }
@@ -88,15 +92,12 @@
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Hoşgeldin, @Context.User.Identity.Name
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  @if (isAdmin == true)
-                  {
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">                
                     <a class="dropdown-item" asp-controller="User" asp-action="Index">
                       <i class="bi-gear-fill pe-2"></i>
                       Tercihler
                     </a>
-                  }
-                  <a class="dropdown-item" asp-controller="StudentCredit" asp-action="Load">
+                  <a class="dropdown-item" asp-controller="User" asp-action="Load">
                     <i class="bi-envelope-fill pe-2"></i>
                     Destek İletişim
                   </a>

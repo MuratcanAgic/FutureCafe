@@ -27,6 +27,7 @@ namespace FutureCafe.Business.ServiceRegistiration
       services.AddScoped<IValidator<ProductCreateEditDto>, ProductValidator>();
       services.AddScoped<IValidator<SchoolClass>, SchoolClassValidator>();
       services.AddScoped<IValidator<Student>, StudentValidator>();
+      services.AddScoped<IValidator<User>, UserValidator>();
 
       services.AddAutoMapper(typeof(MappingProfile));
 

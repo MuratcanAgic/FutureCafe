@@ -1,0 +1,61 @@
+﻿@model FutureCafe.Business.Dtos.UserForRegisterDto
+
+<div class="container">
+  <div class="row mb-2">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h5>Kullanıcı Oluştur</h5>
+          @*<div asp-validation-summary="All"></div>*@
+        </div>
+        <div class="card-body">
+          <form asp-controller="User" asp-action="Create" method="post" class="d-flex align-items-center">
+            <div class="container">
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="FirstName" class="mb-2"></label>
+                  <input type="text" asp-for="FirstName" class="form-control" placeholder="İsim" />
+                  <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="LastName" class="mb-2"></label>
+                  <input type="text" asp-for="LastName" class="form-control" placeholder="Soyisim" />
+                  <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="Email" class="mb-2"></label>
+                  <input type="text" asp-for="Email" class="form-control" placeholder="Kullanıcı Adı" />
+                  <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="Password" class="mb-2"></label>
+                  <input type="text" asp-for="Password" class="form-control" placeholder="Şifre" />
+                  <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="PasswordConfirm" class="mb-2"></label>
+                  <input type="text" asp-for="PasswordConfirm" class="form-control" placeholder="Şifre Tekrar" />
+                  <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col">
+                  <button type="submit" class="btn btn-warning" style="width:150px">Oluştur</button>
+                  <a asp-controller="User" asp-action="Index" class="btn btn-primary" style="width:150px">Listeye Dön</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

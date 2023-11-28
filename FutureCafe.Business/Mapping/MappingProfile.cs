@@ -27,7 +27,7 @@ namespace FutureCafe.Business.Mapping
       CreateMap<Product, ProductDetailDto>().ReverseMap();
 
       CreateMap<User, UserForViewDto>().ReverseMap();
-      CreateMap<User, UserForRegisterDto>().ReverseMap();
+      CreateMap<User, UserForRegisterDto>().ReverseMap().ForSourceMember(x => x.PasswordConfirm, opt => opt.DoNotValidate());
       CreateMap<User, UserForLoginDto>().ReverseMap();
     }
   }

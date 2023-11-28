@@ -3,7 +3,7 @@
 <div class="container">
   <div class="row mb-2">
     <div class="col text-end">
-      <a class="btn btn-primary" asp-controller="Student" asp-action="Create"><i class="bi-plus-circle"></i> Yeni Öğrenci Ekle</a>
+      <a class="btn btn-primary" asp-controller="User" asp-action="Create"><i class="bi-plus-circle"></i> Yeni Kullanıcı Ekle</a>
     </div>
   </div>
   <div class="row mb-2">
@@ -18,7 +18,7 @@
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">Değiştir/Detay/Sil</th>
+                  <th scope="col">Sil</th>
                   <th scope="col"><label asp-for="@Model.FirstOrDefault().FirstName"></label></th>
                   <th scope="col"><label asp-for="@Model.FirstOrDefault().LastName"></label></th>
                   <th scope="col"><label asp-for="@Model.FirstOrDefault().Email"></label></th>
@@ -31,8 +31,8 @@
                   <tr>
                     <th scope="row">@(i + 1)</th>
                     <th>
-                      <a class="m-2" asp-controller="User" asp-action="Edit" asp-route-id="@item.Id"><i class="bi-pencil-square text-success"></i></a>
-                      <a class="m-2" asp-controller="User" asp-action="Detail" asp-route-id="@item.Id"><i class="bi-file-earmark text-info"></i></a>
+                      @* <a class="m-2" asp-controller="User" asp-action="Edit" asp-route-id="@item.Id"><i class="bi-pencil-square text-success"></i></a>
+                      <a class="m-2" asp-controller="User" asp-action="Detail" asp-route-id="@item.Id"><i class="bi-file-earmark text-info"></i></a> *@
                       <a class="m-2" asp-controller="User" asp-action="Delete" asp-route-id="@item.Id"><i class="bi-trash text-danger"></i></a>
                     </th>
                     <td>@item.FirstName</td>
