@@ -35,17 +35,30 @@
               <div class="row mb-4">
                 <div class="col">
                   <label asp-for="Password" class="mb-2"></label>
-                  <input type="text" asp-for="Password" class="form-control" placeholder="Şifre" />
+                  <div class="input-group">
+                    <input type="password" asp-for="Password" class="form-control" id="passwordInput" placeholder="Şifre" />
+                    <button type="button" class="btn btn-outline-primary" id="togglePassword" onclick="togglePasswordVisibility()"><i class="bi-eye pe-2" id="toggleIcon"></i></button>
+                  </div>
                   <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
               </div>
               <div class="row mb-4">
                 <div class="col">
                   <label asp-for="PasswordConfirm" class="mb-2"></label>
-                  <input type="text" asp-for="PasswordConfirm" class="form-control" placeholder="Şifre Tekrar" />
+                  <div class="input-group">
+                    <input type="password" asp-for="PasswordConfirm" class="form-control" id="passwordConfirmInput" placeholder="Şifre Tekrar" />
+                    <button type="button" class="btn btn-outline-primary" id="togglePasswordConfirm" onclick="togglePasswordConfirmVisibility()"><i class="bi-eye pe-2" id="toggleConfirmIcon"></i></button>
+                  </div>
                   <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
                 </div>
               </div>
+          @*     <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="PasswordConfirm" class="mb-2"></label>
+                  <input type="password" asp-for="PasswordConfirm" class="form-control" placeholder="Şifre Tekrar" />
+                  <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+                </div>
+              </div> *@
               <div class="row mb-2">
                 <div class="col">
                   <button type="submit" class="btn btn-warning" style="width:150px">Oluştur</button>
@@ -59,3 +72,38 @@
     </div>
   </div>
 </div>
+
+<script>
+  
+  var passwordInput = document.getElementById("passwordInput");
+  var toggleButton = document.getElementById("togglePassword");
+  var toggleIcon = document.getElementById("toggleIcon");
+  var passwordConfirmInput = document.getElementById("passwordConfirmInput");
+  var toggleConfirmButton = document.getElementById("togglePasswordConfirm");
+  var toggleConfirmIcon = document.getElementById("toggleConfirmIcon");
+
+  function togglePasswordVisibility() {
+    
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      //toggleButton.innerText = "Şifre Gizle";
+      toggleIcon.className = "bi-eye-slash pe-2";
+    } else {
+      passwordInput.type = "password";
+      //toggleButton.innerText = "Şifre Göster";
+      toggleIcon.className = "bi-eye pe-2";
+    }
+  }
+  function togglePasswordConfirmVisibility() {
+
+    if (passwordConfirmInput.type === "password") {
+      passwordConfirmInput.type = "text";
+      //toggleConfirmButton.innerText = "Şifre Gizle";
+      toggleConfirmIcon.className = "bi-eye-slash pe-2";
+    } else {
+      passwordConfirmInput.type = "password";
+      //toggleConfirmButton.innerText = "Şifre Göster";
+      toggleConfirmIcon.className = "bi-eye pe-2";
+    }
+  }
+</script>

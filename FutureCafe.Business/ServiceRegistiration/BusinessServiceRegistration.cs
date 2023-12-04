@@ -9,29 +9,29 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FutureCafe.Business.ServiceRegistiration
 {
-  public static class BusinessServiceRegistration
-  {
-    public static IServiceCollection AddBusinessServices(this IServiceCollection services)
-    {
-      //services
-      services.AddScoped<ICategoryService, CategoryService>();
-      services.AddScoped<IProductService, ProductService>();
-      services.AddScoped<ISchoolClassService, SchoolClassService>();
-      services.AddScoped<IStudentService, StudentService>();
-      services.AddScoped<ITradeService, TradeService>();
-      services.AddScoped<IUserService, UserService>();
-      services.AddScoped<IAuthService, AuthService>();
+	public static class BusinessServiceRegistration
+	{
+		public static IServiceCollection AddBusinessServices(this IServiceCollection services)
+		{
+			//services
+			services.AddScoped<ICategoryService, CategoryService>();
+			services.AddScoped<IProductService, ProductService>();
+			services.AddScoped<ISchoolClassService, SchoolClassService>();
+			services.AddScoped<IStudentService, StudentService>();
+			services.AddScoped<ITradeService, TradeService>();
+			services.AddScoped<IUserService, UserService>();
+			services.AddScoped<IAuthService, AuthService>();
 
-      //validators
-      services.AddScoped<IValidator<Category>, CategoryValidator>();
-      services.AddScoped<IValidator<ProductCreateEditDto>, ProductValidator>();
-      services.AddScoped<IValidator<SchoolClass>, SchoolClassValidator>();
-      services.AddScoped<IValidator<Student>, StudentValidator>();
-      services.AddScoped<IValidator<User>, UserValidator>();
+			//validators
+			services.AddScoped<IValidator<Category>, CategoryValidator>();
+			services.AddScoped<IValidator<ProductCreateEditDto>, ProductValidator>();
+			services.AddScoped<IValidator<SchoolClass>, SchoolClassValidator>();
+			services.AddScoped<IValidator<Student>, StudentValidator>();
+			services.AddScoped<IValidator<UserForRegisterDto>, UserValidator>();
 
-      services.AddAutoMapper(typeof(MappingProfile));
+			services.AddAutoMapper(typeof(MappingProfile));
 
-      return services;
-    }
-  }
+			return services;
+		}
+	}
 }
