@@ -19,11 +19,15 @@ namespace FutureCafe.Business.ServiceRegistiration
       services.AddScoped<ISchoolClassService, SchoolClassService>();
       services.AddScoped<IStudentService, StudentService>();
       services.AddScoped<ITradeService, TradeService>();
+      services.AddScoped<IUserService, UserService>();
+      services.AddScoped<IAuthService, AuthService>();
+      services.AddScoped<IOperationClaimService, OperationClaimService>();
       //validators
       services.AddScoped<IValidator<Category>, CategoryValidator>();
       services.AddScoped<IValidator<ProductCreateEditDto>, ProductValidator>();
       services.AddScoped<IValidator<SchoolClass>, SchoolClassValidator>();
       services.AddScoped<IValidator<Student>, StudentValidator>();
+      services.AddScoped<IValidator<UserForRegisterDto>, UserValidator>();
 
       services.AddAutoMapper(typeof(MappingProfile));
 

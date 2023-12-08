@@ -2,6 +2,7 @@
 using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Extensions;
 using FutureCafe.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FutureCafe.Web.Controllers
@@ -15,6 +16,7 @@ namespace FutureCafe.Web.Controllers
       _categoryService = categoryService;
     }
 
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Index()
     {
       var list = await _categoryService.GetListAsync<CategoryViewDto>();
@@ -26,11 +28,13 @@ namespace FutureCafe.Web.Controllers
     }
 
     //CREATE
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public IActionResult Create()
     {
       return View();
     }
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> Create(CategoryCreateEditDto categoryDto)
     {
@@ -51,6 +55,7 @@ namespace FutureCafe.Web.Controllers
       return RedirectToAction("Index");
     }
     //EDIT
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int id)
     {
       if (id == 0) { return RedirectToAction("Index"); }
@@ -63,6 +68,7 @@ namespace FutureCafe.Web.Controllers
 
       return View(category.Data);
     }
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> Edit(CategoryCreateEditDto categoryDto)
     {
@@ -84,6 +90,7 @@ namespace FutureCafe.Web.Controllers
       return RedirectToAction("Index");
     }
     //DETAIL
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> Detail(int id)
     {
@@ -97,7 +104,7 @@ namespace FutureCafe.Web.Controllers
       return View(category.Data);
     }
     //DELETE
-
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
@@ -111,6 +118,7 @@ namespace FutureCafe.Web.Controllers
       return View(category.Data);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost, ActionName("Delete")]
     public async Task<IActionResult> DeletePost(int id)
     {

@@ -1,6 +1,7 @@
 ﻿using FutureCafe.Business.Abstract;
 using FutureCafe.Business.Dtos;
 using FutureCafe.Entities.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FutureCafe.Web.Controllers
@@ -17,11 +18,13 @@ namespace FutureCafe.Web.Controllers
       _tradeService = tradeService;
     }
 
+    [Authorize(Roles = "Admin,CanteenKeeper")]
     public IActionResult Index()
     {
       return View();
     }
 
+    [Authorize(Roles = "Admin,CanteenKeeper")]
     [HttpGet]
     public async Task<IActionResult> CreateProductItem(string productBarcodNoInput)
     {
@@ -41,6 +44,7 @@ namespace FutureCafe.Web.Controllers
         return Json(new { success = false, message = "Ürün veritabanında bulunamadı." });
       }
     }
+    [Authorize(Roles = "Admin,CanteenKeeper")]
     [HttpPost]
     public async Task<IActionResult> Pay(string studentCardNumber, decimal totalPrice, IEnumerable<ProductTradeDto> products)
     {

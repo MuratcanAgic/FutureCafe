@@ -1,5 +1,6 @@
 ﻿using FutureCafe.Business.Abstract;
 using FutureCafe.Entities.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FutureCafe.Web.Controllers
@@ -12,16 +13,18 @@ namespace FutureCafe.Web.Controllers
     {
       _studentService = studentService;
     }
-
+    [Authorize(Roles = "Admin,CanteenKeeper")]
     public IActionResult Load()
     {
       return View();
     }
+    [Authorize(Roles = "Admin,CanteenKeeper")]
     public IActionResult Show()
     {
       return View();
     }
 
+    [Authorize(Roles = "Admin,CanteenKeeper")]
     [HttpGet]
     public async Task<IActionResult> FindStudent(string studentCardNumber)
     {
@@ -37,6 +40,7 @@ namespace FutureCafe.Web.Controllers
       }
     }
 
+    [Authorize(Roles = "Admin,CanteenKeeper")]
     [HttpPost]
     public async Task<IActionResult> LoadMoney(decimal loadAmount, string studentCardNumber)
     {
@@ -61,6 +65,7 @@ namespace FutureCafe.Web.Controllers
       }
     }
 
+    [Authorize(Roles = "Admin,CanteenKeeper")]
     [HttpGet]
     public async Task<IActionResult> ShowMoney(string studentCardNumber)
     {
