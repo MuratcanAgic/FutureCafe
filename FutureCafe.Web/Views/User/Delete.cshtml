@@ -1,0 +1,63 @@
+﻿@model FutureCafe.Business.Dtos.UserForViewDto
+
+<div class="container">
+
+  <div class="row mb-2">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h5>Kullanıcı Sil</h5>
+          @*<div asp-validation-summary="All"></div>*@
+        </div>
+        <div class="card-body">
+          <form asp-controller="User" asp-action="Delete" method="post" class="d-flex align-items-center">
+            <div class="container">
+
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="FirstName" class="mb-2"></label>
+                  <div class="container bg-dark-subtle rounded p-2">@Model.FirstName</div>
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="LastName" class="mb-2"></label>
+                  <div class="container bg-dark-subtle rounded p-2">@Model.LastName</div>
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="Email" class="mb-2"></label>
+                  <div class="container bg-dark-subtle rounded p-2">@Model.Email</div>
+                </div>
+              </div>
+
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="@Model.UserOperationClaims"></label>
+                  <div class="container bg-dark-subtle rounded p-2">
+                    @if (@Model.UserOperationClaims != null)
+                    {
+                      @String.Join(", ", @Model.UserOperationClaims.Select(p => p.OperationClaim.Name).ToArray())
+                    }
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="row mb-2">
+                <div class="col">
+                  <button type="submit" class="btn btn-danger" style="width:150px">Sil</button>
+                  <a asp-controller="User" asp-action="Index" class="btn btn-primary" style="width:150px">Listeye Dön</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

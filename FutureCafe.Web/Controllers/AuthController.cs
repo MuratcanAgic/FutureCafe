@@ -16,7 +16,6 @@ namespace FutureCafe.Web.Controllers
       _authService = authService;
       _userService = userService;
     }
-
     public IActionResult Login()
     {
       return View();
@@ -25,14 +24,15 @@ namespace FutureCafe.Web.Controllers
     {
       return View();
     }
-
     [HttpPost]
     public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
     {
       var userToLogin = _authService.Login(userForLoginDto);
       if (!userToLogin.Success)
       {
-        return BadRequest(userToLogin.Message);
+        ModelState.AddModelError("LoginError", userToLogin.Message);
+        return View(userToLogin.Data);
+        //return BadRequest(userToLogin.Message);
       }
       var claimsDb = _userService.GetClaims(userToLogin.Data);
 

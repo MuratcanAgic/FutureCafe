@@ -22,6 +22,7 @@
                   <th scope="col"><label asp-for="@Model.FirstOrDefault().FirstName"></label></th>
                   <th scope="col"><label asp-for="@Model.FirstOrDefault().LastName"></label></th>
                   <th scope="col"><label asp-for="@Model.FirstOrDefault().Email"></label></th>
+                  <th scope="col"><label asp-for="@Model.FirstOrDefault().UserOperationClaims"></label></th>
                   @*<th>Resim</th>*@
                 </tr>
               </thead>
@@ -38,6 +39,10 @@
                     <td>@item.FirstName</td>
                     <td>@item.LastName</td>
                     <td>@item.Email</td>
+                    @if (@item.UserOperationClaims != null)
+                    {
+                      <td>@String.Join(", ", @item.UserOperationClaims.Select(p => p.OperationClaim.Name).ToArray())</td>
+                    }
                     @*<td><img href="@item.ImageUrl" /></td>*@
                   </tr>
                 }

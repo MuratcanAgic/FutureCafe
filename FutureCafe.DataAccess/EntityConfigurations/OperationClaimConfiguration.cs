@@ -11,9 +11,15 @@ namespace FutureCafe.DataAccess.EntityConfigurations
       builder.HasKey(x => x.Id);
       builder.Property(x => x.Name).IsRequired().HasMaxLength(50);
 
+      builder
+           .HasMany(c => c.UserOperationClaims)
+           .WithOne(pc => pc.OperationClaim)
+           .HasForeignKey(pc => pc.OperationClaimId)
+           .OnDelete(DeleteBehavior.Restrict);
+
       builder.HasData(
          new OperationClaim { Id = 1, Name = "Admin" },
-         new OperationClaim { Id = 2, Name = "CanteenKeeper" }
+         new OperationClaim { Id = 2, Name = "Kantinci" }
         );
     }
   }

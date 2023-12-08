@@ -27,6 +27,14 @@
               </div>
               <div class="row mb-4">
                 <div class="col">
+                  <label class="control-label mb-2" asp-for="SelectClaimIds"></label>
+                  <select asp-for="SelectClaimIds" multiple="multiple" class="form-control" asp-items=ViewBag.AvailableClaims>
+                  </select>
+                  <span asp-validation-for="SelectClaimIds" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div class="col">
                   <label asp-for="Email" class="mb-2"></label>
                   <input type="text" asp-for="Email" class="form-control" placeholder="Kullanıcı Adı" />
                   <span asp-validation-for="Email" class="text-danger"></span>

@@ -36,6 +36,8 @@ namespace FutureCafe.Business.ValidationRules.FluentValidation
 										.Matches(@"[a-z]+").WithMessage(x => "{PropertyName} " + Messages.AtLeastOneLowerCaseLetter)
 										.Matches(@"[0-9]+").WithMessage(x => "{PropertyName} " + Messages.AtLeastOneNumber)
 										.Matches(@"[\!\?\*\.]+").WithMessage(x => "{PropertyName} " + Messages.AtLeastOneCharacterLetter);
+
+			RuleFor(x => x.SelectClaimIds).NotNull().WithName("Roller").WithMessage(x => "{PropertyName} " + Messages.CannotBeEmpty);
 		}
 	}
 }

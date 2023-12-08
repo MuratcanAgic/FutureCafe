@@ -6,6 +6,7 @@ using FutureCafe.Business.Constants;
 using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Business;
 using FutureCafe.Core.Utilities.Results;
+using FutureCafe.Core.Utilities.Security;
 using FutureCafe.DataAccess.Abstract;
 using FutureCafe.Entities.Concrete;
 using System.Linq.Expressions;
@@ -37,25 +38,25 @@ namespace FutureCafe.Business.Concrete
 			}
 
 		}
-		public IDataResult<TDto> Add<TDto>(TDto dto)
+		public IDataResult<UserForRegisterDto> Add(UserForRegisterDto dto)
 		{
 			try
 			{
-				var entity = _mapper.Map<TDto, User>(dto);
+				var entity = _mapper.Map<UserForRegisterDto, User>(dto);
 
 				//business result
 				IResult result = BusinessRules.Run();
 
 				if (result != null)
 				{
-					return new ErrorDataResult<TDto>(dto, result.Message);
+					return new ErrorDataResult<UserForRegisterDto>(dto, result.Message);
 				}
 				_userDal.Add(entity);
-				return new SuccessDataResult<TDto>(dto);
+				return new SuccessDataResult<UserForRegisterDto>(dto);
 			}
 			catch (Exception e)
 			{
-				return new ErrorDataResult<TDto>(e.Message);
+				return new ErrorDataResult<UserForRegisterDto>(e.Message);
 			}
 		}
 		public IResult Delete<TDto>(TDto dto)
@@ -191,25 +192,38 @@ namespace FutureCafe.Business.Concrete
 				return new ErrorDataResult<TDto>(e.Message.ToString());
 			}
 		}
-		public async Task<IDataResult<TDto>> AddAsync<TDto>(TDto dto)
+		public async Task<IDataResult<UserForRegisterDto>> AddAsync(UserForRegisterDto dto)
 		{
 			try
 			{
-				var entity = _mapper.Map<TDto, User>(dto);
+				byte[] passwordHash, passwordSalt;
+				HashingHelper.CreatePasswordHash(dto.Password, out passwordHash, out passwordSalt);
+				dto.PasswordHash = passwordHash;
+				dto.PasswordSalt = passwordSalt;
+				dto.Status = true;
+
+				if (dto.SelectClaimIds != null && dto.SelectClaimIds.Any())
+				{
+					dto.UserOperationClaims = dto.SelectClaimIds
+							.Select(claimId => new UserOperationClaim { OperationClaimId = claimId })
+							.ToList();
+				}
+
+				var entity = _mapper.Map<UserForRegisterDto, User>(dto);
 
 				//business result
 				IResult result = BusinessRules.Run();
 
 				if (result != null)
 				{
-					return new ErrorDataResult<TDto>(dto, result.Message);
+					return new ErrorDataResult<UserForRegisterDto>(dto, result.Message);
 				}
 				await _userDal.AddAsync(entity);
-				return new SuccessDataResult<TDto>(dto);
+				return new SuccessDataResult<UserForRegisterDto>(dto);
 			}
 			catch (Exception e)
 			{
-				return new ErrorDataResult<TDto>(e.Message);
+				return new ErrorDataResult<UserForRegisterDto>(e.Message);
 			}
 		}
 		public IDataResult<ValidationResult> Validate(UserForRegisterDto dto)

@@ -30,22 +30,6 @@ namespace FutureCafe.Business.Concrete
 
       return new SuccessDataResult<User>(userToCheck, "Başarılı giriş");
     }
-    public IDataResult<User> Register(UserForRegisterDto userForRegisterDto, string password)
-    {
-      byte[] passwordHash, passwordSalt;
-      HashingHelper.CreatePasswordHash(password, out passwordHash, out passwordSalt);
-      var user = new User
-      {
-        Email = userForRegisterDto.Email,
-        FirstName = userForRegisterDto.FirstName,
-        LastName = userForRegisterDto.LastName,
-        PasswordHash = passwordHash,
-        PasswordSalt = passwordSalt,
-        Status = true
-      };
-      _userService.Add(user);
-      return new SuccessDataResult<User>(user, "Kayıt oldu");
-    }
 
     public IResult UserExists(string email)
     {

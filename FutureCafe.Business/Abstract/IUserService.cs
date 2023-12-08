@@ -11,7 +11,7 @@ namespace FutureCafe.Business.Abstract
 		IDataResult<ValidationResult> Validate(UserForRegisterDto dto);
 		List<OperationClaim> GetClaims(User user);
 
-		IDataResult<TDto> Add<TDto>(TDto dto);
+		IDataResult<UserForRegisterDto> Add(UserForRegisterDto dto);
 		IDataResult<User> GetByMail(string email);
 		IResult Update<TDto>(TDto dto);
 		IResult Delete<TDto>(TDto dto);
@@ -21,7 +21,7 @@ namespace FutureCafe.Business.Abstract
 		Task<IDataResult<IEnumerable<TDto>>> GetListAsync<TDto>(Expression<Func<User, bool>> filter = null, Func<IQueryable<User>, IOrderedQueryable<User>> orderBy = null, string includeProperties = "");
 		Task<IDataResult<TDto>> FindByIdAsync<TDto>(int id);
 		Task<IDataResult<TDto>> GetAsync<TDto>(Expression<Func<User, bool>> filter, string includeProperties = "");
-		Task<IDataResult<TDto>> AddAsync<TDto>(TDto dto);
+		Task<IDataResult<UserForRegisterDto>> AddAsync(UserForRegisterDto dto);
 		Task<IResult> SaveAsync();
 	}
 }
