@@ -16,6 +16,9 @@ namespace FutureCafe.Business.Dtos
     [DisplayName("Ürün Tanımı")]
     public string? Description { get; set; }
 
+    [DisplayName("Ürün Fotoğrafı")]
+    public string? ImageUrl { get; set; }
+
     [DisplayName("Kategori")]
     public virtual ICollection<ProductCategory> ProductCategory { get; set; }
     public virtual ICollection<ProductPrice> ProductPrice { get; set; }

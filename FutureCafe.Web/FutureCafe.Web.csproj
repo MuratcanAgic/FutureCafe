@@ -19,4 +19,8 @@
     <ProjectReference Include="..\FutureCafe.DataAccess\FutureCafe.DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\ImageUploads\" />
+  </ItemGroup>
+
 </Project>

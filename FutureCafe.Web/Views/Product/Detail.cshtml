@@ -54,8 +54,8 @@
                 <div class="container bg-dark-subtle rounded p-2">
                   @if (Model.ProductPrice.Select(e => e.Price).Where(e => e.BuyingPrice.HasValue).LastOrDefault() != null)
                   {
-                    @(Model.ProductPrice.Select(e => e.Price).Where(e => e.BuyingPrice.HasValue).LastOrDefault().BuyingPrice.ToString() + "₺")
-                  }                  
+                    @(Model.ProductPrice.Select(e => e.Price).Where(e => e.BuyingPrice.HasValue).LastOrDefault()?.BuyingPrice.ToString() + "₺")
+                  }
                 </div>
               </div>
             </div>
@@ -67,20 +67,23 @@
                 <div class="container bg-dark-subtle rounded p-2">
                   @if (Model.ProductPrice.Select(e => e.Price).Where(e => e.SalePrice.HasValue).LastOrDefault() != null)
                   {
-                    @(Model.ProductPrice.Select(e => e.Price).Where(e => e.SalePrice.HasValue).LastOrDefault().SalePrice.ToString() + "₺")
-                  }             
+                    @(Model.ProductPrice.Select(e => e.Price).Where(e => e.SalePrice.HasValue).LastOrDefault()?.SalePrice.ToString() + "₺")
+                  }
                 </div>
               </div>
             </div>
 
             @*Image*@
-            @*<div class="row mb-4">
-            <div class="col">
-            <label asp-for="ImageUrl" class="mb-2"></label>
-            <input type="file" asp-for="ImageUrl" class="form-control" placeholder="Dosya yolu seçiniz." />
-            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            <div class="row mb-4">
+              <div class="col">
+                <div class="d-flex align-items-start">
+                  <div>
+                    <label asp-for="ImageUrl" class="mb-2"></label>
+                    <img src="@Model.ImageUrl" alt="..." class="mb-2" style="width: 100%; height: 150px; object-fit: contain;" />
+                  </div>
+                </div>
+              </div>
             </div>
-            </div>*@
 
             <div class="row mb-2">
               <div class="col">
