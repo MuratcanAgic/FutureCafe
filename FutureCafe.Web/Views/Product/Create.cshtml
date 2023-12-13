@@ -10,7 +10,7 @@
           @*<div asp-validation-summary="All"></div>*@
         </div>
         <div class="card-body">
-          <form asp-controller="Product" asp-action="Create" method="post" class="d-flex align-items-center">
+          <form asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data" class="d-flex align-items-center">
             <div class="container">
 
               <div class="row mb-4">
@@ -67,17 +67,18 @@
                   </div>
                   <span asp-validation-for="SalePrice" class="text-danger"></span>
                 </div>
-              </div> 
+              </div>
 
               @*Image*@
-              @*<div class="row mb-4">
-              <div class="col">
-              <label asp-for="ImageUrl" class="mb-2"></label>
-              <input type="file" asp-for="ImageUrl" class="form-control" placeholder="Dosya yolu seçiniz." />
-              <span asp-validation-for="ImageUrl" class="text-danger"></span>
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="ImageFile" class="mb-2"></label>
+                  <input type="file" asp-for="ImageFile" class="form-control" placeholder="Dosya yolu seçiniz." />
+                  <span asp-validation-for="ImageFile.ContentType" class="text-danger"></span>
+                  <span asp-validation-for="ImageFile.Length" class="text-danger"></span>
+                </div>
               </div>
-              </div>*@
-
+              
               <div class="row mb-2">
                 <div class="col">
                   <button type="submit" class="btn btn-warning" style="width:150px">Oluştur</button>
@@ -90,7 +91,6 @@
       </div>
     </div>
   </div>
-
 </div>
 
 <script>
@@ -129,3 +129,4 @@
     targetElement.value = scanned_barcode;
   }
 </script>
+

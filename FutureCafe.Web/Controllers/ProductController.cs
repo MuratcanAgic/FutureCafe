@@ -12,10 +12,13 @@ namespace FutureCafe.Web.Controllers
   {
     IProductService _productService;
     ICategoryService _categoryService;
-    public ProductController(IProductService productService, ICategoryService categoryService)
+    IWebHostEnvironment _webHostEnvironment;
+
+    public ProductController(IProductService productService, ICategoryService categoryService, IWebHostEnvironment webHostEnvironment)
     {
       _productService = productService;
       _categoryService = categoryService;
+      _webHostEnvironment = webHostEnvironment;
     }
 
     [Authorize(Roles = "Admin")]
@@ -52,11 +55,15 @@ namespace FutureCafe.Web.Controllers
         PopulateCategoryDropDownList();
         return View(productDto);
       }
+
+      await SaveProductImage(productDto);
+
       await _productService.AddAsync(productDto);
       await _productService.SaveAsync();
 
       return RedirectToAction("Index");
     }
+
 
     //EDIT
     [Authorize(Roles = "Admin")]
@@ -89,7 +96,11 @@ namespace FutureCafe.Web.Controllers
         PopulateCategoryDropDownList();
         return View(productDto);
       }
+
+      if (productDto.ImageUrl != null) DeleteProductImage(productDto.ImageUrl);
+      await SaveProductImage(productDto);
       _productService.Update(productDto);
+
       await _productService.SaveAsync();
 
       return RedirectToAction("Index");
@@ -138,16 +149,49 @@ namespace FutureCafe.Web.Controllers
 
       if (product != null)
       {
+
+        if (product.Data.ImageUrl != null) DeleteProductImage(product.Data.ImageUrl);
         _productService.Delete(product.Data);
         await _productService.SaveAsync();
         return RedirectToAction("Index");
       }
       return RedirectToAction("Index");
     }
+
     private void PopulateCategoryDropDownList(object? selectedCategory = null)
     {
       var categories = _categoryService.GetList<Category>(orderBy: q => q.OrderBy(x => x.Name));
       ViewBag.AvailableCategories = new SelectList(categories.Data, "Id", "Name", selectedCategory);
     }
+
+    private async Task SaveProductImage(ProductCreateEditDto productDto)
+    {
+      if (productDto.ImageFile != null && productDto.ImageFile.Length > 0)
+      {
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(productDto.ImageFile.FileName);
+        var fileExtension = Path.GetExtension(productDto.ImageFile.FileName);
+
+        var fileName = fileNameWithoutExtension + "_" + DateTime.Now.Ticks.ToString() + fileExtension;
+        var savePath = Path.Combine(_webHostEnvironment.WebRootPath, "ImageUploads", fileName);
+
+        using (var stream = new FileStream(savePath, FileMode.Create))
+        {
+          await productDto.ImageFile.CopyToAsync(stream);
+        }
+        productDto.ImageUrl = "/ImageUploads/" + fileName;
+      }
+      else
+        productDto.ImageUrl = "..//imgs/canteen_default.jpg";
+    }
+    private void DeleteProductImage(string imageUrl)
+    {
+      imageUrl = imageUrl.Replace("/ImageUploads/", "");
+      var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "ImageUploads", imageUrl);
+      if (System.IO.File.Exists(filePath))
+      {
+        System.IO.File.Delete(filePath);
+      }
+    }
+
   }
 }

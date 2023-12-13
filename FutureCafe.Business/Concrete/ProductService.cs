@@ -18,6 +18,7 @@ namespace FutureCafe.Business.Concrete
     ICategoryDal _categoryDal;
     IValidator<ProductCreateEditDto> _validator;
     IMapper _mapper;
+
     public ProductService(IProductDal productDal, IValidator<ProductCreateEditDto> validator, IMapper mapper, ICategoryDal categoryDal)
     {
       _productDal = productDal;
@@ -296,6 +297,7 @@ namespace FutureCafe.Business.Concrete
           entity.Name = dto.Name;
           entity.Description = dto.Description;
           entity.ProductBarcodNo = dto.ProductBarcodNo;
+          entity.ImageUrl = dto.ImageUrl;
 
           //business result
           IResult result = BusinessRules.Run();
@@ -319,6 +321,7 @@ namespace FutureCafe.Business.Concrete
     {
       try
       {
+
         var validationResult = _validator.Validate(dto);
 
         if (validationResult == null)

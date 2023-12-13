@@ -1,4 +1,5 @@
 ﻿using FutureCafe.Entities.Concrete;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel;
 
 namespace FutureCafe.Business.Dtos
@@ -24,6 +25,11 @@ namespace FutureCafe.Business.Dtos
 
     [DisplayName("Satış Fiyatı")]
     public decimal? SalePrice { get; set; }
+
+    [DisplayName("Ürün Fotoğrafı")]
+    public IFormFile? ImageFile { get; set; }
+
+    public string? ImageUrl { get; set; }
 
     public virtual ICollection<ProductPrice> ProductPrice { get; set; }
     public virtual ICollection<ProductCategory> ProductCategory { get; set; }

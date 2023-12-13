@@ -50,9 +50,9 @@
                 <div class="col">
                   <label>Alış fiyatı</label>
                   <div class="container bg-dark-subtle rounded p-2">
-                    @if (Model.ProductPrice.Count != 0)
+                    @if (Model.ProductPrice.Count != 0 )
                     {
-                      @(Model.ProductPrice.Select(e => e.Price).Where(e => e.BuyingPrice.HasValue).LastOrDefault().BuyingPrice.ToString() + "₺")
+                      @(Model.ProductPrice.Select(e => e.Price).Where(e => e.BuyingPrice.HasValue).LastOrDefault()?.BuyingPrice.ToString() + "₺")
                     }
                   </div>
                 </div>
@@ -64,7 +64,7 @@
                   <div class="container bg-dark-subtle rounded p-2">
                     @if (Model.ProductPrice.Count != 0)
                     {
-                      @(Model.ProductPrice.Select(e => e.Price).Where(e => e.SalePrice.HasValue).LastOrDefault().SalePrice.ToString() + "₺")
+                      @(Model.ProductPrice.Select(e => e.Price).Where(e => e.SalePrice.HasValue).LastOrDefault()?.SalePrice.ToString() + "₺")
                     }
                   </div>
                 </div>

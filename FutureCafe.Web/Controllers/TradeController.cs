@@ -34,7 +34,7 @@ namespace FutureCafe.Web.Controllers
         var salePrice = _productService.GetLastSalePrice(product.Data);
 
         if (salePrice.Success)
-          return Json(new { success = true, productBarcodNo = product.Data.ProductBarcodNo, productName = product.Data.Name, productSalePrice = salePrice.Data });
+          return Json(new { success = true, productBarcodNo = product.Data.ProductBarcodNo, productName = product.Data.Name, productSalePrice = salePrice.Data, productImage = product.Data.ImageUrl });
 
         return Json(new { success = false, message = salePrice.Message });
       }
