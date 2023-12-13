@@ -57,6 +57,46 @@ namespace FutureCafe.Web.Controllers
       return RedirectToAction("Index");
     }
 
+
+    //EDIT
+    [Authorize(Roles = "Admin")]
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id)
+    {
+      if (id == 0) { return RedirectToAction("Index"); }
+
+      var user = await _userService.FindByIdAsync<UserForRegisterDto>(id);
+
+      if (user == null)
+      { return RedirectToAction("Index"); }
+
+      PopulateRolesDropDownList();
+
+      return View(user.Data);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    public async Task<IActionResult> Edit(UserForRegisterDto usertDto)
+    {
+      if (usertDto == null) { return RedirectToAction("Index"); }
+
+      //validate
+      var validationResult = _userService.Validate(usertDto);
+      if (validationResult.Data.IsValid == false)
+      {
+        validationResult.Data.AddToModelState(this.ModelState);
+        PopulateRolesDropDownList();
+        return View(usertDto);
+      }
+
+      _userService.Update(usertDto);
+
+      await _userService.SaveAsync();
+
+      return RedirectToAction("Index");
+    }
+
     //DELETE
     [Authorize(Roles = "Admin")]
     [HttpGet]

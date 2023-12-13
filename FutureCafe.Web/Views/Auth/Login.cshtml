@@ -27,11 +27,21 @@
                   <span class="input-group-text"><i class="bi-person-fill pe-2"></i></span>
                   <input asp-for="Email" type="text" placeholder="Email Adresi" class="form-control">
                 </div>
-                <label asp-for="Password" class="mb-2"></label>
+               @*  <label asp-for="Password" class="mb-2"></label>
                 <div class="input-group mb-4">
                   <span class="input-group-text"><i class="bi-key-fill pe-2"></i></span>
                   <input asp-for="Password" type="password" placeholder="Şifre" class="form-control">
-                </div>
+                </div> *@
+
+               
+                    <label asp-for="Password" class="mb-2"></label>
+                <div class="input-group">
+                  <span class="input-group-text"><i class="bi-key-fill pe-2"></i></span>
+                      <input type="password" asp-for="Password" class="form-control" id="passwordInput" placeholder="Şifre" />
+                      <button type="button" class="btn btn-outline-primary" id="togglePassword" onclick="togglePasswordVisibility()"><i class="bi-eye pe-2" id="toggleIcon"></i></button>
+                    </div>
+                   
+              
                 @*  <div class="loggedin-forgot">
                 <input asp-for="RememberMe" type="checkbox" id="keep-me-logged-in">
                 <label for="keep-me-logged-in" class="pt-3 pb-2">Beni Hatırla</label>
@@ -58,5 +68,27 @@
   @*  <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
   <script src="~/js/site.js" asp-append-version="true"></script>
+
+  <script>
+
+    var passwordInput = document.getElementById("passwordInput");
+    var toggleButton = document.getElementById("togglePassword");
+    var toggleIcon = document.getElementById("toggleIcon");
+
+
+    function togglePasswordVisibility() {
+
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        //toggleButton.innerText = "Şifre Gizle";
+        toggleIcon.className = "bi-eye-slash pe-2";
+      } else {
+        passwordInput.type = "password";
+        //toggleButton.innerText = "Şifre Göster";
+        toggleIcon.className = "bi-eye pe-2";
+      }
+    }
+   
+  </script>
 </body>
 </html>
