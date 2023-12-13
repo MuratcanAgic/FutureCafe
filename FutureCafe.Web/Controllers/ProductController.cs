@@ -56,19 +56,14 @@ namespace FutureCafe.Web.Controllers
         return View(productDto);
       }
 
-      if (productDto.ImageFile != null && productDto.ImageFile.Length > 0)
-      {
-        var savedImageName = SaveProductImage(productDto.ImageFile);
-        productDto.ImageUrl = "/ImageUploads/" + savedImageName.Result;
-      }
-      else
-        productDto.ImageUrl = "..//imgs/canteen_default.jpg";
+      await SaveProductImage(productDto);
 
       await _productService.AddAsync(productDto);
       await _productService.SaveAsync();
 
       return RedirectToAction("Index");
     }
+
 
     //EDIT
     [Authorize(Roles = "Admin")]
@@ -101,7 +96,11 @@ namespace FutureCafe.Web.Controllers
         PopulateCategoryDropDownList();
         return View(productDto);
       }
+
+      if (productDto.ImageUrl != null) DeleteProductImage(productDto.ImageUrl);
+      await SaveProductImage(productDto);
       _productService.Update(productDto);
+
       await _productService.SaveAsync();
 
       return RedirectToAction("Index");
@@ -165,19 +164,24 @@ namespace FutureCafe.Web.Controllers
       ViewBag.AvailableCategories = new SelectList(categories.Data, "Id", "Name", selectedCategory);
     }
 
-    private async Task<string> SaveProductImage(IFormFile file)
+    private async Task SaveProductImage(ProductCreateEditDto productDto)
     {
-      var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(file.FileName);
-      var fileExtension = Path.GetExtension(file.FileName);
-
-      var fileName = fileNameWithoutExtension + "_" + DateTime.Now.Ticks.ToString() + fileExtension;
-      var savePath = Path.Combine(_webHostEnvironment.WebRootPath, "ImageUploads", fileName);
-
-      using (var stream = new FileStream(savePath, FileMode.Create))
+      if (productDto.ImageFile != null && productDto.ImageFile.Length > 0)
       {
-        await file.CopyToAsync(stream);
+        var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(productDto.ImageFile.FileName);
+        var fileExtension = Path.GetExtension(productDto.ImageFile.FileName);
+
+        var fileName = fileNameWithoutExtension + "_" + DateTime.Now.Ticks.ToString() + fileExtension;
+        var savePath = Path.Combine(_webHostEnvironment.WebRootPath, "ImageUploads", fileName);
+
+        using (var stream = new FileStream(savePath, FileMode.Create))
+        {
+          await productDto.ImageFile.CopyToAsync(stream);
+        }
+        productDto.ImageUrl = "/ImageUploads/" + fileName;
       }
-      return fileName;
+      else
+        productDto.ImageUrl = "..//imgs/canteen_default.jpg";
     }
     private void DeleteProductImage(string imageUrl)
     {

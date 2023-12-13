@@ -22,7 +22,7 @@ namespace FutureCafe.Business.Mapping
         .ForSourceMember(x => x.SelectCategoryIds, opt => opt.DoNotValidate())
         .ForSourceMember(x => x.BuyingPrice, opt => opt.DoNotValidate())
         .ForSourceMember(x => x.SalePrice, opt => opt.DoNotValidate())
-        .ForSourceMember(x => x.ImageFile, opt => opt.DoNotValidate());
+        ;
 
       CreateMap<Product, ProductViewDto>().ReverseMap();
       CreateMap<Product, ProductDetailDto>().ReverseMap();

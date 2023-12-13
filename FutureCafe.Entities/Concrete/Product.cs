@@ -1,6 +1,8 @@
 ﻿using FutureCafe.Core.Entitites;
 using FutureCafe.Entities.Abstract;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FutureCafe.Entities.Concrete
 {
@@ -21,6 +23,9 @@ namespace FutureCafe.Entities.Concrete
     //[StringLength(500, ErrorMessage = "{0}, {1}'den az olmalıdır.")]
     //[MinLength(2, ErrorMessage = "{0}, {1}'den fazla olmalıdır")]
     public string? ImageUrl { get; set; }
+
+    [NotMapped]
+    public IFormFile? ImageFile { get; set; }
 
     [DisplayName("Ürün Barkod Numarası")]
     //[Required(ErrorMessage = "{0} boş geçilemez")]

@@ -297,6 +297,7 @@ namespace FutureCafe.Business.Concrete
           entity.Name = dto.Name;
           entity.Description = dto.Description;
           entity.ProductBarcodNo = dto.ProductBarcodNo;
+          entity.ImageUrl = dto.ImageUrl;
 
           //business result
           IResult result = BusinessRules.Run();

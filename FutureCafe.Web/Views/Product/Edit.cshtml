@@ -10,7 +10,7 @@
           @*<div asp-validation-summary="All"></div>*@
         </div>
         <div class="card-body">
-          <form asp-controller="Product" asp-action="Edit" method="post" class="d-flex align-items-center">
+          <form asp-controller="Product" asp-action="Edit" method="post" enctype="multipart/form-data" class="d-flex align-items-center">
             <div class="container">
 
               <div class="row mb-4">
@@ -70,14 +70,22 @@
               </div>
 
               @*Image*@
-              @*<div class="row mb-4">
-              <div class="col">
-              <label asp-for="ImageUrl" class="mb-2"></label>
-              <input type="file" asp-for="ImageUrl" class="form-control" placeholder="Dosya yolu seçiniz." />
-              <span asp-validation-for="ImageUrl" class="text-danger"></span>
-              </div>
-              </div>*@
+              <div class="row mb-4">
+                <div class="col">
+                  <label asp-for="ImageFile" class="mb-2"></label>
+                  <input type="text" asp-for="ImageUrl" hidden class="form-control" />
+                  <input type="file" name="ImageFile" asp-for="ImageFile" class="form-control" placeholder="Dosya yolu seçiniz." />
+                  <span asp-validation-for="ImageFile.ContentType" class="text-danger"></span>
+                  <span asp-validation-for="ImageFile.Length" class="text-danger"></span>
 
+@*                   @if (Model.ImageUrl != null)
+                  {
+                    <label>Şu anki fotoğraf</label>
+                    <img src="@Model.ImageUrl" alt="..." class="mb-2" style="width: 100%; height: 150px; object-fit: contain;" />
+                  } *@
+                </div>
+              </div>
+             
               <div class="row mb-2">
                 <div class="col">
                   <button type="submit" class="btn btn-warning" style="width:150px">Değiştir</button>
@@ -90,7 +98,6 @@
       </div>
     </div>
   </div>
-
 </div>
 
 <script>
