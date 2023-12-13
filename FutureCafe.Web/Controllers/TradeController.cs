@@ -18,13 +18,13 @@ namespace FutureCafe.Web.Controllers
       _tradeService = tradeService;
     }
 
-    [Authorize(Roles = "Admin,CanteenKeeper")]
+    [Authorize(Roles = "Admin,Kantinci")]
     public IActionResult Index()
     {
       return View();
     }
 
-    [Authorize(Roles = "Admin,CanteenKeeper")]
+    [Authorize(Roles = "Admin,Kantinci")]
     [HttpGet]
     public async Task<IActionResult> CreateProductItem(string productBarcodNoInput)
     {
@@ -44,7 +44,7 @@ namespace FutureCafe.Web.Controllers
         return Json(new { success = false, message = "Ürün veritabanında bulunamadı." });
       }
     }
-    [Authorize(Roles = "Admin,CanteenKeeper")]
+    [Authorize(Roles = "Admin,Kantinci")]
     [HttpPost]
     public async Task<IActionResult> Pay(string studentCardNumber, decimal totalPrice, IEnumerable<ProductTradeDto> products)
     {

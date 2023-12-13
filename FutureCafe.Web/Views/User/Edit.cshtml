@@ -5,11 +5,11 @@
     <div class="col">
       <div class="card">
         <div class="card-header">
-          <h5>Kullanıcı Oluştur</h5>
+          <h5>Kullanıcı Değiştir</h5>
           @*<div asp-validation-summary="All"></div>*@
         </div>
         <div class="card-body">
-          <form asp-controller="User" asp-action="Create" method="post" class="d-flex align-items-center">
+          <form asp-controller="User" asp-action="Edit" method="post" class="d-flex align-items-center">
             <div class="container">
               <div class="row mb-4">
                 <div class="col">
@@ -62,7 +62,7 @@
               </div>
               <div class="row mb-2">
                 <div class="col">
-                  <button type="submit" class="btn btn-warning" style="width:150px">Oluştur</button>
+                  <button type="submit" class="btn btn-warning" style="width:150px">Değiştir</button>
                   <a asp-controller="User" asp-action="Index" class="btn btn-primary" style="width:150px">Listeye Dön</a>
                 </div>
               </div>
@@ -75,7 +75,7 @@
 </div>
 
 <script>
-  
+
   var passwordInput = document.getElementById("passwordInput");
   var toggleButton = document.getElementById("togglePassword");
   var toggleIcon = document.getElementById("toggleIcon");
@@ -84,7 +84,7 @@
   var toggleConfirmIcon = document.getElementById("toggleConfirmIcon");
 
   function togglePasswordVisibility() {
-    
+
     if (passwordInput.type === "password") {
       passwordInput.type = "text";
       //toggleButton.innerText = "Şifre Gizle";

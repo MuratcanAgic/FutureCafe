@@ -13,18 +13,18 @@ namespace FutureCafe.Web.Controllers
     {
       _studentService = studentService;
     }
-    [Authorize(Roles = "Admin,CanteenKeeper")]
+    [Authorize(Roles = "Admin,Kantinci")]
     public IActionResult Load()
     {
       return View();
     }
-    [Authorize(Roles = "Admin,CanteenKeeper")]
+    [Authorize(Roles = "Admin,Kantinci")]
     public IActionResult Show()
     {
       return View();
     }
 
-    [Authorize(Roles = "Admin,CanteenKeeper")]
+    [Authorize(Roles = "Admin,Kantinci")]
     [HttpGet]
     public async Task<IActionResult> FindStudent(string studentCardNumber)
     {
@@ -40,7 +40,7 @@ namespace FutureCafe.Web.Controllers
       }
     }
 
-    [Authorize(Roles = "Admin,CanteenKeeper")]
+    [Authorize(Roles = "Admin,Kantinci")]
     [HttpPost]
     public async Task<IActionResult> LoadMoney(decimal loadAmount, string studentCardNumber)
     {
@@ -65,7 +65,7 @@ namespace FutureCafe.Web.Controllers
       }
     }
 
-    [Authorize(Roles = "Admin,CanteenKeeper")]
+    [Authorize(Roles = "Admin,Kantinci")]
     [HttpGet]
     public async Task<IActionResult> ShowMoney(string studentCardNumber)
     {
