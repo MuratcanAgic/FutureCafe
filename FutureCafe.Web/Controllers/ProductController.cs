@@ -181,7 +181,7 @@ namespace FutureCafe.Web.Controllers
         productDto.ImageUrl = "/ImageUploads/" + fileName;
       }
       else
-        productDto.ImageUrl = "..//imgs/canteen_default.jpg";
+        productDto.ImageUrl = "/imgs/canteen_default.jpg";
     }
     private void DeleteProductImage(string imageUrl)
     {
