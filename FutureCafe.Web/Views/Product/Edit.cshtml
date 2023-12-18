@@ -15,7 +15,7 @@
 
               <div class="row mb-4">
                 <div class="col">
-                  <label asp-for="Name" class="mb-2"></label>
+                  <label asp-for="Name" class="mb-2"></label> *
                   <input type="text" asp-for="Name" class="form-control" placeholder="Ad" />
                   <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
@@ -31,7 +31,7 @@
 
               <div class="row mb-4">
                 <div class="col">
-                  <label class="control-label mb-2" asp-for="SelectCategoryIds"></label>
+                  <label class="control-label mb-2" asp-for="SelectCategoryIds"></label> *
                   <select asp-for="SelectCategoryIds" multiple="multiple" class="form-control" asp-items=ViewBag.AvailableCategories>
                     @*<option value="">-- Kategori Seç --</option>*@
                   </select>
@@ -41,7 +41,7 @@
 
               <div class="row mb-4">
                 <div class="col">
-                  <label asp-for="ProductBarcodNo" class="mb-2"></label>
+                  <label asp-for="ProductBarcodNo" class="mb-2"></label> *
                   <input type="text" asp-for="ProductBarcodNo" class="form-control" id="target-input" placeholder="Barkod okutabilir veya elle yazabilirsiniz." />
                   <span asp-validation-for="ProductBarcodNo" class="text-danger"></span>
                 </div>
@@ -60,7 +60,7 @@
 
               <div class="row mb-4">
                 <div class="col">
-                  <label asp-for="SalePrice" class="mb-2"></label>
+                  <label asp-for="SalePrice" class="mb-2"></label> *
                   <div class="input-group mb-3">
                     <span class="input-group-text">₺</span>
                     <input type="text" asp-for="SalePrice" class="form-control" />
@@ -90,6 +90,11 @@
                 <div class="col">
                   <button type="submit" class="btn btn-warning" style="width:150px">Değiştir</button>
                   <a asp-controller="Product" asp-action="Index" class="btn btn-primary" style="width:150px">Listeye Dön</a>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col justify-content-end d-flex">
+                  <label class="text-info">* ile gösterilen alanlar,doldurulması zorunlu alanlardır.  </label>
                 </div>
               </div>
             </div>

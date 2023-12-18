@@ -15,7 +15,7 @@
 
               <div class="row mb-4">
                 <div class="col">
-                  <label asp-for="Name" class="mb-2"></label>
+                  <label asp-for="Name" class="mb-2"></label> *
                   <input type="text" asp-for="Name" class="form-control" placeholder="Ad" />
                   <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
@@ -25,6 +25,11 @@
                 <div class="col">
                   <button type="submit" class="btn btn-warning" style="width:150px">Değiştir</button>
                   <a asp-controller="SchoolClass" asp-action="Index" class="btn btn-primary" style="width:150px">Listeye Dön</a>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col justify-content-end d-flex">
+                  <label class="text-info">* ile gösterilen alanlar,doldurulması zorunlu alanlardır.  </label>
                 </div>
               </div>
             </div>
