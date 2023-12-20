@@ -48,5 +48,6 @@ namespace FutureCafe.Entities.Concrete
 
     public virtual ICollection<StudentCredit>? StudentCredit { get; set; }
     public virtual ICollection<StudentCategory>? StudentCategory { get; set; }
+    public virtual ICollection<StudentProduct>? StudentProduct { get; set; }
   }
 }

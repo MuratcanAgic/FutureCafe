@@ -3,6 +3,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using FutureCafe.Business.Abstract;
 using FutureCafe.Business.Constants;
+using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Business;
 using FutureCafe.Core.Utilities.Results;
 using FutureCafe.DataAccess.Abstract;
@@ -16,11 +17,39 @@ namespace FutureCafe.Business.Concrete
     IStudentDal _studentDal;
     IValidator<Student> _validator;
     IMapper _mapper;
-    public StudentService(IStudentDal studentDal, IValidator<Student> validator, IMapper mapper)
+    ICategoryDal _categoryDal;
+    IProductDal _productDal;
+    public StudentService(IStudentDal studentDal, IValidator<Student> validator, IMapper mapper, ICategoryDal categoryDal, IProductDal productDal)
     {
       _studentDal = studentDal;
       _validator = validator;
       _mapper = mapper;
+      _categoryDal = categoryDal;
+      _productDal = productDal;
+    }
+
+    public async Task<IDataResult<List<ProductBanDto>>> GetProductsByCagegoryToBanAsync()
+    {
+      try
+      {
+        List<ProductBanDto> dtos = new List<ProductBanDto>();
+        var categories = await _categoryDal.GetListAsync();
+        var products = await _productDal.GetListAsync(null, null, "ProductCategory");
+
+        foreach (var category in categories)
+        {
+          var productsByCategory = products.Where(p => p.ProductCategory.Any(x => x.CategoryId == category.Id)).ToList();
+
+          dtos.Add(new ProductBanDto { CategoryName = category.Name, ProductList = productsByCategory });
+        }
+
+        return new SuccessDataResult<List<ProductBanDto>>(dtos);
+      }
+      catch (Exception e)
+      {
+        return new ErrorDataResult<List<ProductBanDto>>(e.Message);
+
+      }
     }
     public IDataResult<TDto> Add<TDto>(TDto dto)
     {

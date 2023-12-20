@@ -1,0 +1,42 @@
+﻿@model IEnumerable<FutureCafe.Business.Dtos.ProductBanDto>
+
+<div class="container">
+
+  <div class="row mb-2">
+    <div class="col">
+      <div class="card">
+        <div class="card-header">
+          <h5>Ürün Yasakla</h5>
+          @*<div asp-validation-summary="All"></div>*@
+        </div>
+        <div class="card-body">
+          <form asp-controller="Student" asp-action="Ban" method="post" class="d-flex align-items-center">
+            <div class="container">
+
+              @foreach (var item in Model)
+              {
+                <div class="row mb-4">
+                  <div class="col">
+                    <label class="control-label mb-2">@item.CategoryName</label>
+                    <select asp-for="@item.SelectedProductIds" multiple="multiple" class="form-control" asp-items="@(new SelectList(item.ProductList,"Id","Name"))">
+                      <option value="">-- Tümünü Seç --</option>
+                    </select>
+                    @* <span asp-validation-for="@item.SelectedProductIds" class="text-danger"></span> *@
+                  </div>
+                </div>
+              }
+            
+              <div class="row mb-2">
+                <div class="col">
+                  <button type="submit" class="btn btn-warning" style="width:150px">Oluştur</button>
+                  <a asp-controller="Student" asp-action="Index" class="btn btn-primary" style="width:150px">Listeye Dön</a>
+                </div>
+              </div>           
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

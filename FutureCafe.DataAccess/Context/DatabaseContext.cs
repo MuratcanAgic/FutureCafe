@@ -37,6 +37,7 @@ namespace FutureCafe.DataAccess.Context
     public DbSet<User> Users { get; set; }
     public DbSet<OperationClaim> OperationClaims { get; set; }
     public DbSet<UserOperationClaim> userOperationClaims { get; set; }
+    public DbSet<StudentProduct> StudentProducts { get; set; }
 
     public override int SaveChanges()
     {

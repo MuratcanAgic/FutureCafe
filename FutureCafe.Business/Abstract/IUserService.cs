@@ -19,6 +19,7 @@ namespace FutureCafe.Business.Abstract
     IResult Save();
     IResult Any(Expression<Func<User, bool>> filter);
 
+
     Task<IDataResult<IEnumerable<TDto>>> GetListAsync<TDto>(Expression<Func<User, bool>> filter = null, Func<IQueryable<User>, IOrderedQueryable<User>> orderBy = null, string includeProperties = "");
     Task<IDataResult<TDto>> FindByIdAsync<TDto>(int id) where TDto : class;
     Task<IDataResult<TDto>> GetAsync<TDto>(Expression<Func<User, bool>> filter, string includeProperties = "");
