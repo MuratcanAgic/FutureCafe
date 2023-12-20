@@ -40,6 +40,23 @@ namespace FutureCafe.Business.Concrete
       }
 
     }
+
+    public IResult Any(Expression<Func<User, bool>> filter)
+    {
+      try
+      {
+        var exist = _userDal.Any(filter);
+
+        if (exist == true) return new SuccessResult(Messages.DataExist);
+
+        return new ErrorResult(Messages.DataNotExist);
+      }
+      catch (Exception e)
+      {
+        return new ErrorResult(e.Message);
+      }
+    }
+
     public IDataResult<UserForRegisterDto> Add(UserForRegisterDto dto)
     {
       try

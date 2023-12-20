@@ -67,7 +67,18 @@ namespace FutureCafe.Business.Concrete
 
     public IResult Any(Expression<Func<Student, bool>> filter)
     {
-      throw new NotImplementedException();
+      try
+      {
+        var exist = _studentDal.Any(filter);
+
+        if (exist == true) return new SuccessResult(Messages.DataExist);
+
+        return new ErrorResult(Messages.DataNotExist);
+      }
+      catch (Exception e)
+      {
+        return new ErrorResult(e.Message);
+      }
     }
 
     public IDataResult<int> CountWhere(Expression<Func<Student, bool>> filter)

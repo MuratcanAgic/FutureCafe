@@ -79,7 +79,18 @@ namespace FutureCafe.Business.Concrete
 
     public IResult Any(Expression<Func<Product, bool>> filter)
     {
-      throw new NotImplementedException();
+      try
+      {
+        var exist = _productDal.Any(filter);
+
+        if (exist == true) return new SuccessResult(Messages.DataExist);
+
+        return new ErrorResult(Messages.DataNotExist);
+      }
+      catch (Exception e)
+      {
+        return new ErrorResult(e.Message);
+      }
     }
 
     public IDataResult<int> CountWhere(Expression<Func<Product, bool>> filter)
