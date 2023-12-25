@@ -145,34 +145,28 @@ namespace FutureCafe.Web.Controllers
       return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Admin")]
     //BAN
+    [Authorize(Roles = "Admin")]
     [HttpGet]
-    public async Task<IActionResult> Ban()
+    public async Task<IActionResult> Ban(int id)
     {
-      var banList = await _studentService.GetProductsByCagegoryToBanAsync();
+      var banList = await _studentService.GetProductsByCagegoryToBanAsync(id);
+      TempData["studentId"] = id;
       return View(banList.Data);
     }
-    /* [Authorize(Roles = "Admin")]
-     [HttpPost]
-     public async Task<IActionResult> Create(StudentCreateEditDto studentDto)
-     {
-       if (studentDto == null) { return RedirectToAction("Index"); }
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    public async Task<IActionResult> Ban(List<ProductBanDto> banDto)
+    {
+      var stdId = TempData["studentId"];
+      if (banDto == null) { return RedirectToAction("Index"); }
 
 
-       //validate
-       var validationResult = _studentService.Validate(studentDto);
-       if (validationResult.Data.IsValid == false)
-       {
-         validationResult.Data.AddToModelState(this.ModelState);
-         PopulateSchoolClassDropDownList();
-         return View(studentDto);
-       }
-       await _studentService.AddAsync(studentDto);
-       await _studentService.SaveAsync();
+      _studentService.BanUpdate(Convert.ToInt32(stdId), banDto);
+      await _studentService.SaveAsync();
 
-       return RedirectToAction("Index");
-     }*/
+      return RedirectToAction("Index");
+    }
 
 
     private void PopulateSchoolClassDropDownList(object? selectedCategory = null)

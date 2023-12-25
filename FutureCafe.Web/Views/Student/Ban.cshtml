@@ -1,4 +1,4 @@
-﻿@model IEnumerable<FutureCafe.Business.Dtos.ProductBanDto>
+﻿@model List<FutureCafe.Business.Dtos.ProductBanDto>
 
 <div class="container">
 
@@ -7,31 +7,39 @@
       <div class="card">
         <div class="card-header">
           <h5>Ürün Yasakla</h5>
-          @*<div asp-validation-summary="All"></div>*@
         </div>
         <div class="card-body">
           <form asp-controller="Student" asp-action="Ban" method="post" class="d-flex align-items-center">
             <div class="container">
 
-              @foreach (var item in Model)
+              @for (var i = 0; i < Model.Count; i += 2)
               {
                 <div class="row mb-4">
-                  <div class="col">
-                    <label class="control-label mb-2">@item.CategoryName</label>
-                    <select asp-for="@item.SelectedProductIds" multiple="multiple" class="form-control" asp-items="@(new SelectList(item.ProductList,"Id","Name"))">
-                      <option value="">-- Tümünü Seç --</option>
+                  <div class="col-lg-6 col-md-12">
+                    <input type="text" asp-for="@Model[i].CategoryId" hidden />
+                    <label class="control-label mb-2">@Model[i].CategoryName</label>
+                    <select asp-for="@Model[i].SelectedProductIds" multiple="multiple" class="form-control" asp-items="@(new SelectList(Model[i].ProductList, "Id", "Name"))">
+                      <option value="-1">-- Tüm Kategori --</option>
                     </select>
-                    @* <span asp-validation-for="@item.SelectedProductIds" class="text-danger"></span> *@
                   </div>
+                  @if (i + 1 < Model.Count)
+                  {
+                    <div class="col-lg-6 col-md-12">
+                      <input type="text" asp-for="@Model[i + 1].CategoryId" hidden />
+                      <label class="control-label mb-2">@Model[i + 1].CategoryName</label>
+                      <select asp-for="@Model[i + 1].SelectedProductIds" multiple="multiple" class="form-control" asp-items="@(new SelectList(Model[i + 1].ProductList, "Id", "Name"))">
+                        <option value="-1">-- Tüm Kategori --</option>
+                      </select>
+                    </div>
+                  }
                 </div>
               }
-            
               <div class="row mb-2">
                 <div class="col">
-                  <button type="submit" class="btn btn-warning" style="width:150px">Oluştur</button>
+                  <button type="submit" class="btn btn-warning" style="width:150px">Yasakla</button>
                   <a asp-controller="Student" asp-action="Index" class="btn btn-primary" style="width:150px">Listeye Dön</a>
                 </div>
-              </div>           
+              </div>
             </div>
           </form>
         </div>
@@ -40,3 +48,14 @@
   </div>
 </div>
 
+@* <script>
+  // jQuery code to select all options when "-- Tümünü Seç --" is selected
+  $(document).ready(function () {
+    $('select[data-index]').change(function () {
+      var index = $(this).data('index');
+      if ($(this).val() == "-1") {
+        $(this).find("option").prop("selected", true);
+      }
+    });
+  });
+</script> *@
