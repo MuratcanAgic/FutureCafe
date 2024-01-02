@@ -19,12 +19,14 @@ namespace FutureCafe.Business.Concrete
     IMapper _mapper;
     IValidator<UserForRegisterDto> _validator;
     IOperationClaimDal _operationClaimDal;
+
     public UserService(IUserDal userDal, IMapper mapper, IValidator<UserForRegisterDto> validator, IOperationClaimDal operationClaimDal)
     {
       _userDal = userDal;
       _mapper = mapper;
       _validator = validator;
       _operationClaimDal = operationClaimDal;
+
     }
 
     public List<OperationClaim> GetClaims(User user)

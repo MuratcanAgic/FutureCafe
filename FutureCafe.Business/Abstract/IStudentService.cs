@@ -1,4 +1,5 @@
 ﻿using FluentValidation.Results;
+using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Results;
 using FutureCafe.Entities.Concrete;
 using System.Linq.Expressions;
@@ -22,6 +23,8 @@ namespace FutureCafe.Business.Abstract
     IDataResult<Student> LoadMoneyToStudent(Student student, decimal loadAmount);
     IDataResult<decimal?> GetLastCreditAmount(Student student);
     IDataResult<Student> WithDrawMoneyFromStudent(Student student, decimal withdrawAmount);
+    public IResult BanUpdate(int studentId, List<ProductBanDto> banDto);
+
     //Asnyc
     Task<IDataResult<TDto>> FindByIdAsync<TDto>(int id);
     Task<IDataResult<TDto>> GetAsync<TDto>(Expression<Func<Student, bool>> filter, string includeProperties = "");
@@ -30,5 +33,7 @@ namespace FutureCafe.Business.Abstract
     Task<IDataResult<TDto>> AddAsync<TDto>(TDto dto);
     Task<IResult> SaveAsync();
     Task<IDataResult<int>> CountWhereAsync(Expression<Func<Student, bool>> filter);
+    public Task<IDataResult<List<ProductBanDto>>> GetProductsByCagegoryToBanAsync(int studentId);
+    Task<IDataResult<string>> CheckBannedProducts(IEnumerable<ProductTradeDto> productsToCheck, string studentCardNumber);
   }
 }

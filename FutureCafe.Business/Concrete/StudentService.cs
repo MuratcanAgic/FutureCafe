@@ -3,6 +3,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using FutureCafe.Business.Abstract;
 using FutureCafe.Business.Constants;
+using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Business;
 using FutureCafe.Core.Utilities.Results;
 using FutureCafe.DataAccess.Abstract;
@@ -16,12 +17,144 @@ namespace FutureCafe.Business.Concrete
     IStudentDal _studentDal;
     IValidator<Student> _validator;
     IMapper _mapper;
-    public StudentService(IStudentDal studentDal, IValidator<Student> validator, IMapper mapper)
+    ICategoryDal _categoryDal;
+    IProductDal _productDal;
+    public StudentService(IStudentDal studentDal, IValidator<Student> validator, IMapper mapper, ICategoryDal categoryDal, IProductDal productDal)
     {
       _studentDal = studentDal;
       _validator = validator;
       _mapper = mapper;
+      _categoryDal = categoryDal;
+      _productDal = productDal;
     }
+
+    public async Task<IDataResult<List<ProductBanDto>>> GetProductsByCagegoryToBanAsync(int studentId)
+    {
+      try
+      {
+        List<ProductBanDto> dtos = new List<ProductBanDto>();
+        var categories = await _categoryDal.GetListAsync();
+        var products = await _productDal.GetListAsync(null, null, "ProductCategory");
+        var studentList = _studentDal.GetList(null, null, "StudentCategory,StudentProduct.Product.ProductCategory");
+        Student student = studentList.FirstOrDefault(x => x.Id == studentId);
+
+        if (student == null || products == null || categories == null)
+          return new ErrorDataResult<List<ProductBanDto>>(Messages.DataNotFound);
+
+
+        foreach (var category in categories)
+        {
+          var productsByCategory = products.Where(p => p.ProductCategory.Any(x => x.CategoryId == category.Id)).ToList();
+          var selectIds = new List<int>();
+
+          if (student.StudentCategory.Any(x => x.CategoryId == category.Id)) selectIds.Add(-1);
+
+          foreach (var studentProduct in student.StudentProduct)
+          {
+            if (studentProduct.Product.ProductCategory.Any(x => x.CategoryId == category.Id))
+            {
+              selectIds.Add(studentProduct.ProductId);
+            }
+          }
+
+          dtos.Add(new ProductBanDto { CategoryName = category.Name, ProductList = productsByCategory, SelectedProductIds = selectIds, CategoryId = category.Id });
+        }
+
+        return new SuccessDataResult<List<ProductBanDto>>(dtos);
+      }
+      catch (Exception e)
+      {
+        return new ErrorDataResult<List<ProductBanDto>>(e.Message);
+
+      }
+    }
+
+    public async Task<IDataResult<string>> CheckBannedProducts(IEnumerable<ProductTradeDto> productsToCheck, string studentCardNumber)
+    {
+      try
+      {
+        var student = await GetAsync<Student>(x => x.CardNumber == studentCardNumber, "StudentCategory.Category,StudentProduct.Product");
+        var productBarcodes = productsToCheck.Select(p => p.ProductBarcodNo).Distinct().ToList();
+        var products = await _productDal.GetListAsync(x => productBarcodes.Contains(x.ProductBarcodNo), null, "ProductCategory.Category");
+
+        if (student == null || products == null) return new ErrorDataResult<string>(Messages.DataNotFound);
+
+        List<string> result = new List<string>();
+
+        foreach (var product in products)
+        {
+          foreach (var studentProduct in student.Data.StudentProduct)
+          {
+
+            if (studentProduct.ProductId == product.Id)
+            {
+              result.Add($"{product.Name} ürünü {student.Data.NameSurname} için yasaklıdır!");
+            }
+          }
+
+          if (product.ProductCategory.Any(x => student.Data.StudentCategory.Any(y => y.CategoryId == x.CategoryId)))
+          {
+            result.Add($"{product.Name} ürünü {student.Data.NameSurname} için yasaklıdır!");
+          }
+        }
+
+        string concatenatedString = string.Join(Environment.NewLine, result);
+
+        return new SuccessDataResult<string>(concatenatedString);
+      }
+      catch (Exception e)
+      {
+        return new ErrorDataResult<string>(e.Message);
+      }
+    }
+
+    public IResult BanUpdate(int studentId, List<ProductBanDto> banDtos)
+    {
+      try
+      {
+        var studentList = _studentDal.GetList(null, null, "StudentCategory,StudentProduct");
+        Student student = studentList.FirstOrDefault(x => x.Id == studentId);
+
+        if (student == null)
+          return new ErrorResult(Messages.DataNotFound);
+
+
+        var studentCategoriesBanList = new List<StudentCategory>();
+        var studentProductsBanList = new List<StudentProduct>();
+
+
+        foreach (var dto in banDtos)
+        {
+          if (dto.SelectedProductIds != null)
+          {
+            if (dto.SelectedProductIds.Contains(-1))
+            {
+              studentCategoriesBanList.Add(new StudentCategory { CategoryId = dto.CategoryId });
+            }
+            else
+            {
+              foreach (var productId in dto.SelectedProductIds)
+              {
+                if (studentProductsBanList.Any(x => x.ProductId == productId) == false)
+                  studentProductsBanList.Add(new StudentProduct { ProductId = productId });
+              }
+            }
+          }
+        }
+
+        student.StudentProduct = studentProductsBanList;
+        student.StudentCategory = studentCategoriesBanList;
+
+
+        return new SuccessResult("Ban kaydedildi");
+      }
+      catch (Exception e)
+      {
+
+        return new ErrorResult(e.Message);
+      }
+    }
+
     public IDataResult<TDto> Add<TDto>(TDto dto)
     {
       try

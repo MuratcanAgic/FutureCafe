@@ -145,6 +145,30 @@ namespace FutureCafe.Web.Controllers
       return RedirectToAction("Index");
     }
 
+    //BAN
+    [Authorize(Roles = "Admin")]
+    [HttpGet]
+    public async Task<IActionResult> Ban(int id)
+    {
+      var banList = await _studentService.GetProductsByCagegoryToBanAsync(id);
+      TempData["studentId"] = id;
+      return View(banList.Data);
+    }
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    public async Task<IActionResult> Ban(List<ProductBanDto> banDto)
+    {
+      var stdId = TempData["studentId"];
+      if (banDto == null) { return RedirectToAction("Index"); }
+
+
+      _studentService.BanUpdate(Convert.ToInt32(stdId), banDto);
+      await _studentService.SaveAsync();
+
+      return RedirectToAction("Index");
+    }
+
+
     private void PopulateSchoolClassDropDownList(object? selectedCategory = null)
     {
       var schoolClasses = _schoolClassService.GetList<SchoolClass>(orderBy: q => q.OrderBy(x => x.Name));

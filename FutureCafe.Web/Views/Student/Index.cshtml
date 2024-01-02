@@ -17,7 +17,7 @@
               <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">Değiştir/Detay/Sil</th>
+                  <th scope="col">Değiştir/Detay/Sil/Ürün Yasakla</th>
                   <th scope="col"><label asp-for="@Model.FirstOrDefault().Name"></label></th>
                   <th scope="col"><label asp-for="@Model.FirstOrDefault().SurName"></label></th>
                   <th scope="col"><label asp-for="@Model.FirstOrDefault().CardNumber"></label></th>
@@ -33,6 +33,7 @@
                       <a class="m-2" asp-controller="Student" asp-action="Edit" asp-route-id="@item.Id"><i class="bi-pencil-square text-success"></i></a>
                       <a class="m-2" asp-controller="Student" asp-action="Detail" asp-route-id="@item.Id"><i class="bi-file-earmark text-info"></i></a>
                       <a class="m-2" asp-controller="Student" asp-action="Delete" asp-route-id="@item.Id"><i class="bi-trash text-danger"></i></a>
+                      <a class="m-2" asp-controller="Student" asp-action="Ban" asp-route-id="@item.Id"><i class="bi-ban text-danger"></i></a>
                     </th>
                     <td>@item.Name</td>
                     <td>@item.SurName</td>

@@ -61,6 +61,11 @@ namespace FutureCafe.Web.Controllers
       if (products == null)
         return Json(new { success = false, message = "Sepette ürün bulunmuyor!" });
 
+      var bannedProducts = await _studentService.CheckBannedProducts(products, studentCardNumber);
+
+      if (bannedProducts != null && bannedProducts.Message != "")
+        return Json(new { success = false, message = bannedProducts.Message });
+
       //pay success
 
       var newStudentCredit = studentCredit.Data - totalPrice;

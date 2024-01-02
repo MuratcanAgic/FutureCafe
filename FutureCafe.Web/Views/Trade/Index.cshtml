@@ -210,7 +210,8 @@
   function CreateToaster(messageInfo, messageHeader, error) {
     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
     toastBootstrap.show();
-    document.getElementById("toasterInfoLabel").innerHTML = messageInfo;
+    var htmlFormattedString = messageInfo.replace(/\n/g, '<br>');
+    document.getElementById("toasterInfoLabel").innerHTML = htmlFormattedString;
     document.getElementById("toasterInfoHeader").innerHTML = messageHeader;
     if (error === true)
       document.getElementById("toasterBody").className = "toast-body text-bg-danger";
