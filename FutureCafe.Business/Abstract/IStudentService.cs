@@ -34,5 +34,6 @@ namespace FutureCafe.Business.Abstract
     Task<IResult> SaveAsync();
     Task<IDataResult<int>> CountWhereAsync(Expression<Func<Student, bool>> filter);
     public Task<IDataResult<List<ProductBanDto>>> GetProductsByCagegoryToBanAsync(int studentId);
+    Task<IDataResult<string>> CheckBannedProducts(IEnumerable<ProductTradeDto> productsToCheck, string studentCardNumber);
   }
 }

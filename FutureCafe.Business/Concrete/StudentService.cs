@@ -69,6 +69,45 @@ namespace FutureCafe.Business.Concrete
       }
     }
 
+    public async Task<IDataResult<string>> CheckBannedProducts(IEnumerable<ProductTradeDto> productsToCheck, string studentCardNumber)
+    {
+      try
+      {
+        var student = await GetAsync<Student>(x => x.CardNumber == studentCardNumber, "StudentCategory.Category,StudentProduct.Product");
+        var productBarcodes = productsToCheck.Select(p => p.ProductBarcodNo).Distinct().ToList();
+        var products = await _productDal.GetListAsync(x => productBarcodes.Contains(x.ProductBarcodNo), null, "ProductCategory.Category");
+
+        if (student == null || products == null) return new ErrorDataResult<string>(Messages.DataNotFound);
+
+        List<string> result = new List<string>();
+
+        foreach (var product in products)
+        {
+          foreach (var studentProduct in student.Data.StudentProduct)
+          {
+
+            if (studentProduct.ProductId == product.Id)
+            {
+              result.Add($"{product.Name} ürünü {student.Data.NameSurname} için yasaklıdır!");
+            }
+          }
+
+          if (product.ProductCategory.Any(x => student.Data.StudentCategory.Any(y => y.CategoryId == x.CategoryId)))
+          {
+            result.Add($"{product.Name} ürünü {student.Data.NameSurname} için yasaklıdır!");
+          }
+        }
+
+        string concatenatedString = string.Join(Environment.NewLine, result);
+
+        return new SuccessDataResult<string>(concatenatedString);
+      }
+      catch (Exception e)
+      {
+        return new ErrorDataResult<string>(e.Message);
+      }
+    }
+
     public IResult BanUpdate(int studentId, List<ProductBanDto> banDtos)
     {
       try
