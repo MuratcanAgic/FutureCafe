@@ -83,7 +83,7 @@ namespace FutureCafe.Web.Controllers
 
       //validate
       var validationResult = _studentService.Validate(studentDto);
-      if (validationResult.Data.IsValid == false)
+      if (validationResult.Data.IsValid == false && validationResult.Data.Errors.Select(x => x.PropertyName).ToList().Any(x => x.Equals("CardNumber")) == false)
       {
         validationResult.Data.AddToModelState(this.ModelState);
         PopulateSchoolClassDropDownList();
