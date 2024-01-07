@@ -2,7 +2,6 @@
 using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Extensions;
 using FutureCafe.Entities.Concrete;
-using FutureCafe.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -27,8 +26,8 @@ namespace FutureCafe.Web.Controllers
     {
       var productList = await _productService.GetListAsync<ProductViewDto>(null, null, "ProductCategory.Category");
 
-      if (productList.Data == null)
-        return View("Error", new ErrorViewModel { ErrorMessage = productList.Message });
+      /*  if (productList.Data == null)
+          return View("Error", new ErrorViewModel { ErrorMessage = productList.Message });*/
 
       return View(productList.Data);
     }
