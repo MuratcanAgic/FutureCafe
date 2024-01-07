@@ -6,6 +6,7 @@ using FutureCafe.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+
 namespace FutureCafe.Web.Controllers
 {
   public class ProductController : Controller
@@ -90,7 +91,7 @@ namespace FutureCafe.Web.Controllers
 
       //validate
       var validationResult = _productService.Validate(productDto);
-      if (validationResult.Data.IsValid == false)
+      if (validationResult.Data.IsValid == false && validationResult.Data.Errors.Select(x => x.PropertyName).ToList().Any(x => x.Equals("ProductBarcodNo")) == false)
       {
         validationResult.Data.AddToModelState(this.ModelState);
         PopulateCategoryDropDownList();
