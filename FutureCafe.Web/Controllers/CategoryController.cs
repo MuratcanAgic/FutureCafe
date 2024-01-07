@@ -21,8 +21,8 @@ namespace FutureCafe.Web.Controllers
     {
       var list = await _categoryService.GetListAsync<CategoryViewDto>();
 
-      if (list.Data == null)
-        return View("Error", new ErrorViewModel { ErrorMessage = list.Message });
+      /*if (list.Data == null)
+        return View("Error", new ErrorViewModel { ErrorMessage = list.Message });*/
 
       return View(list.Data);
     }

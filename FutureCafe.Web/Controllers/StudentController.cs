@@ -2,7 +2,6 @@
 using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Extensions;
 using FutureCafe.Entities.Concrete;
-using FutureCafe.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,8 +23,8 @@ namespace FutureCafe.Web.Controllers
     {
       var list = await _studentService.GetListAsync<StudentViewDto>();
 
-      if (list.Data == null)
-        return View("Error", new ErrorViewModel { ErrorMessage = list.Message });
+      /*   if (list.Data == null)
+           return View("Error", new ErrorViewModel { ErrorMessage = list.Message });*/
 
       return View(list.Data);
     }

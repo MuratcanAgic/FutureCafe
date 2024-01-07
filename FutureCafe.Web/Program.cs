@@ -1,6 +1,9 @@
 using FutureCafe.Business.ServiceRegistiration;
 using FutureCafe.DataAccess.ServiceRegistiration;
+using FutureCafe.Web.Middlewares;
+using FutureCafe.Web.Sinks;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
   options.LoginPath = "/Auth/Login";
   options.AccessDeniedPath = "/Auth/AccessDenied";
 });
+var logger = new LoggerConfiguration()
+.ReadFrom.Configuration(builder.Configuration)
+.WriteTo.CustomSink()
+.Enrich.FromLogContext()
+.CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 var app = builder.Build();
 
@@ -27,6 +38,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseMiddleware(typeof(ExceptionHandlingMiddleware));
 
 app.UseRouting();
 

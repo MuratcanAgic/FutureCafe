@@ -19,10 +19,10 @@ namespace FutureCafe.Web.Controllers
     public async Task<IActionResult> Index()
     {
       var list = await _schoolClassService.GetListAsync<SchoolClassViewDto>();
-
-      if (list.Data == null)
-        return View("Error", new ErrorViewModel { ErrorMessage = list.Message });
-
+      /*
+            if (list.Data == null)
+              return View("Error", new ErrorViewModel { ErrorMessage = list.Message });
+      */
       return View(list.Data);
     }
 
