@@ -33,6 +33,9 @@ namespace FutureCafe.Business.Mapping
         .ForSourceMember(x => x.SelectClaimIds, opt => opt.DoNotValidate());
 
       CreateMap<User, UserForLoginDto>().ReverseMap();
+
+      CreateMap<Trade, TradeReportDto>().ReverseMap();
+      CreateMap<TradeProduct, TradeProductReportDto>().ReverseMap();
     }
   }
 }

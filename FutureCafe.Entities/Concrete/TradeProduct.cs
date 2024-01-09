@@ -10,6 +10,9 @@ namespace FutureCafe.Entities.Concrete
     //[Required(ErrorMessage = "{0} boş geçilemez")]
     public int ProductCount { get; set; }
 
+    [DisplayName("Satış Anındaki Satış Fiyatı")]
+    public decimal? SalePriceSnap { get; set; }
+
     public int ProductId { get; set; }
     public int TradeId { get; set; }
 

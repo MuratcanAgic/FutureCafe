@@ -16,6 +16,12 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"
           integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
           crossorigin="anonymous"></script>
+  <!--Flatpickr-->
+  <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/airbnb.css">
+  @* <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> *@
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://npmcdn.com/flatpickr/dist/flatpickr.min.js"></script>
+  <script src="https://npmcdn.com/flatpickr/dist/l10n/tr.js"></script>
 
 </head>
 <body>
@@ -85,6 +91,20 @@
                 </div>
               </li>
             }
+            <!--Report Dropdown-->
+            @if (isAuthenticated == true && isAdmin == true)
+            {
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Rapor
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" asp-controller="Report" asp-action="TradeReport">
+                    <i class="bi-graph-up-arrow pe-2"></i>Satış
+                  </a>
+                </div>
+              </li>
+            }
             @if (isAuthenticated == true)
             {
 
@@ -92,11 +112,11 @@
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Hoşgeldin, @Context.User.Identity.Name
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">                
-                    <a class="dropdown-item" asp-controller="User" asp-action="Index">
-                      <i class="bi-gear-fill pe-2"></i>
-                      Tercihler
-                    </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" asp-controller="User" asp-action="Index">
+                    <i class="bi-gear-fill pe-2"></i>
+                    Tercihler
+                  </a>
                   <a class="dropdown-item" asp-controller="User" asp-action="Load">
                     <i class="bi-envelope-fill pe-2"></i>
                     Destek İletişim
