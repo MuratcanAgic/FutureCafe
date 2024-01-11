@@ -7,10 +7,11 @@ namespace FutureCafe.Web.Controllers
   public class ReportController : Controller
   {
     private readonly ITradeService _tradeService;
-
-    public ReportController(ITradeService tradeService)
+    private readonly IStudentService _studentService;
+    public ReportController(ITradeService tradeService, IStudentService studentService)
     {
       _tradeService = tradeService;
+      _studentService = studentService;
     }
 
     public IActionResult TradeReport()
@@ -35,6 +36,27 @@ namespace FutureCafe.Web.Controllers
       }
 
       return View(trades.Data);
+    }
+
+    public IActionResult CreditReport()
+    {
+      return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreditReport(string studentCardNumber)
+    {
+      if (studentCardNumber == null)
+        return View();
+
+      var student = await _studentService.GetAsync<StudentCreditReportDto>(x => x.CardNumber == studentCardNumber, "StudentCredit.Credit");
+
+      if (student == null || student.Success == false)
+        return View();
+
+      student.Data.StudentCredit.OrderBy(x => x.CreatedDate);
+
+      return View(student.Data);
     }
   }
 }

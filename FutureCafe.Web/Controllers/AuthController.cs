@@ -54,7 +54,7 @@ namespace FutureCafe.Web.Controllers
 
       var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
       var claimsPrinciple = new ClaimsPrincipal(claimsIdentity);
-      var authProperties = new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.Now.AddMinutes(5) };
+      var authProperties = new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.Now.AddDays(1) };
 
       await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrinciple, authProperties);
 

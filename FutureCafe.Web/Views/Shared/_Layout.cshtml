@@ -102,8 +102,12 @@
                   <a class="dropdown-item" asp-controller="Report" asp-action="TradeReport">
                     <i class="bi-graph-up-arrow pe-2"></i>Satış
                   </a>
-                </div>
+                  <a class="dropdown-item" asp-controller="Report" asp-action="CreditReport">
+                    <i class="bi-person-vcard pe-2"></i>Öğrenci Kredi
+                  </a>
+                </div>        
               </li>
+
             }
             @if (isAuthenticated == true)
             {
