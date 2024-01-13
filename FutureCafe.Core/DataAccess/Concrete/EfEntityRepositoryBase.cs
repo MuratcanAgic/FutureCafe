@@ -85,7 +85,20 @@ namespace FutureCafe.Core.DataAccess.Concrete
     }
     public int Save()
     {
-      return _context.SaveChanges();
+      using (var transaction = _context.Database.BeginTransaction())
+      {
+        try
+        {
+          var result = _context.SaveChanges();
+          transaction.Commit();
+          return result;
+        }
+        catch (Exception)
+        {
+          transaction.Rollback();
+          throw;
+        }
+      }
     }
     public int CountWhere(Expression<Func<TEntity, bool>> filter)
     {
@@ -149,11 +162,20 @@ namespace FutureCafe.Core.DataAccess.Concrete
     }
     public async Task<int> SaveAsync()
     {
-
-      return await _context.SaveChangesAsync();
-
-
-
+      using (var transaction = await _context.Database.BeginTransactionAsync())
+      {
+        try
+        {
+          var result = await _context.SaveChangesAsync();
+          transaction.Commit();
+          return result;
+        }
+        catch (Exception)
+        {
+          transaction.Rollback();
+          throw;
+        }
+      }
     }
     public async Task<int> CountWhereAsync(Expression<Func<TEntity, bool>> filter)
     {
