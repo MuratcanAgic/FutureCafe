@@ -1,0 +1,104 @@
+﻿@model FutureCafe.Business.Dtos.ProductPriceReportDto
+
+<form asp-action="ProductPriceReport" asp-controller="Report" method="post">
+  <div class="col-4 mx-auto card mt-5 mb-2">
+    <div class="card-header">
+      <label>Fiyatı Gösterilecek Ürün</label>
+    </div>
+    <div class="card-body">
+      <div class="input-group">
+        <input type="text" id="productBarcodeNo" name="productBarcodeNo" class="form-control" placeholder="Barkod no" />
+        <button class="btn btn-warning" id="showCreditButton">Rapor Oluştur</button>
+      </div>
+    </div>
+    <div class="card-footer">
+      <label class="text-muted mt-2" style="font-size:10pt">*Kart tarama yaparak da ürün barkod numarası girebilirsiniz.</label>
+    </div>
+  </div>
+</form>
+
+@if (Model != null)
+{
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-header d-flex">
+            <label class="fw-bold">Rapor Sonucu</label>
+            <button class="btn btn-primary ms-auto" onclick="printTable()"> <i class="bi-printer pe-2"></i>Yazdır</button>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive text-center d-flex align-items-center table-print">
+              <table id="myTable" class="table table-hover table-bordered-outer text-center">
+                <thead>
+                  <tr class="table-info">
+                    <th scope="col">#</th>
+                    <th scope="col"><label asp-for="@Model.Name"></label></th>
+                    <th scope="col">Değişim Tarihi</th>
+                    <th scope="col">Alış Fiyatı</th>
+                    <th scope="col">Satış Fiyatı</th>
+                  </tr>
+                </thead>
+                <tbody class="table-group-divider">
+
+                  @foreach (var (item, i) in Model.ProductPrice.Select((item, i) => (item, i)))
+                  {
+                    <tr>
+                      <th scope="row">@(i + 1)</th>
+                      <td>@Model.Name</td>
+                      <td>@item.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                      <td>₺@item.Price.BuyingPrice</td>
+                      <td>₺@item.Price.SalePrice</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<script>
+
+  var barcode = "";
+  var interval;
+  var studentCardNumber = document.getElementById("studentCardNumber");
+  //scanner show
+  document.addEventListener("keydown", function (evt) {
+    if (interval) {
+      clearInterval(interval);
+
+    }
+    if (evt.code == "Enter") {
+      evt.preventDefault();
+      if (barcode)
+        handleBarcode(barcode);
+
+      barcode = "";
+      return;
+    }
+    if (evt.key != "Shift") {
+      barcode += evt.key;
+    }
+    interval = setInterval(() => barcode = "", 20);
+  });
+
+  function handleBarcode(scanned_barcode) {
+
+    var focusedElement = document.activeElement;
+
+    if (document.activeElement && focusedElement.tagName === "INPUT") {
+      var currentValue = focusedElement.value;
+      var modifiedValue = currentValue.replace(scanned_barcode, "");
+      focusedElement.value = modifiedValue;
+    }
+    studentCardNumber.value = scanned_barcode;
+  }
+
+  function printTable() {
+    window.print();
+  }
+</script>

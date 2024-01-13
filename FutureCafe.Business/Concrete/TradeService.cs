@@ -1,4 +1,5 @@
-﻿using FutureCafe.Business.Abstract;
+﻿using AutoMapper;
+using FutureCafe.Business.Abstract;
 using FutureCafe.Business.Constants;
 using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Results;
@@ -13,11 +14,13 @@ namespace FutureCafe.Business.Concrete
     ITradeDal _tradeDal;
     IStudentDal _studentDal;
     IProductDal _productDal;
-    public TradeService(ITradeDal tradeDal, IStudentDal studentDal, IProductDal productDal)
+    IMapper _mapper;
+    public TradeService(ITradeDal tradeDal, IStudentDal studentDal, IProductDal productDal, IMapper mapper)
     {
       _tradeDal = tradeDal;
       _studentDal = studentDal;
       _productDal = productDal;
+      _mapper = mapper;
     }
 
     public IDataResult<TDto> Add<TDto>(TDto dto)
@@ -34,7 +37,8 @@ namespace FutureCafe.Business.Concrete
         trade.Student = await _studentDal.GetAsync(x => x.CardNumber == studentCardNumber);
         foreach (var item in products)
         {
-          trade.TradeProduct.Add(new TradeProduct { ProductCount = item.ProductCount, Product = await _productDal.GetAsync(x => x.ProductBarcodNo == item.ProductBarcodNo) });
+          var product = await _productDal.GetAsync(x => x.ProductBarcodNo == item.ProductBarcodNo, "ProductPrice.Price");
+          trade.TradeProduct.Add(new TradeProduct { ProductCount = item.ProductCount, Product = product, SalePriceSnap = product.ProductPrice.Select(x => x.Price).Where(x => x.SalePrice.HasValue).LastOrDefault().SalePrice });
         }
         await _tradeDal.AddAsync(trade);
 
@@ -97,9 +101,23 @@ namespace FutureCafe.Business.Concrete
       throw new NotImplementedException();
     }
 
-    public Task<IDataResult<IEnumerable<TDto>>> GetListAsync<TDto>(Expression<Func<Trade, bool>> filter = null, Func<IQueryable<Trade>, IOrderedQueryable<Trade>> orderBy = null, string includeProperties = "")
+    public async Task<IDataResult<IEnumerable<TDto>>> GetListAsync<TDto>(Expression<Func<Trade, bool>> filter = null, Func<IQueryable<Trade>, IOrderedQueryable<Trade>> orderBy = null, string includeProperties = "")
     {
-      throw new NotImplementedException();
+      try
+      {
+        var productClassList = await _tradeDal.GetListAsync(filter, orderBy, includeProperties);
+
+        var dto = productClassList.Select(e => _mapper.Map<Trade, TDto>(e)).ToList();
+        if (dto == null)
+        {
+          return new ErrorDataResult<IEnumerable<TDto>>(Messages.ListEmpty);
+        }
+        return new SuccessDataResult<IEnumerable<TDto>>(dto);
+      }
+      catch (Exception e)
+      {
+        return new ErrorDataResult<IEnumerable<TDto>>(e.Message.ToString());
+      }
     }
 
     public IResult Save()

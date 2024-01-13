@@ -17,6 +17,7 @@ namespace FutureCafe.Business.Mapping
       CreateMap<Student, StudentViewDto>().ReverseMap();
       CreateMap<Student, StudentCreateEditDto>().ReverseMap();
       CreateMap<Student, StudentDetailDto>().ReverseMap();
+      CreateMap<Student, StudentCreditReportDto>().ReverseMap();
 
       CreateMap<Product, ProductCreateEditDto>().ReverseMap()
         .ForSourceMember(x => x.SelectCategoryIds, opt => opt.DoNotValidate())
@@ -26,6 +27,7 @@ namespace FutureCafe.Business.Mapping
 
       CreateMap<Product, ProductViewDto>().ReverseMap();
       CreateMap<Product, ProductDetailDto>().ReverseMap();
+      CreateMap<Product, ProductPriceReportDto>().ReverseMap();
 
       CreateMap<User, UserForViewDto>().ReverseMap();
       CreateMap<User, UserForRegisterDto>().ReverseMap()
@@ -33,6 +35,11 @@ namespace FutureCafe.Business.Mapping
         .ForSourceMember(x => x.SelectClaimIds, opt => opt.DoNotValidate());
 
       CreateMap<User, UserForLoginDto>().ReverseMap();
+
+      CreateMap<Trade, TradeReportDto>().ReverseMap();
+      CreateMap<TradeProduct, TradeProductReportDto>().ReverseMap();
+
+
     }
   }
 }

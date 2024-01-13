@@ -1,0 +1,107 @@
+﻿@model IEnumerable<FutureCafe.Business.Dtos.TradeReportDto>
+
+<form asp-action="TradeReport" asp-controller="Report" method="post">
+  <div class="container mt-5 mb-2">
+    <div class="card">
+      <div class="card-header bg-info text-white">
+        Tarih Seçimi
+      </div>
+      <div class="card-body">
+        <div class="row mb-2">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="startDate">Başlangıç Tarihi:</label>
+              <input type="date" class="form-control" name="startDate" id="startDate" required placeholder="Tarih Seçiniz...">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="endDate">Bitiş Tarihi:</label>
+              <input type="date" class="form-control" name="endDate" id="endDate" required placeholder="Tarih Seçiniz...">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 text-end">
+            <button class="btn btn-warning" type="submit">Rapor Oluştur</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+@if (Model != null)
+{
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-header d-flex">
+            <label class="fw-bold">Rapor Sonucu</label>
+            <button class="btn btn-primary ms-auto" onclick="printTable()"> <i class="bi-printer pe-2"></i>Yazdır</button>
+          </div>
+        
+        <div class="card-body">        
+        <div class="table-responsive text-center d-flex align-items-center table-print">
+          <table id="myTable" class="table table-hover table-bordered-outer text-center">
+            <thead>
+              <tr class="table-info">
+                <th scope="col">#</th>
+                <th scope="col"><label asp-for="@Model.FirstOrDefault().StudentNameSurname"></label></th>
+                <th scope="col"><label asp-for="@Model.FirstOrDefault().CreatedDate"></label></th>
+                <th scope="col">Alışveriş Detayı</th>
+              </tr>
+            </thead>
+            <tbody class="table-group-divider">
+
+              @foreach (var (item, i) in Model.Select((item, i) => (item, i)))
+              {
+                <tr>
+                  <th scope="row">@(i + 1)</th>
+                  <td>@item.StudentNameSurname</td>
+                  <td>@item.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                  <td>
+                    <table class="table table-borderless">
+                      <thead>
+                        <tr class="table-light">
+                          <th scope="col">Ürün</th>
+                          <th scope="col">Birim Fiyat</th>
+                          <th scope="col">Ara Toplam</th>
+                        </tr>
+                      </thead>
+                      <tbody class="table-group-divider">
+
+                        @foreach (var tradeProductDto in item.TradeProduct)
+                        {
+                          <tr>
+                            <td><label>@tradeProductDto.ProductName x @tradeProductDto.ProductCount</label></td>
+                            <td><label>₺@tradeProductDto.SalePriceSnap</label></td>
+                            <td><label>₺@(tradeProductDto.SalePriceSnap * @tradeProductDto.ProductCount) </label></td>
+                          </tr>
+                        }
+                        <tr>
+                          <td colspan="2" class="fw-bold">Toplam:</td>
+                          <td colspan="1">₺@item.TotalPrice</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+<script>
+  flatpickr("#startDate", { dateFormat: "m-d-Y H:i", enableTime: true, locale: "tr" });
+  flatpickr("#endDate", { dateFormat: "m-d-Y H:i", enableTime: true, locale: "tr" });
+
+  function printTable() {
+    window.print();
+  }
+</script>

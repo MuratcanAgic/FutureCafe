@@ -20,3 +20,30 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.table-bordered-outer {
+  border: 1px solid #dee2e6; 
+  border-radius: 8px; 
+}
+
+  .table-bordered-outer thead th,
+  .table-bordered-outer tbody td {
+    border: 1px solid #dee2e6; 
+  }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .table-print,
+  .table-print * {
+    visibility: visible;
+  }
+
+  .table-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
