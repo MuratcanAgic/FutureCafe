@@ -8,10 +8,12 @@ namespace FutureCafe.Web.Controllers
   {
     private readonly ITradeService _tradeService;
     private readonly IStudentService _studentService;
-    public ReportController(ITradeService tradeService, IStudentService studentService)
+    private readonly IProductService _productService;
+    public ReportController(ITradeService tradeService, IStudentService studentService, IProductService productService)
     {
       _tradeService = tradeService;
       _studentService = studentService;
+      _productService = productService;
     }
 
     public IActionResult TradeReport()
@@ -57,6 +59,27 @@ namespace FutureCafe.Web.Controllers
       student.Data.StudentCredit.OrderBy(x => x.CreatedDate);
 
       return View(student.Data);
+    }
+
+    public IActionResult ProductPriceReport()
+    {
+      return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ProductPriceReport(string productBarcodeNo)
+    {
+      if (productBarcodeNo == null)
+        return View();
+
+      var product = await _productService.GetAsync<ProductPriceReportDto>(x => x.ProductBarcodNo == productBarcodeNo, "ProductPrice.Price");
+
+      if (product == null || product.Success == false)
+        return View();
+
+      product.Data.ProductPrice.OrderBy(x => x.CreatedDate);
+
+      return View(product.Data);
     }
   }
 }
