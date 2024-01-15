@@ -3,6 +3,7 @@ using FutureCafe.DataAccess.ServiceRegistiration;
 using FutureCafe.Web.Middlewares;
 using FutureCafe.Web.Sinks;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using NToastNotify;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +18,19 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
   options.LoginPath = "/Auth/Login";
   options.AccessDeniedPath = "/Auth/AccessDenied";
 });
+
+builder.Services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
+{
+  ProgressBar = false,
+  PositionClass = ToastPositions.BottomCenter
+});
+builder.Services.AddMvc().AddNToastNotifyNoty(new NotyOptions
+{
+  ProgressBar = true,
+  Timeout = 5000,
+  Theme = "mint"
+});
+
 var logger = new LoggerConfiguration()
 .ReadFrom.Configuration(builder.Configuration)
 .WriteTo.CustomSink()

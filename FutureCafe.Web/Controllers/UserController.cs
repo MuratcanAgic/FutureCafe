@@ -1,22 +1,26 @@
 ﻿using FutureCafe.Business.Abstract;
+using FutureCafe.Business.Constants;
 using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Extensions;
 using FutureCafe.Entities.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NToastNotify;
 namespace FutureCafe.Web.Controllers
 {
   public class UserController : Controller
   {
-    IUserService _userService;
-    IAuthService _authService;
-    IOperationClaimService _operationClaimService;
-    public UserController(IUserService userService, IAuthService authService, IOperationClaimService operationClaimService)
+    private readonly IUserService _userService;
+    private readonly IAuthService _authService;
+    private readonly IOperationClaimService _operationClaimService;
+    private readonly IToastNotification _toastNotification;
+    public UserController(IUserService userService, IAuthService authService, IOperationClaimService operationClaimService, IToastNotification toastNotification)
     {
       _userService = userService;
       _authService = authService;
       _operationClaimService = operationClaimService;
+      _toastNotification = toastNotification;
     }
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Index()
@@ -51,8 +55,13 @@ namespace FutureCafe.Web.Controllers
         PopulateRolesDropDownList();
         return View(userDto);
       }
-      await _userService.AddAsync(userDto);
-      await _userService.SaveAsync();
+      var addResult = await _userService.AddAsync(userDto);
+      var saveResult = await _userService.SaveAsync();
+
+      if (addResult.Success == false || saveResult.Success == false)
+        _toastNotification.AddErrorToastMessage(Messages.DataNotCreated);
+      else
+        _toastNotification.AddSuccessToastMessage(Messages.DataCreated);
 
       return RedirectToAction("Index");
     }
@@ -90,10 +99,13 @@ namespace FutureCafe.Web.Controllers
         return View(usertDto);
       }
 
-      _userService.Update(usertDto);
+      var updateResult = _userService.Update(usertDto);
+      var saveResult = await _userService.SaveAsync();
 
-      await _userService.SaveAsync();
-
+      if (updateResult.Success == false || saveResult.Success == false)
+        _toastNotification.AddErrorToastMessage(Messages.DataNotUpdated);
+      else
+        _toastNotification.AddSuccessToastMessage(Messages.DataUpdated);
       return RedirectToAction("Index");
     }
 
@@ -122,8 +134,13 @@ namespace FutureCafe.Web.Controllers
 
       if (user != null)
       {
-        _userService.Delete(user.Data);
-        await _userService.SaveAsync();
+        var deleteResult = _userService.Delete(user.Data);
+        var saveResult = await _userService.SaveAsync();
+
+        if (deleteResult.Success == false || saveResult.Success == false)
+          _toastNotification.AddErrorToastMessage(Messages.DataNotDeleted);
+        else
+          _toastNotification.AddSuccessToastMessage(Messages.DataDeleted);
         return RedirectToAction("Index");
       }
       return RedirectToAction("Index");

@@ -7,7 +7,7 @@ namespace FutureCafe.Web.Controllers
 {
   public class StudentCreditController : Controller
   {
-    IStudentService _studentService;
+    private readonly IStudentService _studentService;
 
     public StudentCreditController(IStudentService studentService)
     {

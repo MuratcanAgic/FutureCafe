@@ -1,33 +1,33 @@
 ﻿using FutureCafe.Business.Abstract;
+using FutureCafe.Business.Constants;
 using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Extensions;
 using FutureCafe.Entities.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NToastNotify;
 
 namespace FutureCafe.Web.Controllers
 {
   public class ProductController : Controller
   {
-    IProductService _productService;
-    ICategoryService _categoryService;
-    IWebHostEnvironment _webHostEnvironment;
-
-    public ProductController(IProductService productService, ICategoryService categoryService, IWebHostEnvironment webHostEnvironment)
+    private readonly IProductService _productService;
+    private readonly ICategoryService _categoryService;
+    private readonly IWebHostEnvironment _webHostEnvironment;
+    private readonly IToastNotification _toastNotification;
+    public ProductController(IProductService productService, ICategoryService categoryService, IWebHostEnvironment webHostEnvironment, IToastNotification toastNotification)
     {
       _productService = productService;
       _categoryService = categoryService;
       _webHostEnvironment = webHostEnvironment;
+      _toastNotification = toastNotification;
     }
 
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Index()
     {
       var productList = await _productService.GetListAsync<ProductViewDto>(null, null, "ProductCategory.Category");
-
-      /*  if (productList.Data == null)
-          return View("Error", new ErrorViewModel { ErrorMessage = productList.Message });*/
 
       return View(productList.Data);
     }
@@ -58,8 +58,13 @@ namespace FutureCafe.Web.Controllers
 
       await SaveProductImage(productDto);
 
-      await _productService.AddAsync(productDto);
-      await _productService.SaveAsync();
+      var addResult = await _productService.AddAsync(productDto);
+      var saveResult = await _productService.SaveAsync();
+
+      if (addResult.Success == false || saveResult.Success == false)
+        _toastNotification.AddErrorToastMessage(Messages.DataNotCreated);
+      else
+        _toastNotification.AddSuccessToastMessage(Messages.DataCreated);
 
       return RedirectToAction("Index");
     }
@@ -99,9 +104,15 @@ namespace FutureCafe.Web.Controllers
 
       if (productDto.ImageUrl != null) DeleteProductImage(productDto.ImageUrl);
       await SaveProductImage(productDto);
-      _productService.Update(productDto);
 
-      await _productService.SaveAsync();
+      var updateResult = _productService.Update(productDto);
+
+      var saveResult = await _productService.SaveAsync();
+
+      if (updateResult.Success == false || saveResult.Success == false)
+        _toastNotification.AddErrorToastMessage(Messages.DataNotUpdated);
+      else
+        _toastNotification.AddSuccessToastMessage(Messages.DataUpdated);
 
       return RedirectToAction("Index");
 
@@ -149,10 +160,16 @@ namespace FutureCafe.Web.Controllers
 
       if (product != null)
       {
-
         if (product.Data.ImageUrl != null) DeleteProductImage(product.Data.ImageUrl);
-        _productService.Delete(product.Data);
-        await _productService.SaveAsync();
+
+        var deleteResult = _productService.Delete(product.Data);
+        var saveResult = await _productService.SaveAsync();
+
+        if (deleteResult.Success == false || saveResult.Success == false)
+          _toastNotification.AddErrorToastMessage(Messages.DataNotDeleted);
+        else
+          _toastNotification.AddSuccessToastMessage(Messages.DataDeleted);
+
         return RedirectToAction("Index");
       }
       return RedirectToAction("Index");

@@ -1,30 +1,31 @@
 ﻿using FutureCafe.Business.Abstract;
+using FutureCafe.Business.Constants;
 using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Extensions;
 using FutureCafe.Entities.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using NToastNotify;
 
 namespace FutureCafe.Web.Controllers
 {
   public class StudentController : Controller
   {
-    IStudentService _studentService;
-    ISchoolClassService _schoolClassService;
-    public StudentController(IStudentService studentService, ISchoolClassService schoolClassService)
+    private readonly IStudentService _studentService;
+    private readonly ISchoolClassService _schoolClassService;
+    private readonly IToastNotification _toastNotification;
+    public StudentController(IStudentService studentService, ISchoolClassService schoolClassService, IToastNotification toastNotification)
     {
       _studentService = studentService;
       _schoolClassService = schoolClassService;
+      _toastNotification = toastNotification;
     }
 
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Index()
     {
       var list = await _studentService.GetListAsync<StudentViewDto>();
-
-      /*   if (list.Data == null)
-           return View("Error", new ErrorViewModel { ErrorMessage = list.Message });*/
 
       return View(list.Data);
     }
@@ -52,8 +53,13 @@ namespace FutureCafe.Web.Controllers
         PopulateSchoolClassDropDownList();
         return View(studentDto);
       }
-      await _studentService.AddAsync(studentDto);
-      await _studentService.SaveAsync();
+      var addResult = await _studentService.AddAsync(studentDto);
+      var saveResult = await _studentService.SaveAsync();
+
+      if (addResult.Success == false || saveResult.Success == false)
+        _toastNotification.AddErrorToastMessage(Messages.DataNotCreated);
+      else
+        _toastNotification.AddSuccessToastMessage(Messages.DataCreated);
 
       return RedirectToAction("Index");
     }
@@ -88,9 +94,13 @@ namespace FutureCafe.Web.Controllers
         PopulateSchoolClassDropDownList();
         return View(studentDto);
       }
-      _studentService.Update(studentDto);
-      await _studentService.SaveAsync();
+      var updateResult = _studentService.Update(studentDto);
+      var saveResult = await _studentService.SaveAsync();
 
+      if (updateResult.Success == false || saveResult.Success == false)
+        _toastNotification.AddErrorToastMessage(Messages.DataNotUpdated);
+      else
+        _toastNotification.AddSuccessToastMessage(Messages.DataUpdated);
       return RedirectToAction("Index");
 
     }
@@ -137,8 +147,14 @@ namespace FutureCafe.Web.Controllers
 
       if (student != null)
       {
-        _studentService.Delete(student.Data);
-        await _studentService.SaveAsync();
+        var deleteResult = _studentService.Delete(student.Data);
+        var saveResult = await _studentService.SaveAsync();
+
+        if (deleteResult.Success == false || saveResult.Success == false)
+          _toastNotification.AddErrorToastMessage(Messages.DataNotDeleted);
+        else
+          _toastNotification.AddSuccessToastMessage(Messages.DataDeleted);
+
         return RedirectToAction("Index");
       }
       return RedirectToAction("Index");
