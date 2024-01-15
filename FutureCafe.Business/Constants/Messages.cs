@@ -6,7 +6,12 @@
     public const string DataSaved = "Veri kaydedildi.";
     public const string DataExist = "Veri var.";
     public const string DataNotExist = "Veri yok.";
+    public const string DataCreated = "Veri eklendi.";
     public const string DataDeleted = "Veri silindi.";
+    public const string DataUpdated = "Veri güncellendi.";
+    public const string DataNotCreated = "Veri eklenemedi.";
+    public const string DataNotDeleted = "Veri silinemedi.";
+    public const string DataNotUpdated = "Veri güncellenemedi.";
     public const string CannotBeEmpty = "boş geçilemez.";
     public const string StringMinLength = "minimum {MinLength} karakter olmalıdır.";
     public const string StringMaxLength = "maksimum {MaxLength} karakter olmalıdır.";

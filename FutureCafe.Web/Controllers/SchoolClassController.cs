@@ -1,28 +1,26 @@
 ﻿using FutureCafe.Business.Abstract;
+using FutureCafe.Business.Constants;
 using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Extensions;
-using FutureCafe.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 
 namespace FutureCafe.Web.Controllers
 {
   public class SchoolClassController : Controller
   {
-    ISchoolClassService _schoolClassService;
-
-    public SchoolClassController(ISchoolClassService schoolClassService)
+    private readonly ISchoolClassService _schoolClassService;
+    private readonly IToastNotification _toastNotification;
+    public SchoolClassController(ISchoolClassService schoolClassService, IToastNotification toastNotification)
     {
       _schoolClassService = schoolClassService;
+      _toastNotification = toastNotification;
     }
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Index()
     {
       var list = await _schoolClassService.GetListAsync<SchoolClassViewDto>();
-      /*
-            if (list.Data == null)
-              return View("Error", new ErrorViewModel { ErrorMessage = list.Message });
-      */
       return View(list.Data);
     }
 
@@ -48,8 +46,13 @@ namespace FutureCafe.Web.Controllers
         return View(schoolClassDto);
       }
 
-      await _schoolClassService.AddAsync(schoolClassDto);
-      await _schoolClassService.SaveAsync();
+      var addResult = await _schoolClassService.AddAsync(schoolClassDto);
+      var saveResult = await _schoolClassService.SaveAsync();
+
+      if (addResult.Success == false || saveResult.Success == false)
+        _toastNotification.AddErrorToastMessage(Messages.DataNotCreated);
+      else
+        _toastNotification.AddSuccessToastMessage(Messages.DataCreated);
 
       return RedirectToAction("Index");
     }
@@ -82,8 +85,13 @@ namespace FutureCafe.Web.Controllers
         return View(schoolClassDto);
       }
 
-      _schoolClassService.Update(schoolClassDto);
-      await _schoolClassService.SaveAsync();
+      var updateResult = _schoolClassService.Update(schoolClassDto);
+      var saveResult = await _schoolClassService.SaveAsync();
+
+      if (updateResult.Success == false || saveResult.Success == false)
+        _toastNotification.AddErrorToastMessage(Messages.DataNotUpdated);
+      else
+        _toastNotification.AddSuccessToastMessage(Messages.DataUpdated);
 
       return RedirectToAction("Index");
     }
@@ -123,14 +131,14 @@ namespace FutureCafe.Web.Controllers
     {
       if (id == 0) { return RedirectToAction("Index"); }
 
-      _schoolClassService.DeleteById(id);
+      var deleteResult = _schoolClassService.DeleteById(id);
 
       var saveResult = await _schoolClassService.SaveAsync();
 
-      if (saveResult.Success == false)
-      {
-        return View("Error", new ErrorViewModel { ErrorMessage = saveResult.Message });
-      }
+      if (deleteResult.Success == false || saveResult.Success == false)
+        _toastNotification.AddErrorToastMessage(Messages.DataNotDeleted);
+      else
+        _toastNotification.AddSuccessToastMessage(Messages.DataDeleted);
 
       return RedirectToAction("Index");
     }

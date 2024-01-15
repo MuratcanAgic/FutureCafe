@@ -1,28 +1,27 @@
 ﻿using FutureCafe.Business.Abstract;
+using FutureCafe.Business.Constants;
 using FutureCafe.Business.Dtos;
 using FutureCafe.Core.Utilities.Extensions;
-using FutureCafe.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 
 namespace FutureCafe.Web.Controllers
 {
   public class CategoryController : Controller
   {
-    ICategoryService _categoryService;
-
-    public CategoryController(ICategoryService categoryService)
+    private readonly ICategoryService _categoryService;
+    private readonly IToastNotification _toastNotification;
+    public CategoryController(ICategoryService categoryService, IToastNotification toastNotification)
     {
       _categoryService = categoryService;
+      _toastNotification = toastNotification;
     }
 
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Index()
     {
       var list = await _categoryService.GetListAsync<CategoryViewDto>();
-
-      /*if (list.Data == null)
-        return View("Error", new ErrorViewModel { ErrorMessage = list.Message });*/
 
       return View(list.Data);
     }
@@ -49,8 +48,13 @@ namespace FutureCafe.Web.Controllers
         return View(categoryDto);
       }
 
-      await _categoryService.AddAsync<CategoryCreateEditDto>(categoryDto);
-      await _categoryService.SaveAsync();
+      var addResult = await _categoryService.AddAsync<CategoryCreateEditDto>(categoryDto);
+      var saveResult = await _categoryService.SaveAsync();
+
+      if (addResult.Success == false || saveResult.Success == false)
+        _toastNotification.AddErrorToastMessage(Messages.DataNotCreated);
+      else
+        _toastNotification.AddSuccessToastMessage(Messages.DataCreated);
 
       return RedirectToAction("Index");
     }
@@ -84,8 +88,13 @@ namespace FutureCafe.Web.Controllers
         return View(categoryDto);
       }
 
-      _categoryService.Update(categoryDto);
-      await _categoryService.SaveAsync();
+      var updateResult = _categoryService.Update(categoryDto);
+      var saveResult = await _categoryService.SaveAsync();
+
+      if (updateResult.Success == false || saveResult.Success == false)
+        _toastNotification.AddErrorToastMessage(Messages.DataNotUpdated);
+      else
+        _toastNotification.AddSuccessToastMessage(Messages.DataUpdated);
 
       return RedirectToAction("Index");
     }
@@ -124,14 +133,15 @@ namespace FutureCafe.Web.Controllers
     {
       if (id == 0) { return RedirectToAction("Index"); }
 
-      _categoryService.DeleteById(id);
+      var deleteResult = _categoryService.DeleteById(id);
 
       var saveResult = await _categoryService.SaveAsync();
 
-      if (saveResult.Success == false)
-      {
-        return View("Error", new ErrorViewModel { ErrorMessage = saveResult.Message });
-      }
+      if (deleteResult.Success == false || saveResult.Success == false)
+        _toastNotification.AddErrorToastMessage(Messages.DataNotDeleted);
+      else
+        _toastNotification.AddSuccessToastMessage(Messages.DataDeleted);
+
       return RedirectToAction("Index");
     }
   }
