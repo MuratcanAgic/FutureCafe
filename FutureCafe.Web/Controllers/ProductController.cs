@@ -102,9 +102,11 @@ namespace FutureCafe.Web.Controllers
         return View(productDto);
       }
 
-      if (productDto.ImageUrl != null) DeleteProductImage(productDto.ImageUrl);
-      await SaveProductImage(productDto);
-
+      if (productDto.ImageFile != null)
+      {
+        if (productDto.ImageUrl != null) DeleteProductImage(productDto.ImageUrl);
+        await SaveProductImage(productDto);
+      }
       var updateResult = _productService.Update(productDto);
 
       var saveResult = await _productService.SaveAsync();
@@ -189,7 +191,13 @@ namespace FutureCafe.Web.Controllers
         var fileExtension = Path.GetExtension(productDto.ImageFile.FileName);
 
         var fileName = fileNameWithoutExtension + "_" + DateTime.Now.Ticks.ToString() + fileExtension;
+        var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "ImageUploads");
         var savePath = Path.Combine(_webHostEnvironment.WebRootPath, "ImageUploads", fileName);
+
+        if (Directory.Exists(folderPath) == false)
+        {
+          Directory.CreateDirectory(folderPath);
+        }
 
         using (var stream = new FileStream(savePath, FileMode.Create))
         {
