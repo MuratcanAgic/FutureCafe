@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\ImageUploads\**" />
+    <Content Remove="wwwroot\ImageUploads\**" />
+    <EmbeddedResource Remove="wwwroot\ImageUploads\**" />
+    <None Remove="wwwroot\ImageUploads\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.13">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -21,10 +28,6 @@
     <ProjectReference Include="..\FutureCafe.Business\FutureCafe.Business.csproj" />
     <ProjectReference Include="..\FutureCafe.Core\FutureCafe.Core.csproj" />
     <ProjectReference Include="..\FutureCafe.DataAccess\FutureCafe.DataAccess.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\ImageUploads\" />
   </ItemGroup>
 
 </Project>

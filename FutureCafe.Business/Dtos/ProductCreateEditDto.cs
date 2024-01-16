@@ -29,6 +29,7 @@ namespace FutureCafe.Business.Dtos
     [DisplayName("Ürün Fotoğrafı")]
     public IFormFile? ImageFile { get; set; }
 
+    [DisplayName("Şu Anki Fotoğraf")]
     public string? ImageUrl { get; set; }
 
     public virtual ICollection<ProductPrice> ProductPrice { get; set; }
