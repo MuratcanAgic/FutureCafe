@@ -28,7 +28,7 @@
               <div class="row mb-4">
                 <div class="col">
                   <label class="control-label mb-2" asp-for="UserOperationClaims"></label> *
-                  <select asp-for="SelectClaimIds" multiple="multiple" class="form-control" asp-items=ViewBag.AvailableClaims>
+                  <select asp-for="SelectClaimIds" multiple="multiple" class="form-control select2" asp-items=ViewBag.AvailableClaims>
                   </select>
                   <span asp-validation-for="SelectClaimIds" class="text-danger"></span>
                 </div>
@@ -80,7 +80,12 @@
 </div>
 
 <script>
-  
+  $(document).ready(function () {
+    $('.select2').select2(
+      { placeholder: 'Bir seçenek seçin.' }
+    );
+  });
+
   var passwordInput = document.getElementById("passwordInput");
   var toggleButton = document.getElementById("togglePassword");
   var toggleIcon = document.getElementById("toggleIcon");
@@ -112,4 +117,6 @@
       toggleConfirmIcon.className = "bi-eye pe-2";
     }
   }
+
+
 </script>

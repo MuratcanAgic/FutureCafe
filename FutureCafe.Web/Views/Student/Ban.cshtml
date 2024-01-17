@@ -17,8 +17,8 @@
                 <div class="row mb-4">
                   <div class="col-lg-6 col-md-12">
                     <input type="text" asp-for="@Model[i].CategoryId" hidden />
-                    <label class="control-label mb-2">@Model[i].CategoryName</label>
-                    <select asp-for="@Model[i].SelectedProductIds" multiple="multiple" class="form-control" asp-items="@(new SelectList(Model[i].ProductList, "Id", "Name"))">
+                    <label class="control-label mb-2 fw-bold">@Model[i].CategoryName</label>
+                    <select asp-for="@Model[i].SelectedProductIds" multiple="multiple" class="form-control js-states select2" asp-items="@(new SelectList(Model[i].ProductList, "Id", "Name"))">
                       <option value="-1">-- Tüm Kategori --</option>
                     </select>
                   </div>
@@ -26,8 +26,8 @@
                   {
                     <div class="col-lg-6 col-md-12">
                       <input type="text" asp-for="@Model[i + 1].CategoryId" hidden />
-                      <label class="control-label mb-2">@Model[i + 1].CategoryName</label>
-                      <select asp-for="@Model[i + 1].SelectedProductIds" multiple="multiple" class="form-control" asp-items="@(new SelectList(Model[i + 1].ProductList, "Id", "Name"))">
+                      <label class="control-label mb-2 fw-bold">@Model[i + 1].CategoryName</label>
+                      <select asp-for="@Model[i + 1].SelectedProductIds" multiple="multiple" class="form-control js-states select2" asp-items="@(new SelectList(Model[i + 1].ProductList, "Id", "Name"))">
                         <option value="-1">-- Tüm Kategori --</option>
                       </select>
                     </div>
@@ -48,14 +48,17 @@
   </div>
 </div>
 
-@* <script>
-  // jQuery code to select all options when "-- Tümünü Seç --" is selected
+
+<script>
   $(document).ready(function () {
-    $('select[data-index]').change(function () {
-      var index = $(this).data('index');
-      if ($(this).val() == "-1") {
-        $(this).find("option").prop("selected", true);
+    $('.select2').select2({ placeholder: 'Bir seçenek seçin.' });
+
+    $('.select2').on('change', function () {
+      var selectedValues = $(this).val();
+      var isAllCategorySelected = selectedValues && selectedValues.includes('-1');
+      if (isAllCategorySelected) {
+        $(this).val('-1').trigger('change.select2');
       }
     });
   });
-</script> *@
+</script>

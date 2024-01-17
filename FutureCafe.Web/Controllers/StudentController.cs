@@ -177,8 +177,13 @@ namespace FutureCafe.Web.Controllers
       if (banDto == null) { return RedirectToAction("Index"); }
 
 
-      _studentService.BanUpdate(Convert.ToInt32(stdId), banDto);
-      await _studentService.SaveAsync();
+      var banResult = _studentService.BanUpdate(Convert.ToInt32(stdId), banDto);
+      var saveResult = await _studentService.SaveAsync();
+
+      if (banResult.Success == false || saveResult.Success == false)
+        _toastNotification.AddErrorToastMessage(Messages.DataNotUpdated);
+      else
+        _toastNotification.AddSuccessToastMessage(Messages.DataUpdated);
 
       return RedirectToAction("Index");
     }

@@ -28,8 +28,8 @@
               <div class="row mb-4">
                 <div class="col">
                   <label asp-for="SchoolClassId" class="control-label mb-2"></label> *
-                  <select asp-for="SchoolClassId" class="form-control" asp-items="ViewBag.SchoolClasses">
-                    <option value="">-- Sınıf Seç --</option>
+                  <select asp-for="SchoolClassId" class="form-control select2" asp-items="ViewBag.SchoolClasses">
+                    @* <option value="">-- Sınıf Seç --</option> *@
                   </select>
                   <span asp-validation-for="SchoolClassId" class="text-danger"></span>
                 </div>
@@ -110,4 +110,8 @@
 
     targetElement.value = scanned_barcode;
   }
+
+  $(document).ready(function () {
+    $('.select2').select2();
+  });
 </script>
