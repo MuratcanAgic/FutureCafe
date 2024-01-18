@@ -95,7 +95,11 @@ namespace FutureCafe.Web.Controllers
 
       //validate
       var validationResult = _productService.Validate(productDto);
-      if (validationResult.Data.IsValid == false && validationResult.Data.Errors.Select(x => x.PropertyName).ToList().Any(x => x.Equals("ProductBarcodNo")) == false)
+
+      var ProductBarcodNoError = validationResult.Data.Errors.FirstOrDefault(x => x.PropertyName == "ProductBarcodNo");
+      if (ProductBarcodNoError != null) validationResult.Data.Errors.Remove(ProductBarcodNoError);
+
+      if (validationResult.Data.IsValid == false)
       {
         validationResult.Data.AddToModelState(this.ModelState);
         PopulateCategoryDropDownList();
