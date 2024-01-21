@@ -30,5 +30,8 @@
     public const string CategoryNameDuplicate = "Veritabanında aynı isimde başka bir kategori bulunmaktadır.";
     public const string SchoolClassNameDuplicate = "Veritabanında aynı isimde başka bir sınıf bulunmaktadır.";
     public const string UserEmailDuplicate = "Veritabanında aynı kullanıcı adında başka bir kullanıcı bulunmaktadır.";
+    public const string StockProductNoInput = "Stoğa eklenecek ürün getirilmedi.";
+    public const string StockProductCountRegisterNoInput = "Stoğa eklenecek ürün miktarı girilmedi.";
+    public const string StockCountZero = "Stok miktarı zaten 0.";
   }
 }

@@ -8,14 +8,18 @@ namespace FutureCafe.Web.Controllers
 {
   public class TradeController : Controller
   {
-    IProductService _productService;
-    IStudentService _studentService;
-    ITradeService _tradeService;
-    public TradeController(IProductService productService, IStudentService studentService, ITradeService tradeService)
+    private readonly IProductService _productService;
+    private readonly IStudentService _studentService;
+    private readonly ITradeService _tradeService;
+    private readonly IStockService _stockService;
+
+    public TradeController(IProductService productService, IStudentService studentService, ITradeService tradeService, IStockService stockService)
     {
       _productService = productService;
       _studentService = studentService;
       _tradeService = tradeService;
+      _stockService = stockService;
+
     }
 
     [Authorize(Roles = "Admin,Kantinci")]
@@ -67,6 +71,9 @@ namespace FutureCafe.Web.Controllers
         return Json(new { success = false, message = bannedProducts.Message });
 
       //pay success
+
+      await _stockService.RemoveFromStockAsync(products);
+      await _stockService.SaveAsync();
 
       var newStudentCredit = studentCredit.Data - totalPrice;
 
