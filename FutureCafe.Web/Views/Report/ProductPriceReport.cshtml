@@ -8,7 +8,7 @@
     <div class="card-body">
       <div class="input-group">
         <input type="text" id="productBarcodeNo" name="productBarcodeNo" class="form-control" placeholder="Barkod no" />
-        <button class="btn btn-warning" id="showCreditButton">Rapor Oluştur</button>
+        <button class="btn btn-warning" type="submit" >Rapor Oluştur</button>
       </div>
     </div>
     <div class="card-footer">
@@ -65,7 +65,7 @@
 
   var barcode = "";
   var interval;
-  var studentCardNumber = document.getElementById("studentCardNumber");
+  var productBarcodeNo = document.getElementById("productBarcodeNo");
   //scanner show
   document.addEventListener("keydown", function (evt) {
     if (interval) {
@@ -95,7 +95,7 @@
       var modifiedValue = currentValue.replace(scanned_barcode, "");
       focusedElement.value = modifiedValue;
     }
-    studentCardNumber.value = scanned_barcode;
+    productBarcodeNo.value = scanned_barcode;
   }
 
   function printTable() {

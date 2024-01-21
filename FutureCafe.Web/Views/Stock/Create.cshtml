@@ -1,0 +1,151 @@
+﻿@model FutureCafe.Business.Dtos.StockCreateEditDto
+
+<!-- Toast -->
+<div class="toast-container position-fixed top-0 end-0 p-3">
+  <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto" id="toasterInfoHeader"></strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Kapat"></button>
+    </div>
+    <div class="toast-body text-bg-success" id="toasterBody">
+      <label id="toasterInfoLabel"></label>
+    </div>
+  </div>
+</div>
+
+<div class="col-4 mx-auto card mt-5 mb-2">
+  <div class="card-header">
+    <label>Stok Eklenecek Ürün</label>
+  </div>
+  <div class="card-body">
+    <div class="input-group">
+      <input type="text" id="productBarcodeNo" name="productBarcodeNo" class="form-control" placeholder="Barkod no" />
+      <button class="btn btn-warning" id="getProduct">Ürün Getir</button>
+    </div>
+  </div>
+  <div class="card-footer">
+    <label class="text-muted mt-2" style="font-size:10pt">*Kart tarama yaparak da ürün barkod numarası girebilirsiniz.</label>
+  </div>
+</div>
+
+<form asp-action="Create" asp-controller="Stock" method="post">
+  <div class="col-8 mx-auto card mt-5 mb-2">
+    <div class="card-header">
+      <label>Stok Oluştur</label>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-borderless text-center">
+          <thead>
+            <tr>
+              <th><label asp-for="ProductProductBarcodNo"> </label></th>
+              <th><label asp-for="ProductProductName" > </label></th>
+              <th><label asp-for="ProductCount" > </label></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="text" id="ProductBarcodeNoFill" asp-for="ProductProductBarcodNo" class="form-control" readonly/></td>
+              <td><input type="text" id="ProductNameFill" asp-for="ProductProductName" class="form-control" readonly /></td>
+             @*  <td><label id="ProductNameFill" class="form-control"> </label></td> *@
+              <td><input type="text" id="ProductCountFill" asp-for="ProductCount" class="form-control" readonly /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="container">
+        <div class="input-group">
+          <input type="text" id="ProductCountToRegister" asp-for="ProductCountToRegister" class="form-control" placeholder="Stoğa Eklenecek Miktar"  />
+          <button type="submit" class="btn btn-primary text-end bt-2">Stok Oluştur</button> &nbsp;*
+        </div>        
+      </div>
+      
+    </div>
+       <div class="card-footer">
+    <label class="text-muted mt-2" style="font-size:10pt">*(-) sayı girerek miktarı azaltabilirsiniz.</label>
+    </div> 
+  </div>
+</form>
+
+<script>
+  const toastLiveExample = document.getElementById("liveToast");
+  var productBarcodeNo = document.getElementById("productBarcodeNo");
+  var getProductButton = document.getElementById("getProduct");
+  //var FilledProductBarcodeNo = document.getElementById("FilledProductBarcodeNo");
+  var barcode = "";
+  var interval;
+
+  //manual get
+  getProductButton.addEventListener("click", function () {
+    ajaxGetProduct(productBarcodeNo.value);
+  });
+
+  //scanner get
+  document.addEventListener("keydown", function (evt) {
+    if (interval) {
+      clearInterval(interval);
+
+    }
+    if (evt.code == "Enter") {
+      evt.preventDefault();
+      if (barcode)
+        handleBarcode(barcode);
+
+      barcode = "";
+      return;
+    }
+    if (evt.key != "Shift") {
+      barcode += evt.key;
+    }
+    interval = setInterval(() => barcode = "", 20);
+  });
+
+  function handleBarcode(scanned_barcode) {
+
+    var focusedElement = document.activeElement;
+
+    if (document.activeElement && focusedElement.tagName === "INPUT") {
+      var currentValue = focusedElement.value;
+      var modifiedValue = currentValue.replace(scanned_barcode, "");
+      focusedElement.value = modifiedValue;
+    }
+    ajaxGetProduct(scanned_barcode);
+  }
+  //ajax getProduct
+  function ajaxGetProduct(productBarcodeNoVal) {
+    $.ajax({
+      url: "/Stock/GetProduct",
+      type: "GET",
+      data: { ProductBarcodeNo: productBarcodeNoVal },
+      success: function (response) {
+        if (response.success) {
+          updateProductCreateCard(response.productBarcodeNo, response.productName, response.productCount);
+        } else {
+          CreateToaster("Ürün veritabanında bulunamıyor.", "Veritabanı Hatası", true);
+        }
+      },
+      error: function () {
+        CreateToaster("Veri tabanı hatası oluştu.", "Veritabanı Hatası", true);
+      }
+    });
+  }
+  //productCreateCard update
+  function updateProductCreateCard(productBarcodeNo, productName, productCount) {
+    ProductBarcodeNoFill.value = productBarcodeNo;
+    ProductNameFill.value = productName;
+    ProductCountFill.value = productCount;
+    //LoadPersonModalAmountLabel.innerText = "₺ " + productCount;
+  }
+  //create toaster
+  function CreateToaster(messageInfo, messageHeader, error) {
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+    toastBootstrap.show();
+    document.getElementById("toasterInfoLabel").innerHTML = messageInfo;
+    document.getElementById("toasterInfoHeader").innerHTML = messageHeader;
+    if (error === true)
+      document.getElementById("toasterBody").className = "toast-body text-bg-danger";
+    else
+      document.getElementById("toasterBody").className = "toast-body text-bg-success";
+  }
+
+</script>

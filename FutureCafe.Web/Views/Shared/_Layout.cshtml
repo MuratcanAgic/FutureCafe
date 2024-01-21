@@ -83,6 +83,9 @@
                   <a class="dropdown-item" asp-controller="Product" asp-action="Index">
                     <i class="bi-cup-hot pe-2"></i>Ürün
                   </a>
+                  <a class="dropdown-item" asp-controller="Stock" asp-action="Index">
+                    <i class="bi-shop pe-2"></i>Stok
+                  </a>
                   <a class="dropdown-item" asp-controller="Category" asp-action="Index">
                     <i class="bi-card-list pe-2"></i>Kategori
                   </a>
@@ -122,7 +125,7 @@
                   Hoşgeldin, @Context.User.Identity.Name
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" asp-controller="User" asp-action="Index">
+                 @*  <a class="dropdown-item" asp-controller="User" asp-action="Index">
                     <i class="bi-gear-fill pe-2"></i>
                     Tercihler
                   </a>
@@ -130,7 +133,7 @@
                     <i class="bi-envelope-fill pe-2"></i>
                     Destek İletişim
                   </a>
-                  <div class="dropdown-divider"></div>
+                <div class="dropdown-divider"></div> *@
                   <a class="dropdown-item" asp-controller="Auth" asp-action="Logout">
                     <i class="bi-box-arrow-right pe-2"></i>
                     Çıkış

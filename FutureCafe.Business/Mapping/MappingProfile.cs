@@ -39,7 +39,8 @@ namespace FutureCafe.Business.Mapping
       CreateMap<Trade, TradeReportDto>().ReverseMap();
       CreateMap<TradeProduct, TradeProductReportDto>().ReverseMap();
 
-
+      CreateMap<Stock, StockViewDto>().ReverseMap();
+      CreateMap<Stock, StockCreateEditDto>().ReverseMap();
     }
   }
 }
