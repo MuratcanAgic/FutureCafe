@@ -1,5 +1,6 @@
 ﻿using FutureCafe.Business.Abstract;
 using FutureCafe.Business.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FutureCafe.Web.Controllers
@@ -9,18 +10,22 @@ namespace FutureCafe.Web.Controllers
     private readonly ITradeService _tradeService;
     private readonly IStudentService _studentService;
     private readonly IProductService _productService;
-    public ReportController(ITradeService tradeService, IStudentService studentService, IProductService productService)
+    private readonly IStockService _stockService;
+    public ReportController(ITradeService tradeService, IStudentService studentService, IProductService productService, IStockService stockService)
     {
       _tradeService = tradeService;
       _studentService = studentService;
       _productService = productService;
+      _stockService = stockService;
     }
 
+    [Authorize(Roles = "Admin")]
     public IActionResult TradeReport()
     {
       return View();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> TradeReport(DateTime startDate, DateTime endDate)
     {
@@ -40,11 +45,13 @@ namespace FutureCafe.Web.Controllers
       return View(trades.Data);
     }
 
+    [Authorize(Roles = "Admin")]
     public IActionResult CreditReport()
     {
       return View();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreditReport(string studentCardNumber)
     {
@@ -61,11 +68,13 @@ namespace FutureCafe.Web.Controllers
       return View(student.Data);
     }
 
+    [Authorize(Roles = "Admin")]
     public IActionResult ProductPriceReport()
     {
       return View();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> ProductPriceReport(string productBarcodeNo)
     {
@@ -80,6 +89,29 @@ namespace FutureCafe.Web.Controllers
       product.Data.ProductPrice.OrderBy(x => x.CreatedDate);
 
       return View(product.Data);
+    }
+
+    [Authorize(Roles = "Admin")]
+    public IActionResult StockReport()
+    {
+      return View();
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
+    public async Task<IActionResult> StockReport(string productBarcodeNo)
+    {
+      if (productBarcodeNo == null)
+        return View();
+
+      var stock = await _stockService.GetListAsync<StockReportDto>(x => x.Product.ProductBarcodNo == productBarcodeNo, null, "Product");
+
+      if (stock == null || stock.Success == false)
+        return View();
+
+      //product.Data.ProductPrice.OrderBy(x => x.CreatedDate);
+
+      return View(stock.Data);
     }
   }
 }

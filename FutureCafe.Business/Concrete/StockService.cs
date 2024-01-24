@@ -138,9 +138,9 @@ namespace FutureCafe.Business.Concrete
     {
       try
       {
-        var schoolClass = await _stockDal.FindByIdAsync(id);
-        var schoolClassDto = _mapper.Map<Stock, TDto>(schoolClass);
-        return new SuccessDataResult<TDto>(schoolClassDto);
+        var stock = await _stockDal.FindByIdAsync(id);
+        var stockDto = _mapper.Map<Stock, TDto>(stock);
+        return new SuccessDataResult<TDto>(stockDto);
       }
       catch (Exception e)
       {
@@ -162,8 +162,8 @@ namespace FutureCafe.Business.Concrete
     {
       try
       {
-        var schoolClassList = _stockDal.GetList(filter, orderBy, includeProperties);
-        var dto = schoolClassList.Select(e => _mapper.Map<Stock, TDto>(e)).ToList();
+        var stockList = _stockDal.GetList(filter, orderBy, includeProperties);
+        var dto = stockList.Select(e => _mapper.Map<Stock, TDto>(e)).ToList();
         if (dto == null)
         {
           return new ErrorDataResult<IEnumerable<TDto>>(Messages.ListEmpty);
@@ -179,8 +179,8 @@ namespace FutureCafe.Business.Concrete
     {
       try
       {
-        var schoolClassList = await _stockDal.GetListAsync(filter, orderBy, includeProperties);
-        var dto = schoolClassList.Select(e => _mapper.Map<Stock, TDto>(e)).ToList();
+        var stockList = await _stockDal.GetListAsync(filter, orderBy, includeProperties);
+        var dto = stockList.Select(e => _mapper.Map<Stock, TDto>(e)).ToList();
         if (dto == null)
         {
           return new ErrorDataResult<IEnumerable<TDto>>(Messages.ListEmpty);
