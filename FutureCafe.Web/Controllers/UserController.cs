@@ -92,6 +92,10 @@ namespace FutureCafe.Web.Controllers
 
       //validate
       var validationResult = _userService.Validate(usertDto);
+
+      var UserEmailError = validationResult.Data.Errors.FirstOrDefault(x => x.PropertyName == "Email");
+      if (UserEmailError != null) validationResult.Data.Errors.Remove(UserEmailError);
+
       if (validationResult.Data.IsValid == false)
       {
         validationResult.Data.AddToModelState(this.ModelState);
