@@ -42,7 +42,7 @@
               </div>
               <div class="row mb-4">
                 <div class="col">
-                  <label asp-for="Password" class="mb-2"></label> *
+                  <label asp-for="Password" class="mb-2"></label> * , **
                   <div class="input-group">
                     <input type="password" asp-for="Password" class="form-control" id="passwordInput" placeholder="Şifre" />
                     <button type="button" class="btn btn-outline-primary" id="togglePassword" onclick="togglePasswordVisibility()"><i class="bi-eye pe-2" id="toggleIcon"></i></button>
@@ -52,7 +52,7 @@
               </div>
               <div class="row mb-4">
                 <div class="col">
-                  <label asp-for="PasswordConfirm" class="mb-2"></label> *
+                  <label asp-for="PasswordConfirm" class="mb-2"></label> * , **
                   <div class="input-group">
                     <input type="password" asp-for="PasswordConfirm" class="form-control" id="passwordConfirmInput" placeholder="Şifre Tekrar" />
                     <button type="button" class="btn btn-outline-primary" id="togglePasswordConfirm" onclick="togglePasswordConfirmVisibility()"><i class="bi-eye pe-2" id="toggleConfirmIcon"></i></button>
@@ -69,6 +69,11 @@
               <div class="row mb-2">
                 <div class="col justify-content-end d-flex">
                   <label class="text-info">* ile gösterilen alanlar,doldurulması zorunlu alanlardır.  </label>
+                </div>
+              </div>
+              <div class="row mb-2">
+                <div class="col justify-content-end d-flex">
+                  <label class="text-info">** girilen şifre 1 büyük harf, 1 küçük harf, 1 sayı ve !,?,*,. işaretlerinden birini içermelidir. </label>
                 </div>
               </div>
             </div>
