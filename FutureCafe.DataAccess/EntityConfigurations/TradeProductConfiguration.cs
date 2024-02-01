@@ -10,6 +10,7 @@ namespace FutureCafe.DataAccess.EntityConfigurations
     {
       builder.HasKey(x => x.Id);
       builder.Property(x => x.ProductCount).IsRequired();
+      builder.Property(x => x.SalePriceSnap).HasPrecision(8, 3);
     }
   }
 }

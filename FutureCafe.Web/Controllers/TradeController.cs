@@ -3,6 +3,7 @@ using FutureCafe.Business.Dtos;
 using FutureCafe.Entities.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace FutureCafe.Web.Controllers
 {
@@ -50,8 +51,11 @@ namespace FutureCafe.Web.Controllers
     }
     [Authorize(Roles = "Admin,Kantinci")]
     [HttpPost]
-    public async Task<IActionResult> Pay(string studentCardNumber, decimal totalPrice, IEnumerable<ProductTradeDto> products)
+    public async Task<IActionResult> Pay(string studentCardNumber, string totalPrice, IEnumerable<ProductTradeDto> products)
     {
+      decimal totalPriceDecimal;
+      decimal.TryParse(totalPrice, NumberStyles.Any, CultureInfo.InvariantCulture, out totalPriceDecimal);
+
       var student = await _studentService.GetAsync<Student>(x => x.CardNumber == studentCardNumber, "StudentCredit.Credit");
 
       if (student.Data == null)
@@ -59,8 +63,8 @@ namespace FutureCafe.Web.Controllers
 
       var studentCredit = _studentService.GetLastCreditAmount(student.Data);
 
-      if (totalPrice > studentCredit.Data)
-        return Json(new { success = false, message = $"Kredi yeterli değil.Toplam miktar: ₺{totalPrice}, Kredi: ₺{studentCredit.Data}", hideModal = true });
+      if (totalPriceDecimal > studentCredit.Data)
+        return Json(new { success = false, message = $"Kredi yeterli değil.Toplam miktar: ₺{totalPriceDecimal}, Kredi: ₺{studentCredit.Data}", hideModal = true });
 
       if (products == null)
         return Json(new { success = false, message = "Sepette ürün bulunmuyor!" });
@@ -75,12 +79,12 @@ namespace FutureCafe.Web.Controllers
       await _stockService.RemoveFromStockAsync(products);
       await _stockService.SaveAsync();
 
-      var newStudentCredit = studentCredit.Data - totalPrice;
+      var newStudentCredit = studentCredit.Data - totalPriceDecimal;
 
       await _tradeService.AddAsync(studentCardNumber, products);
       await _tradeService.SaveAsync();
 
-      _studentService.WithDrawMoneyFromStudent(student.Data, totalPrice);
+      _studentService.WithDrawMoneyFromStudent(student.Data, totalPriceDecimal);
       _studentService.Update(student.Data);
       await _studentService.SaveAsync();
 
