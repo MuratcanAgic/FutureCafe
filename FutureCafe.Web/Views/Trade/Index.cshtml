@@ -188,7 +188,7 @@
     $.ajax({
       url: "/Trade/Pay",
       type: "POST",
-      data: { studentCardNumber: studentCardValue, totalPrice: calculateTotalPrice(), products: productDtos },
+      data: { studentCardNumber: studentCardValue, totalPrice: calculateTotalPrice().toString(), products: productDtos },
       success: function (response) {
         if (response.success) {
           document.getElementById("productBarcodNoInput").value = "";
